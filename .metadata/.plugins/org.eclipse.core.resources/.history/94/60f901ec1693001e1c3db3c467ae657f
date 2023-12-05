@@ -1,0 +1,10 @@
+package bus;
+
+public enum EnumTypeCurrency {
+	SavingAccount,
+	CheckingAccount,
+	CreditAccount,
+	LineOfCreditAccount,
+	CurrencyAccount,
+	Undefined
+}

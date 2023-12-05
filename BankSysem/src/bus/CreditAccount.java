@@ -42,7 +42,6 @@ public class CreditAccount extends Account{
 		this.limit = limit;
 	}
 
-	@Override
 	public void deposit(Double amount) { //payment of the credit card
 
 		Date currentDate = new Date();
@@ -70,7 +69,6 @@ public class CreditAccount extends Account{
 	}
 
 	
-	@Override
 	public void withdraw(Double amount) { //buying with the credit card
 		
 		if (amount <= getBalance()) {
@@ -87,6 +85,20 @@ public class CreditAccount extends Account{
 			   "\n\tDue Date =" + this.dueDate + 
 			   "\n\tLimit =" + this.limit + 
 			   "\n\tBalance=" + this.balance;
+	}
+
+	@Override
+	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

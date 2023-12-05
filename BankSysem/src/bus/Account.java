@@ -56,9 +56,10 @@ public abstract class Account implements ITransaction {
 				"\n\tBalance : " + this.balance;
 	}
 	
-	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS
-	public abstract void deposit(Double amount);
-
-	public abstract void withdraw(Double amount);
+	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
+	public abstract void deposit (Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type);
+	public abstract void withdraw (Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type);
 	
 }

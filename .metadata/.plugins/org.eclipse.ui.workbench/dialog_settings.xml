@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+<<<<<<< HEAD
 	<section name="NewWizardAction">
+=======
+	<section name="ImportExportAction">
+>>>>>>> 86314dd123e80284c74340e6bd907fa9b1d1db20
 	</section>
 </section>
