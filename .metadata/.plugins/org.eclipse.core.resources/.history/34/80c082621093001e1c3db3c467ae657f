@@ -1,0 +1,80 @@
+package bus;
+
+import java.util.ArrayList;
+
+public class Manager extends User {
+	
+	private ArrayList<Customer> listOfCustomers;
+
+	public Manager() {
+		super();
+		this.listOfCustomers = null;
+	}
+	
+	public Manager(Integer identificationNumber, String userName, Integer password, ArrayList<Customer> listOfCustomers) {
+		super(identificationNumber, userName, password);
+		this.listOfCustomers = listOfCustomers;
+	}
+
+	public ArrayList<Customer> getListOfCustomers() {
+		return listOfCustomers;
+	}
+
+	public void setListOfCustomers(ArrayList<Customer> listOfCustomers) {
+		this.listOfCustomers = listOfCustomers;
+	}
+
+	public void openAccount(Customer customer, EnumTypeAccount type) {
+		
+		if (customer != null && type != null) {
+			
+			Account newAccount = null;
+			
+			if (type == EnumTypeAccount.SavingAccount) {
+				newAccount = new SavingAccount();
+			}
+			else if (type == EnumTypeAccount.CheckingAccount) {
+				newAccount = new CheckingAccount();
+			}
+			else if (type == EnumTypeAccount.CurrencyAccount) {
+				newAccount = new CurrencyAccount();
+			}
+			/*
+			 * COMPLETAR COM OUTRAS ACCOUNTS
+			 */
+			
+			
+			customer.addNewAccount(newAccount);		//ALTERADO CLASSE CUSTOMER MÉTODO ADDNEWACCOUNT
+		}
+		
+	}
+	
+	public void closeAccount(Customer customer, EnumTypeAccount type) {
+		if (customer != null && type != null) {
+			
+			 ArrayList<Account> customerAccounts = customer.getAccounts();
+			 
+			 for (Account account : customerAccounts) {
+	                if (account.getType() == type) {
+	                    customerAccounts.remove(account);
+	                    break;
+	                }
+	            }
+			 
+		}
+	}
+	
+	public void removeCustomer(Customer customer) {
+        if (customer != null) {
+            listOfCustomers.remove(customer);
+        }
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Manager [listOfCustomers=" + listOfCustomers + "]";
+	}
+
+	
+	
+}

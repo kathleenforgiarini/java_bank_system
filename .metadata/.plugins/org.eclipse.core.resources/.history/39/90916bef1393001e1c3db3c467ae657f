@@ -1,0 +1,67 @@
+package bus;
+
+import java.util.Date;
+
+public class SavingAccount extends Account {
+	
+	private double annualInterestRate;
+	private double annualGain;
+	
+	public SavingAccount() {
+		super();
+		this.annualInterestRate = 0.00;
+		this.annualGain = 0.00;
+	}
+
+	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+			TransactionCollection transactions, double annualInterestRate, double annualGain) {
+		super(accountNumber, type, balance, openingDate, transactions);
+		this.annualInterestRate = annualInterestRate;
+		this.annualGain = annualGain;
+	}
+
+	
+	public double getAnnualInterestRate() {
+		return annualInterestRate;
+	}
+
+	public void setAnnualInterestRate(double annualInterestRate) {
+		this.annualInterestRate = annualInterestRate;
+	}
+
+	public double getAnnualGain() {
+		return annualGain;
+	}
+
+	public void calcAnnualGain(double annualGain) {
+		this.annualGain = annualGain;
+		// ADICIONAR LÓGICA
+	}
+
+	@Override
+	public void deposit(Double amount) {
+		if (amount > 0) {
+            
+            this.balance += amount;
+
+            Transaction transaction = new Transaction(EnumTypeTransaction.CCredit, new Date(), amount);
+            this.transactions.addTransaction(transaction);
+        }
+		
+	}
+
+	@Override
+	public void withdraw(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "\n\tAnnual Interest Rate: " + annualInterestRate + 
+								  "\n\tAnnual Gain: " + annualGain;
+	}
+	
+	
+
+}

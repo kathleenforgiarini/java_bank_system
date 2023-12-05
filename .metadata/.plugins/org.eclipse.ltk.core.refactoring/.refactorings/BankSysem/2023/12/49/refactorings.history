@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;EnumTypeAccount.java&apos; to &apos;BankSysem/src/bus&apos;&#x0D;&#x0A;- Original project: &apos;BankSysem&apos;&#x0D;&#x0A;- Destination element: &apos;BankSysem/src/bus&apos;&#x0D;&#x0A;- Original element: &apos;bus.EnumTypeAccount.java&apos;" description="Copy compilation unit" destination="/src&lt;bus" element1="/src&lt;bus{EnumTypeAccount.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1701743705145" units="1" version="1.0"/>
+</session>
