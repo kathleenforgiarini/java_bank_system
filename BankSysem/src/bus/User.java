@@ -1,20 +1,22 @@
 package bus;
 
 public class User{
+	protected Integer counter = 1;
 	protected Integer identificationNumber;
 	protected String userName;
 	protected Integer password;
 	
 	public User() {
 		super();
-		this.identificationNumber = 0;
+		this.identificationNumber = counter;
+		counter++;
 		this.userName = "";
 		this.password = 0;
 	}
 	
 	public User(Integer identificationNumber, String userName, Integer password) {
 		super();
-		this.identificationNumber = identificationNumber;
+		setIdentificationNumber(identificationNumber);
 		this.userName = userName;
 		this.password = password;
 	}
@@ -23,6 +25,17 @@ public class User{
 		return identificationNumber;
 	}
 	
+	public void setIdentificationNumber(Integer identificationNumber) {
+		if (identificationNumber != null)
+		{
+			this.identificationNumber = identificationNumber;
+		}
+		else
+		{
+			this.identificationNumber = counter++;
+		}
+	}
+
 	public String getUserName() {
 		return userName;
 	}

@@ -5,6 +5,7 @@ import java.util.Date;
 public abstract class Account implements ITransaction {
 	protected Integer accountNumber;
 	protected EnumTypeAccount type;
+	protected Integer customerNumber;
 	protected Double balance;
 	protected Date openingDate;
 	protected TransactionCollection transactions;
@@ -13,16 +14,18 @@ public abstract class Account implements ITransaction {
 		super();
 		this.accountNumber = 0;
 		this.type = EnumTypeAccount.Undefined;
+		this.customerNumber = null;
 		this.balance = (double) 0;
 		this.openingDate = null;
 		this.transactions = new TransactionCollection();
 	}
 	
-	public Account(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public Account(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions) {
 		super();
 		this.accountNumber = accountNumber;
 		this.type = type;
+		this.customerNumber = customerNumber;
 		this.balance = balance;
 		this.openingDate = openingDate;
 		this.transactions = transactions;
@@ -46,6 +49,14 @@ public abstract class Account implements ITransaction {
 
 	public Date getOpeningDate() {
 		return openingDate;
+	}
+
+	public Integer getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(Integer customerNumber) {
+		this.customerNumber = customerNumber;
 	}
 
 	@Override

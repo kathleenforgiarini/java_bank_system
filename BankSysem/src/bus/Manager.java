@@ -5,9 +5,6 @@ import java.util.ArrayList;
 public class Manager extends User {
 	
 	private ArrayList<Customer> listOfCustomers;
-<<<<<<< HEAD
-	
-=======
 
 	public Manager() {
 		super();
@@ -50,13 +47,13 @@ public class Manager extends User {
 		
 	}
 	
-	public void closeAccount(Customer customer, EnumTypeAccount type) {
-		if (customer != null && type != null) {
+	public void closeAccount(Customer customer, Integer accountNumber) {
+		if (customer != null && accountNumber != null) {
 			
 			 ArrayList<Account> customerAccounts = customer.getListOfAccounts();
 			 
 			 for (Account account : customerAccounts) {
-	                if (account.getType() == type) {
+	                if (account.getAccountNumber() == accountNumber) {
 	                    customerAccounts.remove(account);
 	                    break;
 	                }
@@ -67,13 +64,13 @@ public class Manager extends User {
 	
 	public void createCustomer(int idNumber, String username, int password, double salary, int mgrId) {
 		Customer newCustomer = new Customer(idNumber, username, password, salary, mgrId, null);
-		listOfCustomers.add(newCustomer);
+		this.listOfCustomers.add(newCustomer);
 		
 	}
 	
 	public void removeCustomer(Customer customer) {
         if (customer != null) {
-            listOfCustomers.remove(customer);
+            this.listOfCustomers.remove(customer);
             // REMOVER TAMBEM DO BANCO DE DADOS
         }
 	}
@@ -82,8 +79,5 @@ public class Manager extends User {
 	public String toString() {
 		return super.toString() + "\nManager List of customers: \n" + listOfCustomers;
 	}
-
->>>>>>> 86314dd123e80284c74340e6bd907fa9b1d1db20
-	
 	
 }

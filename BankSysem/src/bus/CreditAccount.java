@@ -16,10 +16,10 @@ public class CreditAccount extends Account{
 		this.limit = (double) 0;
 	}
 
-	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, Date dueDate, Double limit) {
 		
-		super(accountNumber, type, balance, openingDate, transactions);
+		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		
 		this.dueDate = dueDate;
 		this.limit = limit;

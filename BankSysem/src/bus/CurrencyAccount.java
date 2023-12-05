@@ -16,9 +16,9 @@ public class CurrencyAccount extends Account {
 		this.conversionFees = 0.00;
 	}
 	
-	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) {
-		super(accountNumber, type, balance, openingDate, transactions);
+		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		this.currency = currency;
 		this.currencyRate = currencyRate;
 		this.conversionFees = conversionFees;
