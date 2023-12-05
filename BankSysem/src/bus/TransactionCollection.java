@@ -9,4 +9,9 @@ public class TransactionCollection {
 	{
 		listOfTransactions.add(transaction);
 	}
+
+	public int getCountThisMonth() {
+		// CONTAR QUANTAS TRANSAÇÕES JA TIVERAM PRA VER LIMITE
+		return 0;
+	}
 }

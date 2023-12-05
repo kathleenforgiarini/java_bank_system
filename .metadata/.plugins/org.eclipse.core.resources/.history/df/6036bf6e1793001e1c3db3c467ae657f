@@ -1,0 +1,45 @@
+package bus;
+
+import java.util.Date;
+
+public class CurrencyAccount extends Account {
+	
+	private EnumTypeCurrency currency;
+	private double currencyRate;
+	private double conversionFees;
+	
+	
+	public CurrencyAccount() {
+		super();
+		this.currency = EnumTypeCurrency.Undefined;
+		this.currencyRate = 0.00;
+		this.conversionFees = 0.00;
+	}
+	
+	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) {
+		super();
+		this.currency = currency;
+		this.currencyRate = currencyRate;
+		this.conversionFees = conversionFees;
+	}
+
+
+
+	@Override
+	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
+			EnumTypeTransaction type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+}

@@ -1,0 +1,26 @@
+package bus;
+
+public class SavingAccount extends Account {
+	
+	private double annualInterestRate;
+	private double annualGain;
+	
+	
+
+	public SavingAccount() {
+		super();
+	}
+
+	@Override
+	public void deposit(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void withdraw(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

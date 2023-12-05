@@ -1,0 +1,17 @@
+package bus;
+
+public class CheckingAccount extends Account {
+
+	@Override
+	public void deposit(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void withdraw(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
