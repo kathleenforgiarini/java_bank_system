@@ -1,11 +1,9 @@
 package bus;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public interface ITransaction {
-	public void deposit (Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type);
-	public void withdraw (Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type);
+	public void deposit (LocalDate transactionDate, Double amount);
+	public void withdraw (LocalDate transactionDate, Double amount);
 	public Double getBalance ();
 }

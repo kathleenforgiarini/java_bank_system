@@ -1,6 +1,7 @@
 package bus;
 
 import java.util.Date;
+import java.time.LocalDate;
 
 public class CurrencyAccount extends Account {
 	
@@ -46,32 +47,32 @@ public class CurrencyAccount extends Account {
 	}
 
 	@Override
-	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void deposit(LocalDate transactionDate, Double amount) {
 
 		if (amount > 0) {
             double convertedAmount = amount * this.currencyRate;
 
             this.balance += convertedAmount;
 
+            Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+            this.transactions.add(transactionDep);
+            
+            
             this.balance -= conversionFees;
 
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-            this.transactions.add(transaction);
+            Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, amount, EnumTypeTransaction.Debit);
+            this.transactions.add(transactionFee);
         }
 		
 	}
 
 	@Override
-	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void withdraw(LocalDate transactionDate, Double amount) {
 
 		if (amount > 0 && amount <= this.balance) {
             this.balance -= amount;
 
-            this.balance -= conversionFees;
-
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
+            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
             this.transactions.add(transaction);
         }
 		

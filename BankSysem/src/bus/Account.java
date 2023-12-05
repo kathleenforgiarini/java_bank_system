@@ -1,6 +1,7 @@
 package bus;
 
 import java.util.Date;
+import java.time.LocalDate;
 
 public abstract class Account implements ITransaction {
 	protected Integer accountNumber;
@@ -68,9 +69,7 @@ public abstract class Account implements ITransaction {
 	}
 	
 	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
-	public abstract void deposit (Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type);
-	public abstract void withdraw (Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type);
+	public abstract void deposit (LocalDate transactionDate, Double amount);
+	public abstract void withdraw (LocalDate transactionDate, Double amount);
 	
 }

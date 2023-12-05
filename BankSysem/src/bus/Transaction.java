@@ -1,27 +1,28 @@
 package bus;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Transaction {
+	private Integer counter = 1;
 	private Integer transactionNumber;
 	private String description;
-	private Date transactionDate;
+	private LocalDate transactionDate;
 	private Double amount;
 	private EnumTypeTransaction type;
 	
 	public Transaction() {
 		super();
-		this.transactionNumber = 0;
+		this.transactionNumber = counter++;
 		this.description = "";
 		this.transactionDate = null;
 		this.amount = (double) 0;
 		this.type = EnumTypeTransaction.Undefined;
 	}
 	
-	public Transaction(Integer transactionNumber, String description, Date transactionDate, Double amount,
+	public Transaction(Integer transactionNumber, String description, LocalDate transactionDate, Double amount,
 			EnumTypeTransaction type) {
 		super();
-		this.transactionNumber = transactionNumber;
+		setTransactionNumber(transactionNumber);
 		this.description = description;
 		this.transactionDate = transactionDate;
 		this.amount = amount;
@@ -40,7 +41,7 @@ public class Transaction {
 		this.description = description;
 	}
 	
-	public Date getTransactionDate() {
+	public LocalDate getTransactionDate() {
 		return transactionDate;
 	}
 
@@ -50,6 +51,14 @@ public class Transaction {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+	
+	public void setTransactionNumber(Integer transactionNumber) {
+		if (transactionNumber == null) {
+			this.transactionNumber = counter++;
+		} else {
+			this.transactionNumber = transactionNumber;
+		}
 	}
 
 	public EnumTypeTransaction getType() {

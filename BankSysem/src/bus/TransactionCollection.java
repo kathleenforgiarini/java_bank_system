@@ -3,6 +3,7 @@ package bus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.time.LocalDate;
 
 public class TransactionCollection {
 	private ArrayList<Transaction> listOfTransactions = new ArrayList<Transaction>();
@@ -40,6 +41,20 @@ public class TransactionCollection {
 		return listOfTransactionsByDate;
 	}
 	
+	public ArrayList<Transaction> searchByMonth(LocalDate date){
+		ArrayList<Transaction> listOfTransactionsByMonth = new ArrayList<Transaction>();
+		
+		for (Transaction element : listOfTransactions)
+		{			
+			if (element.getTransactionDate().getMonth() == date.getMonth() && 
+					element.getTransactionDate().getYear() == date.getYear())
+			{
+				listOfTransactionsByMonth.add(element);
+			}
+		}
+		return listOfTransactionsByMonth;
+	}
+	
 	public void sortByDate(PredicateDate datePredicate)
 	{
 		Collections.sort(this.listOfTransactions,datePredicate);
@@ -50,8 +65,8 @@ public class TransactionCollection {
 		Collections.sort(this.listOfTransactions,amountPredicate);
 	}
 	
-	public int getCountThisMonth() {
-		// CONTAR QUANTAS TRANSAÇÕES JA TIVERAM PRA VER LIMITE
-		return 0;
+	public int getCountThisMonth(LocalDate date) {
+		ArrayList<Transaction> transactions = searchByMonth(date);
+		return transactions.size();
 	}
 }

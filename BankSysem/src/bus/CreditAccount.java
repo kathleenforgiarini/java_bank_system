@@ -1,23 +1,22 @@
 package bus;
 import java.util.Date;
+import java.time.LocalDate;
 
 public class CreditAccount extends Account{
 
-	protected Date dueDate;
-	
+	protected LocalDate dueDate;
 	protected Double limit;
 	
 	
 	public CreditAccount() {
 		
 		super();
-		
 		this.dueDate = null;
-		this.limit = (double) 0;
+		this.limit = 0.00;
 	}
 
 	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
-			TransactionCollection transactions, Date dueDate, Double limit) {
+			TransactionCollection transactions, LocalDate dueDate, Double limit) {
 		
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		
@@ -26,11 +25,11 @@ public class CreditAccount extends Account{
 	}
 	
 	
-	public Date getDueDate() {
+	public LocalDate getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) { //day of the month
+	public void setDueDate(LocalDate dueDate) { //day of the month
 		this.dueDate = dueDate;
 	}
 
@@ -42,7 +41,48 @@ public class CreditAccount extends Account{
 		this.limit = limit;
 	}
 
-	
+	@Override
+	public void deposit(LocalDate transactionDate, Double amount) {
+				
+		Double debtValue = getLimit() - getBalance();
+		
+		if (transactionDate.isBefore(getDueDate())) {
+				
+				this.balance += amount;
+				setDueDate(getDueDate().plusMonths(1));
+				 
+				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+		            this.transactions.add(transaction);
+		}
+		else 
+		{
+
+			Double taxLate = 0.05;
+			Double lateFee = taxLate*debtValue;			
+		 		
+		 		
+		 		this.balance += amount;
+		 		Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+	            this.transactions.add(transactionDep);
+				
+	            this.balance -= lateFee;
+		 		Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, amount, EnumTypeTransaction.Debit);
+	            this.transactions.add(transactionFees);
+		}
+	}
+
+	@Override
+	public void withdraw(LocalDate transactionDate, Double amount) {
+		
+		if (amount <= getBalance()) {
+			
+			this.balance -= amount;
+			
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+            this.transactions.add(transaction);
+			
+		}
+	}
 	
 	@Override
 	public String toString() {
@@ -51,58 +91,4 @@ public class CreditAccount extends Account{
 			   "\n\tLimit =" + this.limit + 
 			   "\n\tBalance=" + this.balance;
 	}
-
-	@Override
-	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
-		
-		Date currentDate = new Date();
-		
-		Double debtValue = getLimit() - getBalance();
-		
-		if (currentDate.before(getDueDate())) {
-				
-				this.balance += amount;
-				 
-				Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-		            this.transactions.add(transaction);
-		}
-		else 
-		{
-			
-			long daysLate = (currentDate.getTime() - getDueDate().getTime())/(24*60*60*1000);
-			Double taxLate = 0.01;
-			Double lateFee = taxLate*daysLate*debtValue;			
-		 		
-		 		this.balance -= lateFee;
-				
-		 		this.balance += amount;
-		 		
-		 		Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-	            this.transactions.add(transaction);
-		}
-
-		
-	}
-
-	@Override
-	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
-		
-		if (amount <= getBalance()) {
-			
-			this.balance -= amount;
-			
-			Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-            this.transactions.add(transaction);
-			
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
 }

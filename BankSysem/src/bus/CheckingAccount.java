@@ -1,6 +1,7 @@
 package bus;
 
 import java.util.Date;
+import java.time.LocalDate;
 
 public class CheckingAccount extends Account {
 
@@ -9,14 +10,14 @@ public class CheckingAccount extends Account {
 	
 	public CheckingAccount() {
 		super();
-		this.monthlyTransactionLimit = 0;
+		this.monthlyTransactionLimit = 3;
 		this.transactionFees = 0.00;
 	}
 	
 	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) {
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
-		this.monthlyTransactionLimit = monthlyTransactionLimit;
+		setMonthlyTransactionLimit(monthlyTransactionLimit);
 		this.transactionFees = transactionFees;
 	}
 
@@ -25,7 +26,11 @@ public class CheckingAccount extends Account {
 	}
 
 	public void setMonthlyTransactionLimit(int monthlyTransactionLimit) {
-		this.monthlyTransactionLimit = monthlyTransactionLimit;
+		if (monthlyTransactionLimit < 3) {
+			this.monthlyTransactionLimit = 3;
+		} else {
+			this.monthlyTransactionLimit = monthlyTransactionLimit;
+		}
 	}
 
 	public double getTransactionFees() {
@@ -37,35 +42,73 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void deposit(LocalDate transactionDate, Double amount) {
 		if (amount > 0) {
-            this.balance += amount;
+			
+			if (transactions.getCountThisMonth(transactionDate) < this.monthlyTransactionLimit) {
+				this.balance += amount;
 
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate,
-            		amount, type);
+	            Transaction transaction = new Transaction(null, "Deposit", transactionDate,
+	            		amount, EnumTypeTransaction.Credit);
+	            
+	            this.transactions.add(transaction);
+			} 
+			else {
+				this.balance += amount;
+				
+				Transaction transactionDep = new Transaction(null, "Deposit", transactionDate,
+	            		amount, EnumTypeTransaction.Credit);
+	            
+	            this.transactions.add(transactionDep);
+	            
+	            
+				this.balance -= this.transactionFees;
+
+				Transaction transactionFee = new Transaction(null, "Fee for transaction limit", transactionDate,
+	            		amount, EnumTypeTransaction.Debit);
+	            
+	            this.transactions.add(transactionFee);
+			}
             
-            this.transactions.add(transaction);
         }
 		
 	}
 
 	@Override
-	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void withdraw(LocalDate transactionDate, Double amount) {
 
-		if (amount > 0 && amount <= this.balance && transactions.getCountThisMonth() < monthlyTransactionLimit) {
-            this.balance -= amount;
+		if (amount > 0) {
+			
+			if (amount < this.balance) {
+				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
+					this.balance -= amount;
 
-            this.balance -= transactionFees;
+		            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+		            		EnumTypeTransaction.Debit);
+		            this.transactions.add(transaction);
+				
+				}
+				else {
+					this.balance -= amount;
 
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount,
-            		type);
-            this.transactions.add(transaction);
-        } else {
-        	// valor incorreto ou excedeu limite de transações
-        }
-		
+		            Transaction transactionWith = new Transaction(null, "Withdraw", transactionDate, amount,
+		            		EnumTypeTransaction.Debit);
+		            this.transactions.add(transactionWith);
+		            
+		            this.balance -= this.transactionFees;
+		            
+		            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", transactionDate, amount,
+		            		EnumTypeTransaction.Debit);
+		            this.transactions.add(transactionFees);
+				
+				}
+			} else {
+				
+			}
+		} else {
+			
+		}
+				
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package bus;
 
 import java.util.Date;
+import java.time.LocalDate;
 
 public class SavingAccount extends Account {
 	
@@ -39,29 +40,27 @@ public class SavingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {			// ALTERATE ITRANSACTION TO SATISFY CONSTRUCTOR OF TRANSACTION
+	public void deposit(LocalDate transactionDate, Double amount) {			// ALTERATE ITRANSACTION TO SATISFY CONSTRUCTOR OF TRANSACTION
 		
 		if (amount > 0) {
             
             this.balance += amount;
 
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, 
-            		type);
+            Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, 
+            		EnumTypeTransaction.Credit);
             this.transactions.add(transaction);
         }
 		
 	}
 
 	@Override
-	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void withdraw(LocalDate transactionDate, Double amount) {
 
 		if (amount > 0 && amount <= this.balance) {
             this.balance -= amount;
 
-            Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount,
-            		type);
+            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+            		EnumTypeTransaction.Debit);
             this.transactions.add(transaction);
         }
 		
