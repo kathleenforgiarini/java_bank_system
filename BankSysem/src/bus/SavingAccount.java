@@ -13,9 +13,9 @@ public class SavingAccount extends Account {
 		this.annualGain = 0.00;
 	}
 
-	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, double annualInterestRate, double annualGain) {
-		super(accountNumber, type, balance, openingDate, transactions);
+		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		this.annualInterestRate = annualInterestRate;
 		this.annualGain = annualGain;
 	}

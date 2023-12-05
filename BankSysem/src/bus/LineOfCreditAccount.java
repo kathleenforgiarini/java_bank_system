@@ -12,10 +12,10 @@ public class LineOfCreditAccount extends CreditAccount{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, Date dueDate, Double limit, Double interestRate, int installments) {
 		
-		super(accountNumber, type, balance, openingDate, transactions, dueDate, limit);
+		super(accountNumber, type, customerNumber, balance, openingDate, transactions, dueDate, limit);
 		this.interestRate = interestRate;
 		this.installments = installments;
 		

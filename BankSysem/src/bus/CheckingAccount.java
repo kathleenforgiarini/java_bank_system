@@ -13,9 +13,9 @@ public class CheckingAccount extends Account {
 		this.transactionFees = 0.00;
 	}
 	
-	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Double balance, Date openingDate,
+	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
 			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) {
-		super(accountNumber, type, balance, openingDate, transactions);
+		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		this.monthlyTransactionLimit = monthlyTransactionLimit;
 		this.transactionFees = transactionFees;
 	}
