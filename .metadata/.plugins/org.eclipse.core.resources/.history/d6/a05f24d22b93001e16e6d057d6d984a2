@@ -36,26 +36,19 @@ public class LineOfCreditAccount extends CreditAccount{
 	
 	
 	@Override
-	public void withdraw(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void withdraw(Double amount) { //amount to withdraw
 		
 		if (amount <= getLimit()) {
 			
 			Double finalDebt = amount*(1+ getInterestRate());
 			
 			this.setBalance(finalDebt*-1);
-			
-			Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-	        this.transactions.add(transaction);
 		}
 		else {
 			
 			Double finalDebt = getLimit()*(1+ getInterestRate());
 			
 			this.setBalance(finalDebt*-1);
-			
-			Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-	        this.transactions.add(transaction);
 
 		}
 		
@@ -63,15 +56,10 @@ public class LineOfCreditAccount extends CreditAccount{
 	
 	
 	@Override
-	public void deposit(Integer transactionNumber, String description, Date transactionDate, Double amount,
-			EnumTypeTransaction type) {
+	public void deposit(Double amount) {
 		
 		this.balance += amount;
 		
-		this.installments--;
-		
-		Transaction transaction = new Transaction(transactionNumber, description, transactionDate, amount, type);
-        this.transactions.add(transaction);
 	}
 
 	@Override

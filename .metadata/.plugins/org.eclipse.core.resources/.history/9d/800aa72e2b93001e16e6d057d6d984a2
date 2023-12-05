@@ -43,6 +43,11 @@ public class CreditAccount extends Account{
 	}
 
 	
+	public void withdraw(Double amount) { //buying with the credit card
+		
+				
+	}
+
 	
 	@Override
 	public String toString() {
