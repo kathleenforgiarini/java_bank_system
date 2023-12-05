@@ -1,0 +1,47 @@
+package bus;
+
+public class CurrencyAccount extends Account {
+
+	protected EnumTypeCurrency currency;
+	
+	protected Double currencyRate;
+	
+	protected Double conversionFees;
+	
+	
+
+	public CurrencyAccount() {
+		
+		super();
+		
+		this.currency = EnumTypeCurrency.Undefined;
+		
+		this.currencyRate = (double) 0;
+		
+		this.conversionFees = (double) 0;
+		
+	}
+	
+	
+
+	public CurrencyAccount(Double currencyRate, Double conversionFees) {
+		super();
+		this.currencyRate = currencyRate;
+		this.conversionFees = conversionFees;
+	}
+
+
+
+	@Override
+	public void deposit(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void withdraw(Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
