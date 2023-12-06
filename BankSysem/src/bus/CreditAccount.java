@@ -15,7 +15,7 @@ public class CreditAccount extends Account{
 		this.limit = 0.00;
 	}
 
-	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
+	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
 			TransactionCollection transactions, LocalDate dueDate, Double limit) {
 		
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
@@ -42,45 +42,46 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment {
 				
 		Double debtValue = getLimit() - getBalance();
 		
 		if (transactionDate.isBefore(getDueDate())) {
 				
-				this.balance += amount;
-				setDueDate(getDueDate().plusMonths(1));
-				 
-				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
-		            this.transactions.add(transaction);
+			Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);	
+			
+			this.balance += amount;
+			setDueDate(getDueDate().plusMonths(1));
+			this.transactions.add(transaction);
 		}
 		else 
 		{
-
 			Double taxLate = 0.05;
 			Double lateFee = taxLate*debtValue;			
 		 		
-		 		
-		 		this.balance += amount;
-		 		Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
-	            this.transactions.add(transactionDep);
-				
-	            this.balance -= lateFee;
-		 		Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, amount, EnumTypeTransaction.Debit);
-	            this.transactions.add(transactionFees);
+			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+			Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, lateFee, EnumTypeTransaction.Debit);
+			
+		 	this.balance += amount;
+	        this.transactions.add(transactionDep);
+			
+	        this.balance -= lateFee;
+	        this.transactions.add(transactionFees);
 		}
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 		
 		if (amount <= getBalance()) {
 			
-			this.balance -= amount;
-			
 			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
-            this.transactions.add(transaction);
 			
+			this.balance -= amount;
+            this.transactions.add(transaction);
+		}
+		else {
+			throw new ExceptionNotEnoughBalance();
 		}
 	}
 	

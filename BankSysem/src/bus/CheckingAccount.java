@@ -14,7 +14,7 @@ public class CheckingAccount extends Account {
 		this.transactionFees = 0.00;
 	}
 	
-	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
+	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
 			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) {
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		setMonthlyTransactionLimit(monthlyTransactionLimit);
@@ -42,7 +42,7 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
 		if (amount > 0) {
 			
 			if (transactions.getCountThisMonth(transactionDate) < this.monthlyTransactionLimit) {
@@ -69,17 +69,15 @@ public class CheckingAccount extends Account {
 	            
 	            this.transactions.add(transactionFee);
 			}
-            
         }
 		
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount {
 
-		if (amount > 0) {
-			
-			if (amount < this.balance) {
+		//if (amount > 0) {
+			if (amount <= this.balance) {
 				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
 					this.balance -= amount;
 
@@ -103,11 +101,11 @@ public class CheckingAccount extends Account {
 				
 				}
 			} else {
-				
+				throw new ExceptionNotEnoughBalance();
 			}
-		} else {
-			
-		}
+		//} else {
+			//
+		//}
 				
 	}
 

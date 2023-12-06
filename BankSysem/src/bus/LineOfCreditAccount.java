@@ -2,6 +2,7 @@ package bus;
 
 import java.util.Date;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class LineOfCreditAccount extends CreditAccount{
 
@@ -16,13 +17,21 @@ public class LineOfCreditAccount extends CreditAccount{
 		this.installment = 0.00;
 	}
 	
-	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
-			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate, int installments) {
+	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, LocalDate openingDate,
+			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount {
 		
-		super(accountNumber, type, customerNumber, balance, openingDate, transactions, dueDate, limit);
+		//limit = requested value
+		
+		super(accountNumber, type, customerNumber, (double)0, openingDate, transactions, dueDate, limit);
 		this.interestRate = interestRate;
-		this.numberOfInstallments = installments;
+				
+		Double finalDebt = limit * (1 + getInterestRate());
+		this.installment = finalDebt/numberOfInstallments;
 		
+		withdraw(openingDate, finalDebt);
+		
+		Period numberOfMonths = Period.between(openingDate.withDayOfMonth(1), dueDate.withDayOfMonth(1));
+		this.numberOfInstallments = numberOfMonths.getMonths();
 	}
 
 	public Double getInterestRate() {
@@ -48,46 +57,34 @@ public class LineOfCreditAccount extends CreditAccount{
 	
 	
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
 		
-		if (amount <= getLimit()) {
-			
-			Double finalDebt = amount * (1 + getInterestRate());
-			
-			this.setBalance(finalDebt*-1);
-			
-			setInstallment(getBalance() / getNumberOfInstallments()); 
-			
-			
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
-	        this.transactions.add(transaction);
-		}
-		else {
-			
-			Double finalDebt = getLimit()*(1+ getInterestRate());
-			
-			this.setBalance(finalDebt*-1);
-			
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
-	        this.transactions.add(transaction);
-
-		}
+		Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+		
+		this.setBalance(amount*-1);
+		this.transactions.add(transaction);
 	}
 	
 	
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment {
 		
 		if (amount >= getInstallment()) {
-			this.balance += amount;
-			
-			this.numberOfInstallments--;
-			
-			Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
-	        this.transactions.add(transaction);
+			if (transactionDate.isBefore(this.dueDate))
+			{
+				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+				
+				this.balance += amount;
+				this.numberOfInstallments--;
+		        this.transactions.add(transaction);
+			}
+			else
+			{
+				throw new ExceptionLatePayment();
+			}
 		}
 		else {
-			// EXCEPTION IF AMOUNT IS LESS THAN THE PRICE OF THE INSTALLMENT
+			throw new ExceptionWrongAmount();
 		}
 	}
 

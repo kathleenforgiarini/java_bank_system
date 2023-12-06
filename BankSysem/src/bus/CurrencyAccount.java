@@ -7,7 +7,7 @@ public class CurrencyAccount extends Account {
 	
 	private EnumTypeCurrency currency;
 	private double currencyRate;
-	private double conversionFees;
+	private double conversionFees; //percentage fee for each
 	
 	
 	public CurrencyAccount() {
@@ -17,7 +17,7 @@ public class CurrencyAccount extends Account {
 		this.conversionFees = 0.00;
 	}
 	
-	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
+	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
 			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) {
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		this.currency = currency;
@@ -47,34 +47,37 @@ public class CurrencyAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
 
-		if (amount > 0) {
+		//if (amount > 0) {
+		
             double convertedAmount = amount * this.currencyRate;
+            double conversionFee = convertedAmount * this.conversionFees / 100;
 
+            Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, convertedAmount, EnumTypeTransaction.Credit);
+            Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, conversionFee, EnumTypeTransaction.Debit);
+            
             this.balance += convertedAmount;
-
-            Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
             this.transactions.add(transactionDep);
-            
-            
-            this.balance -= conversionFees;
-
-            Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, amount, EnumTypeTransaction.Debit);
+              
+            this.balance -= conversionFee;
             this.transactions.add(transactionFee);
-        }
+       // }
 		
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 
-		if (amount > 0 && amount <= this.balance) {
-            this.balance -= amount;
-
-            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+		if (amount <= this.balance) {
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
             this.transactions.add(transaction);
         }
+		else {
+			throw new ExceptionNotEnoughBalance();
+		}
 		
 	}
 
