@@ -14,7 +14,7 @@ public class SavingAccount extends Account {
 		this.annualGain = 0.00;
 	}
 
-	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
+	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
 			TransactionCollection transactions, double annualInterestRate, double annualGain) {
 		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
 		this.annualInterestRate = annualInterestRate;
@@ -40,29 +40,31 @@ public class SavingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) {			// ALTERATE ITRANSACTION TO SATISFY CONSTRUCTOR OF TRANSACTION
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
 		
-		if (amount > 0) {
-            
-            this.balance += amount;
-
-            Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, 
-            		EnumTypeTransaction.Credit);
-            this.transactions.add(transaction);
-        }
+		//if (amount > 0) {
+		Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, 
+        		EnumTypeTransaction.Credit);    
+        
+		this.balance += amount;
+		this.transactions.add(transaction);
+        //}
 		
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 
-		if (amount > 0 && amount <= this.balance) {
-            this.balance -= amount;
-
-            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+		if (amount <= this.balance) {
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
             		EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
             this.transactions.add(transaction);
         }
+		else {
+			throw new ExceptionNotEnoughBalance();
+		}
 		
 	}
 

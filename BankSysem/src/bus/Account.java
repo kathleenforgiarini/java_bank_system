@@ -8,7 +8,7 @@ public abstract class Account implements ITransaction {
 	protected EnumTypeAccount type;
 	protected Integer customerNumber;
 	protected Double balance;
-	protected Date openingDate;
+	protected LocalDate openingDate;
 	protected TransactionCollection transactions;
 	
 	public Account() {
@@ -21,7 +21,7 @@ public abstract class Account implements ITransaction {
 		this.transactions = new TransactionCollection();
 	}
 	
-	public Account(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, Date openingDate,
+	public Account(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
 			TransactionCollection transactions) {
 		super();
 		this.accountNumber = accountNumber;
@@ -48,7 +48,7 @@ public abstract class Account implements ITransaction {
 		this.balance = balance;
 	}
 
-	public Date getOpeningDate() {
+	public LocalDate getOpeningDate() {
 		return openingDate;
 	}
 
@@ -69,7 +69,7 @@ public abstract class Account implements ITransaction {
 	}
 	
 	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
-	public abstract void deposit (LocalDate transactionDate, Double amount);
-	public abstract void withdraw (LocalDate transactionDate, Double amount);
+	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment;
+	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount;
 	
 }

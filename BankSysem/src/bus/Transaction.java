@@ -20,12 +20,12 @@ public class Transaction {
 	}
 	
 	public Transaction(Integer transactionNumber, String description, LocalDate transactionDate, Double amount,
-			EnumTypeTransaction type) {
+			EnumTypeTransaction type) throws ExceptionNegativeAmount {
 		super();
 		setTransactionNumber(transactionNumber);
 		this.description = description;
 		this.transactionDate = transactionDate;
-		this.amount = amount;
+		setAmount(amount);
 		this.type = type;
 	}
 
@@ -49,7 +49,15 @@ public class Transaction {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(Double amount) throws ExceptionNegativeAmount {
+		boolean notValidAmount = false;
+		
+		notValidAmount = Validator.isNegativeOrZero(amount);
+		
+		if (notValidAmount)
+		{
+			throw new ExceptionNegativeAmount();
+		}
 		this.amount = amount;
 	}
 	
