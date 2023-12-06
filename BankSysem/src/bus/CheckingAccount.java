@@ -1,6 +1,5 @@
 package bus;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 public class CheckingAccount extends Account {
@@ -14,18 +13,24 @@ public class CheckingAccount extends Account {
 		this.transactionFees = 0.00;
 	}
 	
-	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) {
-		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
+	public CheckingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+		super(type, customer, balance, openingDate, transactions);
 		setMonthlyTransactionLimit(monthlyTransactionLimit);
-		this.transactionFees = transactionFees;
+		setTransactionFees(transactionFees);
 	}
 
 	public int getMonthlyTransactionLimit() {
 		return monthlyTransactionLimit;
 	}
 
-	public void setMonthlyTransactionLimit(int monthlyTransactionLimit) {
+	public void setMonthlyTransactionLimit(int monthlyTransactionLimit) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isInteger(monthlyTransactionLimit)) {
+			throw new ExceptionIsNotANumber();
+		}
+		if (Validator.isNull(monthlyTransactionLimit)) {
+			throw new ExceptionIsNull();
+		}
 		if (monthlyTransactionLimit < 3) {
 			this.monthlyTransactionLimit = 3;
 		} else {
@@ -37,18 +42,25 @@ public class CheckingAccount extends Account {
 		return transactionFees;
 	}
 
-	public void setTransactionFees(double transactionFees) {
+	public void setTransactionFees(double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+		if (Validator.isNull(transactionFees)) {
+			throw new ExceptionIsNull();
+		}
+		
+		if (!Validator.isDouble(transactionFees)) {
+			throw new ExceptionIsNotANumber();
+		}
 		this.transactionFees = transactionFees;
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		if (amount > 0) {
 			
 			if (transactions.getCountThisMonth(transactionDate) < this.monthlyTransactionLimit) {
 				this.balance += amount;
 
-	            Transaction transaction = new Transaction(null, "Deposit", transactionDate,
+	            Transaction transaction = new Transaction("Deposit", transactionDate,
 	            		amount, EnumTypeTransaction.Credit);
 	            
 	            this.transactions.add(transaction);
@@ -56,7 +68,7 @@ public class CheckingAccount extends Account {
 			else {
 				this.balance += amount;
 				
-				Transaction transactionDep = new Transaction(null, "Deposit", transactionDate,
+				Transaction transactionDep = new Transaction("Deposit", transactionDate,
 	            		amount, EnumTypeTransaction.Credit);
 	            
 	            this.transactions.add(transactionDep);
@@ -64,7 +76,7 @@ public class CheckingAccount extends Account {
 	            
 				this.balance -= this.transactionFees;
 
-				Transaction transactionFee = new Transaction(null, "Fee for transaction limit", transactionDate,
+				Transaction transactionFee = new Transaction("Fee for transaction limit", transactionDate,
 	            		amount, EnumTypeTransaction.Debit);
 	            
 	            this.transactions.add(transactionFee);
@@ -74,14 +86,14 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 
 		//if (amount > 0) {
 			if (amount <= this.balance) {
 				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
 					this.balance -= amount;
 
-		            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+		            Transaction transaction = new Transaction("Withdraw", transactionDate, amount,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transaction);
 				
@@ -89,13 +101,13 @@ public class CheckingAccount extends Account {
 				else {
 					this.balance -= amount;
 
-		            Transaction transactionWith = new Transaction(null, "Withdraw", transactionDate, amount,
+		            Transaction transactionWith = new Transaction("Withdraw", transactionDate, amount,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transactionWith);
 		            
 		            this.balance -= this.transactionFees;
 		            
-		            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", transactionDate, amount,
+		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, amount,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transactionFees);
 				

@@ -17,28 +17,36 @@ public class LineOfCreditAccount extends CreditAccount{
 		this.installment = 0.00;
 	}
 	
-	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, LocalDate openingDate,
-			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount {
+	public LineOfCreditAccount(EnumTypeAccount type, Customer customer, LocalDate openingDate,
+			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		
 		//limit = requested value
 		
-		super(accountNumber, type, customerNumber, (double)0, openingDate, transactions, dueDate, limit);
-		this.interestRate = interestRate;
+		super(type, customer, (double)0, openingDate, transactions, dueDate, limit);
+		setInterestRate(interestRate);
 				
-		Double finalDebt = limit * (1 + getInterestRate());
-		this.installment = finalDebt/numberOfInstallments;
+		Period numberOfMonths = Period.between(openingDate.withDayOfMonth(1), dueDate.withDayOfMonth(1));	//NUMBER OF INSTALLMENTS IS THE QUANTITY OF MONTHS FROM THE OPENING DATE OF THE ACCOUNT AND THE DUE DATE
+		this.numberOfInstallments = numberOfMonths.getMonths();
+
+		
+		Double finalDebt = limit * (1 + getInterestRate());													//CALCULATING THE FINAL PRICE THAT THE CUSTOMER HAS TO PAY: THE AMOUNT ASKED PLUS THE INTEREST RATE
+		this.installment = finalDebt/this.numberOfInstallments;
 		
 		withdraw(openingDate, finalDebt);
 		
-		Period numberOfMonths = Period.between(openingDate.withDayOfMonth(1), dueDate.withDayOfMonth(1));
-		this.numberOfInstallments = numberOfMonths.getMonths();
 	}
 
 	public Double getInterestRate() {
 		return interestRate;
 	}
 
-	public void setInterestRate(Double interestRate) {
+	public void setInterestRate(Double interestRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(interestRate)) {
+			throw new ExceptionIsNotANumber();
+		}
+		if (Validator.isNull(interestRate)) {
+			throw new ExceptionIsNull();
+		}
 		this.interestRate = interestRate;
 	}
 
@@ -57,9 +65,9 @@ public class LineOfCreditAccount extends CreditAccount{
 	
 	
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber {
 		
-		Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
 		
 		this.setBalance(amount*-1);
 		this.transactions.add(transaction);
@@ -67,12 +75,12 @@ public class LineOfCreditAccount extends CreditAccount{
 	
 	
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull {
 		
 		if (amount >= getInstallment()) {
 			if (transactionDate.isBefore(this.dueDate))
 			{
-				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+				Transaction transaction = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
 				
 				this.balance += amount;
 				this.numberOfInstallments--;

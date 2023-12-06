@@ -1,33 +1,33 @@
 package bus;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 public abstract class Account implements ITransaction {
+	protected static Integer counter = 1;
 	protected Integer accountNumber;
 	protected EnumTypeAccount type;
-	protected Integer customerNumber;
+	protected Customer customer;
 	protected Double balance;
 	protected LocalDate openingDate;
 	protected TransactionCollection transactions;
 	
 	public Account() {
 		super();
-		this.accountNumber = 0;
+		this.accountNumber = counter++;
 		this.type = EnumTypeAccount.Undefined;
-		this.customerNumber = null;
+		this.customer = null;
 		this.balance = (double) 0;
 		this.openingDate = null;
 		this.transactions = new TransactionCollection();
 	}
 	
-	public Account(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
-			TransactionCollection transactions) {
+	public Account(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super();
-		this.accountNumber = accountNumber;
+		this.accountNumber = counter++;
 		this.type = type;
-		this.customerNumber = customerNumber;
-		this.balance = balance;
+		setCustomer(customer);
+		setBalance(balance);
 		this.openingDate = openingDate;
 		this.transactions = transactions;
 	}
@@ -44,7 +44,13 @@ public abstract class Account implements ITransaction {
 		return balance;
 	}
 
-	public void setBalance(Double balance) {
+	public void setBalance(Double balance) throws ExceptionIsNull, ExceptionIsNotANumber {
+		if(Validator.isNull(balance)) {
+			throw new ExceptionIsNull();
+		}
+		if(!Validator.isDouble(balance)) {
+			throw new ExceptionIsNotANumber();
+		}
 		this.balance = balance;
 	}
 
@@ -52,12 +58,12 @@ public abstract class Account implements ITransaction {
 		return openingDate;
 	}
 
-	public Integer getCustomerNumber() {
-		return customerNumber;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerNumber(Integer customerNumber) {
-		this.customerNumber = customerNumber;
+	public void setCustomer(Customer customer) throws ExceptionIsNull, ExceptionIsNotANumber {
+		this.customer = customer;
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public abstract class Account implements ITransaction {
 	}
 	
 	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
-	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment;
-	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount;
+	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull;
+	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber;
 	
 }

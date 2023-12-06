@@ -11,8 +11,8 @@ public class Manager extends User {
 		this.listOfCustomers = null;
 	}
 	
-	public Manager(Integer identificationNumber, String userName, Integer password, ArrayList<Customer> listOfCustomers) {
-		super(identificationNumber, userName, password);
+	public Manager(String userName, Integer password, ArrayList<Customer> listOfCustomers) {
+		super(userName, password);
 		this.listOfCustomers = listOfCustomers;
 	}
 
@@ -35,14 +35,14 @@ public class Manager extends User {
 			else if (type == EnumTypeAccount.CurrencyAccount) {
 				newAccount = new CurrencyAccount();
 			}
-			/*
-			 * COMPLETAR COM OUTRAS ACCOUNTS
-			 * 
-			 * ADICIONAR PARAMETROS NAS ACCOUNTS
-			 */
-			
-			
-			customer.addNewAccount(newAccount);		//ALTERADO CLASSE CUSTOMER MÉTODO ADDNEWACCOUNT
+			else if (type == EnumTypeAccount.CreditAccount) {
+				
+			}
+			else if (type == EnumTypeAccount.LineOfCreditAccount) {
+				
+			}
+
+			customer.addNewAccount(newAccount);
 		}
 		
 	}
@@ -62,8 +62,8 @@ public class Manager extends User {
 		}
 	}
 	
-	public void createCustomer(int idNumber, String username, int password, double salary, int mgrId) {
-		Customer newCustomer = new Customer(idNumber, username, password, salary, mgrId, null);
+	public void createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull {
+		Customer newCustomer = new Customer(username, password, salary, mgr, new ArrayList<Account>());
 		this.listOfCustomers.add(newCustomer);
 		
 	}

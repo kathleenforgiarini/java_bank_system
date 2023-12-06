@@ -1,5 +1,4 @@
 package bus;
-import java.util.Date;
 import java.time.LocalDate;
 
 public class CreditAccount extends Account{
@@ -15,13 +14,12 @@ public class CreditAccount extends Account{
 		this.limit = 0.00;
 	}
 
-	public CreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, LocalDate dueDate, Double limit) {
+	public CreditAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		
-		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
-		
-		this.dueDate = dueDate;
-		this.limit = limit;
+		super(type, customer, balance, openingDate, transactions);
+		setDueDate(dueDate);
+		setLimit(limit);
 	}
 	
 	
@@ -29,7 +27,11 @@ public class CreditAccount extends Account{
 		return dueDate;
 	}
 
-	public void setDueDate(LocalDate dueDate) { //day of the month
+	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
+		LocalDate now = LocalDate.now();
+		if (dueDate.isBefore(now)) {
+			throw new ExceptionIsPassedDate();
+		}
 		this.dueDate = dueDate;
 	}
 
@@ -37,18 +39,25 @@ public class CreditAccount extends Account{
 		return limit;
 	}
 
-	public void setLimit(Double limit) {
+	public void setLimit(Double limit) throws ExceptionIsNull, ExceptionIsNotANumber {
+		if (Validator.isNull(limit)) {
+			throw new ExceptionIsNull();
+		}
+		
+		if (!Validator.isDouble(limit)) {
+			throw new ExceptionIsNotANumber();
+		}
 		this.limit = limit;
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull {
 				
 		Double debtValue = getLimit() - getBalance();
 		
 		if (transactionDate.isBefore(getDueDate())) {
 				
-			Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);	
+			Transaction transaction = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);	
 			
 			this.balance += amount;
 			setDueDate(getDueDate().plusMonths(1));
@@ -59,8 +68,8 @@ public class CreditAccount extends Account{
 			Double taxLate = 0.05;
 			Double lateFee = taxLate*debtValue;			
 		 		
-			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
-			Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, lateFee, EnumTypeTransaction.Debit);
+			Transaction transactionDep = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+			Transaction transactionFees = new Transaction("Fee for late payment", transactionDate, lateFee, EnumTypeTransaction.Debit);
 			
 		 	this.balance += amount;
 	        this.transactions.add(transactionDep);
@@ -71,11 +80,11 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber {
 		
 		if (amount <= getBalance()) {
 			
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
             this.transactions.add(transaction);

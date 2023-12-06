@@ -1,0 +1,110 @@
+package bus;
+
+import java.util.Date;
+import java.time.LocalDate;
+
+public class SavingAccount extends Account {
+	
+	private double interestRate;	// in percentage
+	private double gain;
+	private LocalDate dueDate;
+	
+	public SavingAccount() {
+		super();
+		this.interestRate = 0.00;
+		this.gain = 0.00;
+		this.dueDate = null;
+	}
+
+	public SavingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions, double annualInterestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		super(type, customer, balance, openingDate, transactions);
+		setInterestRate(annualInterestRate);
+		setGain();
+		setDueDate(dueDate);
+	}
+
+	public double getAnnualInterestRate() {
+		return interestRate;
+	}
+
+	public void setAnnualInterestRate(double annualInterestRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(annualInterestRate)) {
+			throw new ExceptionIsNotANumber();
+		}
+		if (Validator.isNull(annualInterestRate)) {
+			throw new ExceptionIsNull();
+		}
+		this.interestRate = annualInterestRate/100;
+	}
+
+	public double getAnnualGain() {
+		return gain;
+	}
+	
+	public void setAnnualGain() {
+		this.gain = this.balance * this.interestRate;
+	}
+
+	public void calcAnnualGain() {
+		this.balance += getAnnualGain();
+	}
+	
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
+		LocalDate now = LocalDate.now();
+		if (dueDate.isBefore(now)) {
+			throw new ExceptionIsPassedDate();
+		}
+		this.dueDate = dueDate;
+	}
+
+
+	@Override
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
+		
+		//if (amount > 0) {
+		Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, 
+        		EnumTypeTransaction.Credit);    
+        
+		this.balance += amount;
+		setAnnualGain();
+		this.transactions.add(transaction);
+        //}
+		
+	}
+
+	@Override
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+
+		if (transactionDate.isBefore()) {
+			
+			if (amount <= this.balance) {
+				
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+            		EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
+			setAnnualGain();
+            this.transactions.add(transaction);
+          
+			}
+			else {
+				throw new ExceptionNotEnoughBalance();
+			}
+		}
+		else {
+			
+		}
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "\n\tAnnual Interest Rate: " + interestRate + 
+								  "\n\tAnnual Gain: " + gain;
+	}
+
+}

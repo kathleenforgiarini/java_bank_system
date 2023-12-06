@@ -4,20 +4,20 @@ import java.util.ArrayList;
 public class Customer extends User{
 	
 	private Double salary;
-	private Integer mgrId;
+	private Manager mgr;
 	private ArrayList<Account> listOfAccounts = new ArrayList<Account>();
 	
 	public Customer() {
 		super();
 		this.salary = 0.00;
-		this.mgrId = null;
+		this.mgr = null;
 		this.listOfAccounts = null;
 	}
 
-	public Customer(Integer identificationNumber, String userName, Integer password, Double salary, Integer mgrId, ArrayList<Account> listOfAccounts) {
-		super(identificationNumber, userName, password);
-		this.salary = salary;
-		this.mgrId = mgrId;
+	public Customer(String userName, Integer password, Double salary, Manager mgr, ArrayList<Account> listOfAccounts) throws ExceptionIsNotANumber, ExceptionIsNull {
+		super(userName, password);
+		setSalary(salary);
+		this.mgr = mgr;
 		this.listOfAccounts = listOfAccounts;
 	}
 
@@ -25,16 +25,23 @@ public class Customer extends User{
 		return salary;
 	}
 
-	public void setSalary(Double salary) {
+	public void setSalary(Double salary) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(salary)) {
+			throw new ExceptionIsNotANumber();
+		}
+		
+		if (Validator.isNull(salary)) {
+			throw new ExceptionIsNull();
+		}
 		this.salary = salary;
 	}
 
-	public Integer getMgrId() {
-		return mgrId;
+	public Manager getMgr() {
+		return mgr;
 	}
 
-	public void setMgrId(Integer mgrId) {
-		this.mgrId = mgrId;
+	public void setMgr(Manager mgr) {
+		this.mgr = mgr;
 	}
 
 	public ArrayList<Account> getListOfAccounts() {
@@ -48,7 +55,7 @@ public class Customer extends User{
 	@Override
 	public String toString() {
 		return super.toString() + "\nCustomer salary: " + salary + 
-								  "\nManager ID: " + mgrId + "\n List of accounts: \n" + listOfAccounts;
+								  "\nManager ID: " + mgr + "\n List of accounts: \n" + listOfAccounts;
 	}
 	
 }

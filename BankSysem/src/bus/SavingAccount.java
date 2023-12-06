@@ -1,77 +1,119 @@
 package bus;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 public class SavingAccount extends Account {
 	
-	private double annualInterestRate;
-	private double annualGain;
+	private double interestRate;	// in percentage
+	private double gain;
+	private LocalDate dueDate;
 	
 	public SavingAccount() {
 		super();
-		this.annualInterestRate = 0.00;
-		this.annualGain = 0.00;
+		this.interestRate = 0.00;
+		this.gain = 0.00;
+		this.dueDate = null;
 	}
 
-	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, double annualInterestRate, double annualGain) {
-		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
-		this.annualInterestRate = annualInterestRate;
-		this.annualGain = annualGain;
+	public SavingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions, double annualInterestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		super(type, customer, balance, openingDate, transactions);
+		setInterestRate(annualInterestRate);
+		setDueDate(dueDate);		
+		setGain();
 	}
 
+	public double getInterestRate() {
+		return interestRate;
+	}
+
+	public void setInterestRate(double interestRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(interestRate)) {
+			throw new ExceptionIsNotANumber();
+		}
+		if (Validator.isNull(interestRate)) {
+			throw new ExceptionIsNull();
+		}
+		this.interestRate = interestRate/100;
+	}
+
+	public double getGain() {
+		return gain;
+	}
 	
-	public double getAnnualInterestRate() {
-		return annualInterestRate;
+	public void setGain() {
+		this.gain = this.balance * this.interestRate;
 	}
 
-	public void setAnnualInterestRate(double annualInterestRate) {
-		this.annualInterestRate = annualInterestRate;
+	public void calcGain() {
+		this.balance += getGain();
+	}
+	
+	public LocalDate getDueDate() {
+		return dueDate;
 	}
 
-	public double getAnnualGain() {
-		return annualGain;
+	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
+		LocalDate now = LocalDate.now();
+		if (dueDate.isBefore(now)) {
+			throw new ExceptionIsPassedDate();
+		}
+		this.dueDate = dueDate;
 	}
 
-	public void calcAnnualGain(double annualGain) {
-		this.annualGain = this.balance * this.annualInterestRate;
-		this.balance += annualGain;
-	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		
 		//if (amount > 0) {
-		Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, 
+		Transaction transaction = new Transaction("Deposit", transactionDate, amount, 
         		EnumTypeTransaction.Credit);    
         
 		this.balance += amount;
+		setGain();
 		this.transactions.add(transaction);
         //}
 		
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
 
-		if (amount <= this.balance) {
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount,
+		if (transactionDate.isBefore(this.dueDate)) {
+			
+			if (amount <= this.balance) {
+				
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount,
             		EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
+			setGain();
             this.transactions.add(transaction);
-        }
-		else {
-			throw new ExceptionNotEnoughBalance();
+          
+			}
+			else {
+				throw new ExceptionNotEnoughBalance();
+			}
 		}
-		
+		else {
+			
+			calcGain();
+			
+			if (amount == this.balance) {
+				Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount,
+	            		EnumTypeTransaction.Debit);
+				
+				this.balance -= amount;
+				setGain();
+				this.transactions.add(transactionInterest);
+			}
+		}
 	}
 
 	@Override
 	public String toString() {
-		return super.toString() + "\n\tAnnual Interest Rate: " + annualInterestRate + 
-								  "\n\tAnnual Gain: " + annualGain;
+		return super.toString() + "\n\tAnnual Interest Rate: " + interestRate + 
+								  "\n\tAnnual Gain: " + gain;
 	}
 
 }

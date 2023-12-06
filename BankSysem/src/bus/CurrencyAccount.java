@@ -17,9 +17,9 @@ public class CurrencyAccount extends Account {
 		this.conversionFees = 0.00;
 	}
 	
-	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customerNumber, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) {
-		super(accountNumber, type, customerNumber, balance, openingDate, transactions);
+	public CurrencyAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
+			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+		super(type, customer, balance, openingDate, transactions);
 		this.currency = currency;
 		this.currencyRate = currencyRate;
 		this.conversionFees = conversionFees;
@@ -34,7 +34,14 @@ public class CurrencyAccount extends Account {
 		return currencyRate;
 	}
 
-	public void setCurrencyRate(double currencyRate) {
+	public void setCurrencyRate(double currencyRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(currencyRate)) {
+			throw new ExceptionIsNotANumber();
+		}
+		
+		if (Validator.isNull(currencyRate)) {
+			throw new ExceptionIsNull();
+		}
 		this.currencyRate = currencyRate;
 	}
 
@@ -42,20 +49,27 @@ public class CurrencyAccount extends Account {
 		return conversionFees;
 	}
 
-	public void setConversionFees(double conversionFees) {
+	public void setConversionFees(double conversionFees) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(conversionFees)) {
+			throw new ExceptionIsNotANumber();
+		}
+		
+		if (Validator.isNull(conversionFees)) {
+			throw new ExceptionIsNull();
+		}
 		this.conversionFees = conversionFees;
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 
 		//if (amount > 0) {
 		
             double convertedAmount = amount * this.currencyRate;
             double conversionFee = convertedAmount * this.conversionFees / 100;
 
-            Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, convertedAmount, EnumTypeTransaction.Credit);
-            Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, conversionFee, EnumTypeTransaction.Debit);
+            Transaction transactionDep = new Transaction("Deposit", transactionDate, convertedAmount, EnumTypeTransaction.Credit);
+            Transaction transactionFee = new Transaction("Fee for transaction", transactionDate, conversionFee, EnumTypeTransaction.Debit);
             
             this.balance += convertedAmount;
             this.transactions.add(transactionDep);
@@ -67,10 +81,10 @@ public class CurrencyAccount extends Account {
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
 
 		if (amount <= this.balance) {
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
             this.transactions.add(transaction);

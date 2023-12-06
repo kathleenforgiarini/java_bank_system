@@ -8,15 +8,14 @@ public class User{
 	
 	public User() {
 		super();
-		this.identificationNumber = counter;
-		counter++;
+		this.identificationNumber = counter++;
 		this.userName = "";
 		this.password = 0;
 	}
 	
-	public User(Integer identificationNumber, String userName, Integer password) {
+	public User(String userName, Integer password) {
 		super();
-		setIdentificationNumber(identificationNumber);
+		this.identificationNumber = counter++;
 		this.userName = userName;
 		this.password = password;
 	}
@@ -26,14 +25,7 @@ public class User{
 	}
 	
 	public void setIdentificationNumber(Integer identificationNumber) {
-		if (identificationNumber != null)
-		{
-			this.identificationNumber = identificationNumber;
-		}
-		else
-		{
-			this.identificationNumber = counter++;
-		}
+		this.identificationNumber = counter++;
 	}
 
 	public String getUserName() {

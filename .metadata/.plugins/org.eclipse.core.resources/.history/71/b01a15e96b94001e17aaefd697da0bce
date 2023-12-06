@@ -1,0 +1,16 @@
+package bus;
+
+public class ExceptionIsPassedData extends Exception {
+	
+	private final static String message = "The due date can not be in the past";
+
+	public ExceptionIsPassedData()
+	{
+		super(message);
+	}
+	
+	public ExceptionIsPassedData(String newMessage)
+	{
+		super(newMessage);
+	}
+}
