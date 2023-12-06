@@ -3,9 +3,12 @@ package bus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TransactionCollection {
+public class TransactionCollection implements Serializable {
+
+	private static final long serialVersionUID = -9208133107708741107L;
 	private ArrayList<Transaction> listOfTransactions = new ArrayList<Transaction>();
 	
 	public void add(Transaction transaction)

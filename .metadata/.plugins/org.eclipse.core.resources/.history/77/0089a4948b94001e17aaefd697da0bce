@@ -1,0 +1,116 @@
+package bus;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+public class Manager extends User {
+
+	private static final long serialVersionUID = 1549592684555251124L;
+	private ArrayList<Customer> listOfCustomers;
+
+	public Manager() {
+		super();
+		this.listOfCustomers = null;
+	}
+	
+	public Manager(String userName, Integer password, ArrayList<Customer> listOfCustomers) {
+		super(userName, password);
+		this.listOfCustomers = listOfCustomers;
+	}
+
+	public ArrayList<Customer> getListOfCustomers() {
+		return listOfCustomers;
+	}
+	
+	public void openSavingAccount(Customer customer, Double balance, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new SavingAccount(EnumTypeAccount.SavingAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), interestRate, dueDate);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openCheckingAccount(Customer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), monthlyTransactionLimit, transactionFees);
+		
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts.add(newAccount);
+		FileManagerCustomers.serialize(customers);
+		//FileManagerCustomers.saveNewCustomer(newCustomer);
+		
+		return newCustomer;
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openCurrencyAccount(Customer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CurrencyAccount(EnumTypeAccount.CurrencyAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), currency, currencyRate, conversionFees);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openCreditAccount(Customer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CreditAccount(EnumTypeAccount.CreditAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), dueDate, limit);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openLineOfCreditAccount(Customer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException {
+		Account newAccount = new LineOfCreditAccount(EnumTypeAccount.LineOfCreditAccount, customer, LocalDate.now(), 
+				new TransactionCollection(), dueDate, limit, interestRate);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+
+
+	public void closeAccount(Customer customer, Integer accountNumber) {
+		if (customer != null && accountNumber != null) {
+			
+			 ArrayList<Account> customerAccounts = customer.getListOfAccounts();
+			 
+			 for (Account account : customerAccounts) {
+	                if (account.getAccountNumber() == accountNumber) {
+	                    customerAccounts.remove(account);
+	                    break;
+	                }
+	            }
+			 
+		}
+	}
+	
+	public Customer createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull, ClassNotFoundException, IOException {
+		Customer newCustomer = new Customer(username, password, salary, mgr, new ArrayList<Account>());
+		this.listOfCustomers.add(newCustomer);
+		
+		
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		customers.add(newCustomer);
+		FileManagerCustomers.serialize(customers);
+		//FileManagerCustomers.saveNewCustomer(newCustomer);
+		
+		return newCustomer;
+		
+	}
+	
+	public void removeCustomer(Customer customer) {
+        if (customer != null) {
+            this.listOfCustomers.remove(customer);
+            // REMOVER TAMBEM DO BANCO DE DADOS
+        }
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "\nManager List of customers: \n" + listOfCustomers;
+	}
+	
+}

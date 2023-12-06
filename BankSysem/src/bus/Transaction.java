@@ -8,6 +8,7 @@ public class Transaction {
 	private String description;
 	private LocalDate transactionDate;
 	private Double amount;
+	private Account account;
 	private EnumTypeTransaction type;
 	
 	public Transaction() {
@@ -16,16 +17,18 @@ public class Transaction {
 		this.description = "";
 		this.transactionDate = null;
 		this.amount = (double) 0;
+		this.setAccount(null);
 		this.type = EnumTypeTransaction.Undefined;
 	}
 	
-	public Transaction(String description, LocalDate transactionDate, Double amount,
+	public Transaction(String description, LocalDate transactionDate, Double amount, Account account,
 			EnumTypeTransaction type) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		super();
 		this.transactionNumber = counter++;
 		this.description = description;
 		this.transactionDate = transactionDate;
 		setAmount(amount);
+		this.setAccount(account);
 		this.type = type;
 	}
 
@@ -80,6 +83,14 @@ public class Transaction {
 			this.transactionNumber = transactionNumber;
 		}
 	}
+	
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
 	public EnumTypeTransaction getType() {
 		return type;
@@ -93,4 +104,6 @@ public class Transaction {
 				"\n\tDescription: " + this.description + ", on " + this.transactionDate +
 				"\n\tAmount: CAD$ " + this.amount + " , type " + this.type;
 	}
+
+
 }

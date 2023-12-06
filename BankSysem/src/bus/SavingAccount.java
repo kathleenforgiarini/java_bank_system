@@ -3,9 +3,10 @@ package bus;
 import java.time.LocalDate;
 
 public class SavingAccount extends Account {
-	
-	private double interestRate;	// in percentage
-	private double gain;
+
+	private static final long serialVersionUID = -8591301806344627892L;
+	private Double interestRate;	// in percentage
+	private Double gain;
 	private LocalDate dueDate;
 	
 	public SavingAccount() {
@@ -16,9 +17,9 @@ public class SavingAccount extends Account {
 	}
 
 	public SavingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, double annualInterestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+			TransactionCollection transactions, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		super(type, customer, balance, openingDate, transactions);
-		setInterestRate(annualInterestRate);
+		setInterestRate(interestRate);
 		setDueDate(dueDate);		
 		setGain();
 	}
@@ -27,7 +28,7 @@ public class SavingAccount extends Account {
 		return interestRate;
 	}
 
-	public void setInterestRate(double interestRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+	public void setInterestRate(Double interestRate) throws ExceptionIsNotANumber, ExceptionIsNull {
 		if (!Validator.isDouble(interestRate)) {
 			throw new ExceptionIsNotANumber();
 		}
@@ -37,7 +38,7 @@ public class SavingAccount extends Account {
 		this.interestRate = interestRate/100;
 	}
 
-	public double getGain() {
+	public Double getGain() {
 		return gain;
 	}
 	
@@ -66,7 +67,7 @@ public class SavingAccount extends Account {
 	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		
 		//if (amount > 0) {
-		Transaction transaction = new Transaction("Deposit", transactionDate, amount, 
+		Transaction transaction = new Transaction("Deposit", transactionDate, amount, this,
         		EnumTypeTransaction.Credit);    
         
 		this.balance += amount;
@@ -83,7 +84,7 @@ public class SavingAccount extends Account {
 			
 			if (amount <= this.balance) {
 				
-			Transaction transaction = new Transaction("Withdraw", transactionDate, amount,
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this,
             		EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
@@ -100,7 +101,7 @@ public class SavingAccount extends Account {
 			calcGain();
 			
 			if (amount == this.balance) {
-				Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount,
+				Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount, this,
 	            		EnumTypeTransaction.Debit);
 				
 				this.balance -= amount;

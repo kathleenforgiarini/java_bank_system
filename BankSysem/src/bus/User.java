@@ -1,7 +1,11 @@
 package bus;
 
-public class User{
-	protected Integer counter = 1;
+import java.io.Serializable;
+
+public class User implements Serializable{
+
+	private static final long serialVersionUID = 3737716166691896409L;
+	protected static Integer counter = 1;
 	protected Integer identificationNumber;
 	protected String userName;
 	protected Integer password;

@@ -3,6 +3,7 @@ import java.time.LocalDate;
 
 public class CreditAccount extends Account{
 
+	private static final long serialVersionUID = 8320058496241157911L;
 	protected LocalDate dueDate;
 	protected Double limit;
 	
@@ -57,7 +58,7 @@ public class CreditAccount extends Account{
 		
 		if (transactionDate.isBefore(getDueDate())) {
 				
-			Transaction transaction = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);	
+			Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);	
 			
 			this.balance += amount;
 			setDueDate(getDueDate().plusMonths(1));
@@ -68,8 +69,8 @@ public class CreditAccount extends Account{
 			Double taxLate = 0.05;
 			Double lateFee = taxLate*debtValue;			
 		 		
-			Transaction transactionDep = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
-			Transaction transactionFees = new Transaction("Fee for late payment", transactionDate, lateFee, EnumTypeTransaction.Debit);
+			Transaction transactionDep = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
+			Transaction transactionFees = new Transaction("Fee for late payment", transactionDate, lateFee, this, EnumTypeTransaction.Debit);
 			
 		 	this.balance += amount;
 	        this.transactions.add(transactionDep);
@@ -84,7 +85,7 @@ public class CreditAccount extends Account{
 		
 		if (amount <= getBalance()) {
 			
-			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
             this.transactions.add(transaction);

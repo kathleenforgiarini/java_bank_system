@@ -1,11 +1,11 @@
 package bus;
 
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.Period;
 
 public class LineOfCreditAccount extends CreditAccount{
 
+	private static final long serialVersionUID = 46034430825741637L;
 	protected Double interestRate;
 	protected Integer numberOfInstallments;
 	protected Double installment;
@@ -67,7 +67,7 @@ public class LineOfCreditAccount extends CreditAccount{
 	@Override
 	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber {
 		
-		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
 		
 		this.setBalance(amount*-1);
 		this.transactions.add(transaction);
@@ -80,7 +80,7 @@ public class LineOfCreditAccount extends CreditAccount{
 		if (amount >= getInstallment()) {
 			if (transactionDate.isBefore(this.dueDate))
 			{
-				Transaction transaction = new Transaction("Deposit", transactionDate, amount, EnumTypeTransaction.Credit);
+				Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
 				
 				this.balance += amount;
 				this.numberOfInstallments--;

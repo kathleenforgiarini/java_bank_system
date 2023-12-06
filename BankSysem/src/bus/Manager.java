@@ -1,9 +1,12 @@
 package bus;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Manager extends User {
-	
+
+	private static final long serialVersionUID = 1549592684555251124L;
 	private ArrayList<Customer> listOfCustomers;
 
 	public Manager() {
@@ -19,34 +22,51 @@ public class Manager extends User {
 	public ArrayList<Customer> getListOfCustomers() {
 		return listOfCustomers;
 	}
-
-	public void openAccount(Customer customer, EnumTypeAccount type) {
+	
+	public void openSavingAccount(Customer customer, Double balance, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new SavingAccount(EnumTypeAccount.SavingAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), interestRate, dueDate);
 		
-		if (customer != null && type != null) {
-			
-			Account newAccount = null;
-			
-			if (type == EnumTypeAccount.SavingAccount) {
-				newAccount = new SavingAccount();
-			}
-			else if (type == EnumTypeAccount.CheckingAccount) {
-				newAccount = new CheckingAccount();
-			}
-			else if (type == EnumTypeAccount.CurrencyAccount) {
-				newAccount = new CurrencyAccount();
-			}
-			else if (type == EnumTypeAccount.CreditAccount) {
-				
-			}
-			else if (type == EnumTypeAccount.LineOfCreditAccount) {
-				
-			}
-
-			customer.addNewAccount(newAccount);
-		}
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openCheckingAccount(Customer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), monthlyTransactionLimit, transactionFees);
+		
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts.add(newAccount);
+		FileManagerAccounts.serialize(accounts);
 		
 	}
 	
+	public void openCurrencyAccount(Customer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CurrencyAccount(EnumTypeAccount.CurrencyAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), currency, currencyRate, conversionFees);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openCreditAccount(Customer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
+		Account newAccount = new CreditAccount(EnumTypeAccount.CreditAccount, customer, balance, LocalDate.now(), 
+				new TransactionCollection(), dueDate, limit);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+	
+	public void openLineOfCreditAccount(Customer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException {
+		Account newAccount = new LineOfCreditAccount(EnumTypeAccount.LineOfCreditAccount, customer, LocalDate.now(), 
+				new TransactionCollection(), dueDate, limit, interestRate);
+		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
+	}
+
+
 	public void closeAccount(Customer customer, Integer accountNumber) {
 		if (customer != null && accountNumber != null) {
 			
@@ -62,9 +82,17 @@ public class Manager extends User {
 		}
 	}
 	
-	public void createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull {
+	public Customer createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull, ClassNotFoundException, IOException {
 		Customer newCustomer = new Customer(username, password, salary, mgr, new ArrayList<Account>());
 		this.listOfCustomers.add(newCustomer);
+		
+		
+//		ArrayList<Customer> customers = new ArrayList<Customer>();
+//		customers.add(newCustomer);
+//		FileManagerCustomers.serialize(customers);
+		FileManagerCustomers.saveNewCustomer(newCustomer);
+		
+		return newCustomer;
 		
 	}
 	

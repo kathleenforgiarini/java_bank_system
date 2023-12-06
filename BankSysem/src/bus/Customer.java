@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class Customer extends User{
 	
+	private static final long serialVersionUID = -3112856540751151482L;
 	private Double salary;
 	private Manager mgr;
 	private ArrayList<Account> listOfAccounts = new ArrayList<Account>();
@@ -55,7 +56,7 @@ public class Customer extends User{
 	@Override
 	public String toString() {
 		return super.toString() + "\nCustomer salary: " + salary + 
-								  "\nManager ID: " + mgr + "\n List of accounts: \n" + listOfAccounts;
+								  "\nManager ID: " + mgr.getUserName() + "\n List of accounts: \n" + listOfAccounts;
 	}
 	
 }

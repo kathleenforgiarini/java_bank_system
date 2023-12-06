@@ -1,8 +1,10 @@
 package bus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class Account implements ITransaction {
+public abstract class Account implements ITransaction, Serializable {
+	private static final long serialVersionUID = 5787217863065268367L;
 	protected static Integer counter = 1;
 	protected Integer accountNumber;
 	protected EnumTypeAccount type;

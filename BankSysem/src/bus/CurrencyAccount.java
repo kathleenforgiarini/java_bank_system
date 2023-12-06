@@ -1,10 +1,10 @@
 package bus;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 public class CurrencyAccount extends Account {
 	
+	private static final long serialVersionUID = -4499600797564452081L;
 	private EnumTypeCurrency currency;
 	private double currencyRate;
 	private double conversionFees; //percentage fee for each
@@ -68,8 +68,8 @@ public class CurrencyAccount extends Account {
             double convertedAmount = amount * this.currencyRate;
             double conversionFee = convertedAmount * this.conversionFees / 100;
 
-            Transaction transactionDep = new Transaction("Deposit", transactionDate, convertedAmount, EnumTypeTransaction.Credit);
-            Transaction transactionFee = new Transaction("Fee for transaction", transactionDate, conversionFee, EnumTypeTransaction.Debit);
+            Transaction transactionDep = new Transaction("Deposit", transactionDate, convertedAmount, this, EnumTypeTransaction.Credit);
+            Transaction transactionFee = new Transaction("Fee for transaction", transactionDate, conversionFee, this, EnumTypeTransaction.Debit);
             
             this.balance += convertedAmount;
             this.transactions.add(transactionDep);
@@ -84,7 +84,7 @@ public class CurrencyAccount extends Account {
 	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
 
 		if (amount <= this.balance) {
-			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
             this.transactions.add(transaction);

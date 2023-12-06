@@ -3,7 +3,7 @@ package bus;
 import java.time.LocalDate;
 
 public class CheckingAccount extends Account {
-
+	private static final long serialVersionUID = -536443424779652112L;
 	private int monthlyTransactionLimit;
 	private double transactionFees;
 	
@@ -61,7 +61,7 @@ public class CheckingAccount extends Account {
 				this.balance += amount;
 
 	            Transaction transaction = new Transaction("Deposit", transactionDate,
-	            		amount, EnumTypeTransaction.Credit);
+	            		amount, this, EnumTypeTransaction.Credit);
 	            
 	            this.transactions.add(transaction);
 			} 
@@ -69,7 +69,7 @@ public class CheckingAccount extends Account {
 				this.balance += amount;
 				
 				Transaction transactionDep = new Transaction("Deposit", transactionDate,
-	            		amount, EnumTypeTransaction.Credit);
+	            		amount, this, EnumTypeTransaction.Credit);
 	            
 	            this.transactions.add(transactionDep);
 	            
@@ -77,7 +77,7 @@ public class CheckingAccount extends Account {
 				this.balance -= this.transactionFees;
 
 				Transaction transactionFee = new Transaction("Fee for transaction limit", transactionDate,
-	            		amount, EnumTypeTransaction.Debit);
+	            		amount, this, EnumTypeTransaction.Debit);
 	            
 	            this.transactions.add(transactionFee);
 			}
@@ -93,7 +93,7 @@ public class CheckingAccount extends Account {
 				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
 					this.balance -= amount;
 
-		            Transaction transaction = new Transaction("Withdraw", transactionDate, amount,
+		            Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transaction);
 				
@@ -101,13 +101,13 @@ public class CheckingAccount extends Account {
 				else {
 					this.balance -= amount;
 
-		            Transaction transactionWith = new Transaction("Withdraw", transactionDate, amount,
+		            Transaction transactionWith = new Transaction("Withdraw", transactionDate, amount, this,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transactionWith);
 		            
 		            this.balance -= this.transactionFees;
 		            
-		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, amount,
+		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, amount, this,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transactionFees);
 				
