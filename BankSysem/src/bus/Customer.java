@@ -7,13 +7,13 @@ public class Customer extends User{
 	private static final long serialVersionUID = -3112856540751151482L;
 	private Double salary;
 	private Manager mgr;
-	private ArrayList<Account> listOfAccounts = new ArrayList<Account>();
+	ArrayList<Account> listOfAccounts;
 	
 	public Customer() {
 		super();
 		this.salary = 0.00;
 		this.mgr = null;
-		this.listOfAccounts = null;
+		this.listOfAccounts = new ArrayList<Account>();
 	}
 
 	public Customer(String userName, Integer password, Double salary, Manager mgr, ArrayList<Account> listOfAccounts) throws ExceptionIsNotANumber, ExceptionIsNull {
@@ -57,7 +57,7 @@ public class Customer extends User{
 	@Override
 	public String toString() {
 		return super.toString() + "\nCustomer salary: " + salary + 
-								  "\nManager ID: " + mgr.getUserName() + "\n List of accounts: \n" + listOfAccounts;
+								  "\nManager ID: " + mgr.getUserName() + "\n List of accounts: \n" + this.listOfAccounts;
 	}
 	
 	public static Customer searchById(Integer id) throws ClassNotFoundException, IOException {

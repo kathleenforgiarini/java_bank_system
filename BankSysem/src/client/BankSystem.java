@@ -24,30 +24,28 @@ public class BankSystem {
 		listOfManagerFromConsole.add(manager1);
 		listOfManagerFromConsole.add(manager2);
 		
+		ArrayList<Customer> listOfCustomerFromConsole = new ArrayList<Customer>();
+		
+		Customer customer1 = new Customer("John", 1234, 12.3, manager1, new ArrayList<Account>());
+		Customer customer2 = new Customer("Maria", 1234, 14.3, manager2, new ArrayList<Account>());
+		
+		listOfCustomerFromConsole.add(customer1);
+		listOfCustomerFromConsole.add(customer2);
+		
+		ArrayList<Account> listOfAccountFromConsole = new ArrayList<Account>();
+		
+		Account account1 = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer1, 1200.00, LocalDate.now(), new TransactionCollection(), 3, 10);
+		Account account2 = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer2, 2400.00, LocalDate.now(), new TransactionCollection(), 3, 10);
+		
+		listOfAccountFromConsole.add(account1);
+		listOfAccountFromConsole.add(account2);
+		
+		customer1.addNewAccount(account1);
+		customer2.addNewAccount(account2);
+		
 		FileManagerManagers.serialize(listOfManagerFromConsole);
-		listOfManagerFromFile = FileManagerManagers.deserialize();
-		
-		for(Manager item : listOfManagerFromFile) {
-			System.out.println(item.toString());
-		}
-		
-
-//		ArrayList<Customer> listOfCustomerFromConsole = new ArrayList<Customer>();
-//		ArrayList<Customer> listOfCustomerFromFile = new ArrayList<Customer>();
-//		
-//		Customer customer1 = new Customer("John", 1234, 12.3, manager1, new ArrayList<Account>());
-//		Customer customer2 = new Customer("Maria", 1234, 14.3, manager2, new ArrayList<Account>());
-//		
-//		listOfCustomerFromConsole.add(customer1);
-//		listOfCustomerFromConsole.add(customer2);
-//		
-//		FileManagerCustomers.serialize(listOfCustomerFromConsole);
-//		listOfCustomerFromFile = FileManagerCustomers.deserialize();
-//		
-//		for(Customer item : listOfCustomerFromFile) {
-//			System.out.println(item.toString());
-//		}
-//		
+		FileManagerCustomers.serialize(listOfCustomerFromConsole);
+		FileManagerAccounts.serialize(listOfAccountFromConsole);
 		
 		Boolean auth = true;
 		int typeUser;
@@ -147,7 +145,6 @@ public class BankSystem {
 				case 5:
 					displayAllCustomers();
 					break;
-					
 				case 6:
 					displayAllAccounts();
 					break;
@@ -550,7 +547,7 @@ public class BankSystem {
 			if (viewBalance.equals("Y")) {
 				System.out.println("\nEnter the account number: ");
 				idAccount = Integer.parseInt(scan.nextLine());
-				account = Account.searchById(idAccount);
+				account = AccountCollection.searchByIdAndCustomer(idAccount, customer);
 				if (account != null) {
 					
 					System.out.println(account.getBalance());
@@ -588,7 +585,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CheckingAccount checkingAccount = (CheckingAccount) Account.searchById(idAccount, typeAccount);
+					CheckingAccount checkingAccount = (CheckingAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (checkingAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + checkingAccount.getBalance());
@@ -608,7 +605,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					SavingAccount savingAccount = (SavingAccount) Account.searchById(idAccount, typeAccount);
+					SavingAccount savingAccount = (SavingAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (savingAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + savingAccount.getBalance());
@@ -627,7 +624,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CreditAccount creditAccount = (CreditAccount) Account.searchById(idAccount, typeAccount);
+					CreditAccount creditAccount = (CreditAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (creditAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + creditAccount.getBalance());
@@ -646,7 +643,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CurrencyAccount currencyAccount = (CurrencyAccount) Account.searchById(idAccount, typeAccount);
+					CurrencyAccount currencyAccount = (CurrencyAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (currencyAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + currencyAccount.getBalance());
@@ -665,7 +662,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) Account.searchById(idAccount, typeAccount);
+					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (lineOfCreditAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + lineOfCreditAccount.getBalance());
@@ -712,7 +709,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CheckingAccount checkingAccount = (CheckingAccount) Account.searchById(idAccount, typeAccount);
+					CheckingAccount checkingAccount = (CheckingAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (checkingAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + checkingAccount.getBalance());
@@ -732,7 +729,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					SavingAccount savingAccount = (SavingAccount) Account.searchById(idAccount, typeAccount);
+					SavingAccount savingAccount = (SavingAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (savingAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + savingAccount.getBalance());
@@ -751,7 +748,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CreditAccount creditAccount = (CreditAccount) Account.searchById(idAccount, typeAccount);
+					CreditAccount creditAccount = (CreditAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (creditAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + creditAccount.getBalance());
@@ -770,7 +767,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					CurrencyAccount currencyAccount = (CurrencyAccount) Account.searchById(idAccount, typeAccount);
+					CurrencyAccount currencyAccount = (CurrencyAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (currencyAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + currencyAccount.getBalance());
@@ -789,7 +786,7 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) Account.searchById(idAccount, typeAccount);
+					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) AccountCollection.searchById(idAccount, typeAccount);
 					if (lineOfCreditAccount != null) {
 						Double amount = null;
 						System.out.println("Balance: " + lineOfCreditAccount.getBalance());
@@ -812,14 +809,76 @@ public class BankSystem {
 		
 	}
 
-	private static void transfer(Customer customer) {
-		// TODO Auto-generated method stub
+	private static void transfer(Customer customer) throws ClassNotFoundException, IOException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, ExceptionNotEnoughBalance {
+		String transfer; 
+		do {
+			System.out.println("\nDo you want to make a transfer? (Y/N) ");
+			transfer = scan.nextLine();
+			
+			Integer idAccount = null;
+
+			if (transfer.equals("Y")) {
+				System.out.println("\nEnter the number of the checking account you want to transfer FROM: ");
+				
+				idAccount = Integer.parseInt(scan.nextLine());
+				CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, EnumTypeAccount.CheckingAccount, customer);
+				
+				if (checkingAccountToWithdraw != null) {
+					System.out.println("\nEnter the number of the checking account you want to transfer TO: ");
+					
+					idAccount = Integer.parseInt(scan.nextLine());
+					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchById(idAccount, EnumTypeAccount.CheckingAccount);
+					
+					if (checkingAccountToDeposit != null) {
+						Double amount = null;
+						System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
+						System.out.println("Enter an amount to transfer: ");
+						amount = Double.parseDouble(scan.nextLine());
+						
+						checkingAccountToWithdraw.withdraw(LocalDate.now(), amount);
+						checkingAccountToDeposit.deposit(LocalDate.now(), amount);
+						
+						System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
+						System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
+
+					}
+					else {
+						System.out.println("Invalid account number");
+					}
+				}
+				else {
+					System.out.println("Invalid account number");
+				}
+			}
+		}
+		while(transfer.equals("Y"));
 		
 	}
 	
-	private static void displayTransactions(Customer customer) {
-		// TODO Auto-generated method stub
+	private static void displayTransactions(Customer customer) throws ClassNotFoundException, IOException {
 		
+		Integer idAccount = null;
+		System.out.println("\nEnter the number of the account you want to view the transactions: ");
+		
+		idAccount = Integer.parseInt(scan.nextLine());
+		Account account = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, customer);
+		
+		//System.out.println(account);
+		if (account != null) {
+			TransactionCollection transactions = account.getTransactions();
+			System.out.println(transactions);
+			
+			ArrayList<Transaction> listOfTransactions = transactions.getListOfTransactions();
+			
+			System.out.println(listOfTransactions);
+			
+			for (Transaction element : listOfTransactions)
+			{
+				System.out.println(element.toString());
+			}
+		} else {
+			System.out.println("Invalid account number");
+		}
 	}
 }
 

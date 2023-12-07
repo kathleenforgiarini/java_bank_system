@@ -88,7 +88,6 @@ public class CheckingAccount extends Account {
 	@Override
 	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 
-		//if (amount > 0) {
 			if (amount <= this.balance) {
 				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
 					this.balance -= amount;
@@ -114,11 +113,7 @@ public class CheckingAccount extends Account {
 				}
 			} else {
 				throw new ExceptionNotEnoughBalance();
-			}
-		//} else {
-			//
-		//}
-				
+			}				
 	}
 
 	@Override
