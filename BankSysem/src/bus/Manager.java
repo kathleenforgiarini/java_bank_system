@@ -29,6 +29,7 @@ public class Manager extends User {
 		
 		customer.addNewAccount(newAccount);
 		FileManagerAccounts.saveNewAccount(newAccount);
+		FileManagerCustomers.saveNewCustomer(customer);
 	}
 	
 	public void openCheckingAccount(Customer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
@@ -37,6 +38,7 @@ public class Manager extends User {
 		
 		customer.addNewAccount(newAccount);
 		FileManagerAccounts.saveNewAccount(newAccount);
+		FileManagerCustomers.saveNewCustomer(customer);
 	}
 	
 	public void openCurrencyAccount(Customer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
@@ -45,6 +47,7 @@ public class Manager extends User {
 		
 		customer.addNewAccount(newAccount);
 		FileManagerAccounts.saveNewAccount(newAccount);
+		FileManagerCustomers.saveNewCustomer(customer);
 	}
 	
 	public void openCreditAccount(Customer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
@@ -53,6 +56,7 @@ public class Manager extends User {
 		
 		customer.addNewAccount(newAccount);
 		FileManagerAccounts.saveNewAccount(newAccount);
+		FileManagerCustomers.saveNewCustomer(customer);
 	}
 	
 	public void openLineOfCreditAccount(Customer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException {
@@ -61,6 +65,7 @@ public class Manager extends User {
 		
 		customer.addNewAccount(newAccount);
 		FileManagerAccounts.saveNewAccount(newAccount);
+		FileManagerCustomers.saveNewCustomer(customer);
 	}
 
 
@@ -68,6 +73,8 @@ public class Manager extends User {
 		if (customer != null && accountNumber != null) {
 			
 			 ArrayList<Account> customerAccounts = customer.getListOfAccounts();
+			 
+			 System.out.println(customerAccounts);
 			 
 			 for (Account account : customerAccounts) {
                 if (account.getAccountNumber().equals(accountNumber)) {
@@ -82,12 +89,6 @@ public class Manager extends User {
 	public Customer createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull, ClassNotFoundException, IOException {
 		Customer newCustomer = new Customer(username, password, salary, mgr, new ArrayList<Account>());
 		this.listOfCustomers.add(newCustomer);
-		
-		
-//		ArrayList<Customer> customers = new ArrayList<Customer>();
-//		customers.add(newCustomer);
-//		FileManagerCustomers.serialize(customers);
-		FileManagerCustomers.saveNewCustomer(newCustomer);
 		
 		return newCustomer;
 		

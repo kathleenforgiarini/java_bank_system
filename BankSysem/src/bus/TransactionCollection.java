@@ -10,6 +10,10 @@ public class TransactionCollection implements Serializable {
 	private static final long serialVersionUID = -9208133107708741107L;
 	private ArrayList<Transaction> listOfTransactions = new ArrayList<Transaction>();
 	
+	public ArrayList<Transaction> getListOfTransactions() {
+		return listOfTransactions;
+	}
+
 	public void add(Transaction transaction)
 	{
 		listOfTransactions.add(transaction);
