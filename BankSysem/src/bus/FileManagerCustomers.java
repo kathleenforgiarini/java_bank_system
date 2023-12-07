@@ -32,9 +32,7 @@ public class FileManagerCustomers {
 	}
 	
 	public static void saveNewCustomer(Customer customer) throws ClassNotFoundException, IOException {		
-		System.out.println("oie");
 		ArrayList<Customer> listOfCustomers = deserialize();
-		System.out.println("oi");
 		listOfCustomers.add(customer);
 		
 		serialize(listOfCustomers);

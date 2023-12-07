@@ -35,11 +35,8 @@ public class Manager extends User {
 		Account newAccount = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer, balance, LocalDate.now(), 
 				new TransactionCollection(), monthlyTransactionLimit, transactionFees);
 		
-		
-		ArrayList<Account> accounts = new ArrayList<Account>();
-		accounts.add(newAccount);
-		FileManagerAccounts.serialize(accounts);
-		
+		customer.addNewAccount(newAccount);
+		FileManagerAccounts.saveNewAccount(newAccount);
 	}
 	
 	public void openCurrencyAccount(Customer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException {
@@ -67,19 +64,19 @@ public class Manager extends User {
 	}
 
 
-	public void closeAccount(Customer customer, Integer accountNumber) {
+	public Boolean closeAccount(Customer customer, Integer accountNumber) {
 		if (customer != null && accountNumber != null) {
 			
 			 ArrayList<Account> customerAccounts = customer.getListOfAccounts();
 			 
 			 for (Account account : customerAccounts) {
-	                if (account.getAccountNumber() == accountNumber) {
-	                    customerAccounts.remove(account);
-	                    break;
-	                }
-	            }
-			 
+                if (account.getAccountNumber().equals(accountNumber)) {
+                    customerAccounts.remove(account);
+                    return true;
+                }
+            }
 		}
+		return false;
 	}
 	
 	public Customer createCustomer(String username, int password, double salary, Manager mgr) throws ExceptionIsNotANumber, ExceptionIsNull, ClassNotFoundException, IOException {
@@ -96,11 +93,12 @@ public class Manager extends User {
 		
 	}
 	
-	public void removeCustomer(Customer customer) {
+	public Boolean removeCustomer(Customer customer) {
         if (customer != null) {
             this.listOfCustomers.remove(customer);
-            // REMOVER TAMBEM DO BANCO DE DADOS
+            return true;
         }
+        return false;
 	}
 
 	@Override

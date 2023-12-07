@@ -1,4 +1,5 @@
 package bus;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Customer extends User{
@@ -57,6 +58,19 @@ public class Customer extends User{
 	public String toString() {
 		return super.toString() + "\nCustomer salary: " + salary + 
 								  "\nManager ID: " + mgr.getUserName() + "\n List of accounts: \n" + listOfAccounts;
+	}
+	
+	public static Customer searchById(Integer id) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		customers = FileManagerCustomers.deserialize();
+
+		for(Customer item : customers) {
+			if (item.getIdentificationNumber().equals(id)) {
+				return item;
+			}
+		}
+		return null;
 	}
 	
 }

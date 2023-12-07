@@ -2,7 +2,6 @@ package bus;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -30,7 +29,7 @@ public class TransactionCollection implements Serializable {
 		return listOfTransactionsByType;
 	}
 	
-	public ArrayList<Transaction> searchByDate (Date date) 
+	public ArrayList<Transaction> searchByDate (LocalDate date) 
 	{
 		ArrayList<Transaction> listOfTransactionsByDate = new ArrayList<Transaction>();
 		

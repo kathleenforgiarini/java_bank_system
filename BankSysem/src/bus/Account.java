@@ -1,7 +1,9 @@
 package bus;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public abstract class Account implements ITransaction, Serializable {
 	private static final long serialVersionUID = 5787217863065268367L;
@@ -72,9 +74,38 @@ public abstract class Account implements ITransaction, Serializable {
 	public String toString() {
 		return "Account Number: " + this.accountNumber +
 				"\n\tType: " + this.type + 
+				"\n\tCustomer: " + this.customer.getUserName() + 
 				"\n\tDate of Opening : " + this.openingDate +
 				"\n\tBalance : " + this.balance;
 	}
+	
+	public static Account searchById(Integer id) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = FileManagerAccounts.deserialize();
+
+		for(Account item : accounts) {
+			if (item.getAccountNumber().equals(id)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public static Account searchById(Integer id, EnumTypeAccount type) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = FileManagerAccounts.deserialize();
+		
+		for(Account item : accounts) {
+			if (item.getAccountNumber().equals(id) && item.getType().equals(type)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	
 	
 	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
 	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull;
