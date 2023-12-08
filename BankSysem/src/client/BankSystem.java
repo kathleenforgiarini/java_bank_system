@@ -39,7 +39,7 @@ public class BankSystem {
 		
 		listOfAccountFromConsole.add(account1);
 		listOfAccountFromConsole.add(account2);
-		
+				
 		customer1.addNewAccount(account1);
 		customer2.addNewAccount(account2);
 		
