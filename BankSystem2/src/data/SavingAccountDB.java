@@ -40,13 +40,38 @@ public class SavingAccountDB {
 	    }
 	}
 	
-	public static void update(SavingAccount aChangedAccount) throws SQLException {
+	public static void updateInterestRate(SavingAccount aChangedAccount) throws SQLException {
 		
 		myConnection = DBConnection.getConnection();
 		
 		mySQLStatement = "update SavingAccount set interest_rate = "    
-			              +   aChangedAccount.getInterestRate() + ", due_date = " 
-			              +   aChangedAccount.getDueDate() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getInterestRate() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateGain(SavingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update SavingAccount set gain = "    
+			              +   aChangedAccount.getGain() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateDueDate(SavingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update SavingAccount set due_date = "    
+			              +   Date.valueOf(aChangedAccount.getDueDate()) + " WHERE  savingsaccountid = "
 			              +   aChangedAccount.getAccountNumber();
 	
 		Statement myStatemnt = myConnection.createStatement();

@@ -54,8 +54,9 @@ public class SavingAccount extends Account {
 	public Double getGain() {
 		return gain;
 	}
-	public void calcGain() {
+	public void calcGain() throws SQLException {
 		this.balance += getGain();
+		Account.update(this);
 	}
 	
 	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
@@ -70,49 +71,53 @@ public class SavingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		
-//		Transaction transaction = new Transaction("Deposit", transactionDate, amount, this,
-//        		EnumTypeTransaction.Credit);    
-//        
-//		this.balance += amount;
-//		setGain();
-//		this.transactions.add(transaction);
-		
+		Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber,
+        		EnumTypeTransaction.Credit);    
+        
+		this.balance += amount;
+		Account.update(this);
+		Transaction.add(transaction);
+		setGain();
+		SavingAccount.updateGain(this);
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
-//		if (transactionDate.isBefore(this.dueDate)) {
-//			
-//			if (amount <= this.balance) {
-//				
-//			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this,
-//            		EnumTypeTransaction.Debit);
-//			
-//			this.balance -= amount;
-//			setGain();
-//            this.transactions.add(transaction);
-//          
-//			}
-//			else {
-//				throw new ExceptionNotEnoughBalance();
-//			}
-//		}
-//		else {
-//			
-//			calcGain();
-//			
-//			if (amount == this.balance) {
-//				Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount, this,
-//	            		EnumTypeTransaction.Debit);
-//				
-//				this.balance -= amount;
-//				setGain();
-//				this.transactions.add(transactionInterest);
-//			}
-//		}
+		if (transactionDate.isBefore(this.dueDate)) {
+			
+			if (amount <= this.balance) {
+				
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+            		EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
+			Account.update(this);
+			Transaction.add(transaction);
+			setGain();
+			SavingAccount.updateGain(this);
+			}
+			else {
+				throw new ExceptionNotEnoughBalance();
+			}
+		}
+		else {
+			
+			calcGain();
+			
+			if (amount == this.balance) {
+				Transaction transactionInterest = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+	            		EnumTypeTransaction.Debit);
+				
+				this.balance -= amount;
+				Account.update(this);
+				Transaction.add(transactionInterest);
+				setGain();
+				SavingAccount.updateGain(this);
+			}
+		}
 	}
 
 	@Override
@@ -128,8 +133,16 @@ public class SavingAccount extends Account {
 		SavingAccountDB.insert(element);
 	}
 	
-	public static void update(SavingAccount element) throws SQLException {
-		SavingAccountDB.update(element);
+	public static void updateInterestRate(SavingAccount element) throws SQLException {
+		SavingAccountDB.updateInterestRate(element);
+	}
+	
+	public static void updateGain(SavingAccount element) throws SQLException {
+		SavingAccountDB.updateGain(element);
+	}
+	
+	public static void updateDueDate(SavingAccount element) throws SQLException {
+		SavingAccountDB.updateDueDate(element);
 	}
 	
 	public static void remove(Integer id) throws SQLException {
@@ -138,6 +151,10 @@ public class SavingAccount extends Account {
 	
 	public static SavingAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return SavingAccountDB.search(id);
+	}
+	
+	public static ArrayList<SavingAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return SavingAccountDB.searchByCustomer(customer);
 	}
 	
 	public static ArrayList<SavingAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {

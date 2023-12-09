@@ -65,66 +65,81 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
-//		if (amount > 0) {
-//			
-//			if (transactions.getCountThisMonth(transactionDate) < this.monthlyTransactionLimit) {
-//				this.balance += amount;
-//
-//	            Transaction transaction = new Transaction("Deposit", transactionDate,
-//	            		amount, this, EnumTypeTransaction.Credit);
-//	            
-//	            this.transactions.add(transaction);
-//			} 
-//			else {
-//				this.balance += amount;
-//				
-//				Transaction transactionDep = new Transaction("Deposit", transactionDate,
-//	            		amount, this, EnumTypeTransaction.Credit);
-//	            
-//	            this.transactions.add(transactionDep);
-//	            
-//	            
-//				this.balance -= this.transactionFees;
-//
-//				Transaction transactionFee = new Transaction("Fee for transaction limit", transactionDate,
-//	            		amount, this, EnumTypeTransaction.Debit);
-//	            
-//	            this.transactions.add(transactionFee);
-//			}
-//        }
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+
+		ArrayList<Transaction> transactions = Transaction.searchByAccount(this.accountNumber);
+		
+		Integer getCountThisMonth = TransactionCollection.getCountThisMonth(transactionDate, transactions);
+		
+		if (getCountThisMonth < this.monthlyTransactionLimit) {
+			this.balance += amount;
+			
+			Account.update(this);
+			
+			Transaction transaction = new Transaction(null, "Deposit", transactionDate,
+            		amount, this.accountNumber, EnumTypeTransaction.Credit);
+			
+			Transaction.add(transaction);
+		} 
+		else {
+			this.balance += amount;
+			Account.update(this);
+			
+			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate,
+            		amount, this.accountNumber, EnumTypeTransaction.Credit);
+            
+			Transaction.add(transactionDep);
+            
+            
+			this.balance -= this.transactionFees;
+			Account.update(this);
+
+			Transaction transactionFee = new Transaction(null, "Fee for transaction limit", transactionDate,
+            		amount, this.accountNumber, EnumTypeTransaction.Debit);
+            
+			Transaction.add(transactionFee);
+		}
+
 		
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
-//			if (amount <= this.balance) {
-//				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
-//					this.balance -= amount;
-//
-//		            Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this,
-//		            		EnumTypeTransaction.Debit);
-//		            this.transactions.add(transaction);
-//				
-//				}
-//				else {
-//					this.balance -= amount;
-//
-//		            Transaction transactionWith = new Transaction("Withdraw", transactionDate, amount, this,
-//		            		EnumTypeTransaction.Debit);
-//		            this.transactions.add(transactionWith);
-//		            
-//		            this.balance -= this.transactionFees;
-//		            
-//		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, amount, this,
-//		            		EnumTypeTransaction.Debit);
-//		            this.transactions.add(transactionFees);
-//				
-//				}
-//			} else {
-//				throw new ExceptionNotEnoughBalance();
-//			}				
+		if (amount <= this.balance) {
+			
+			ArrayList<Transaction> transactions = Transaction.searchByAccount(this.accountNumber);
+			
+			Integer getCountThisMonth = TransactionCollection.getCountThisMonth(transactionDate, transactions);
+			
+			if (getCountThisMonth < this.monthlyTransactionLimit) {
+				this.balance -= amount;
+				Account.update(this);
+
+	            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+	            		EnumTypeTransaction.Debit);
+	            Transaction.add(transaction);
+			
+			}
+			else {
+				this.balance -= amount;
+				Account.update(this);
+				
+	            Transaction transactionWith = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+	            		EnumTypeTransaction.Debit);
+	            Transaction.add(transactionWith);
+	            
+	            this.balance -= this.transactionFees;
+	            Account.update(this);
+	            
+	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", transactionDate, amount, this.accountNumber,
+	            		EnumTypeTransaction.Debit);
+	            Transaction.add(transactionFees);
+			
+			}
+		} else {
+			throw new ExceptionNotEnoughBalance();
+		}				
 	}
 
 	@Override
@@ -140,8 +155,12 @@ public class CheckingAccount extends Account {
 		CheckingAccountDB.insert(element);
 	}
 	
-	public static void update(CheckingAccount element) throws SQLException {
-		CheckingAccountDB.update(element);
+	public static void updateMonthlyLimit(CheckingAccount element) throws SQLException {
+		CheckingAccountDB.updateMonthlyLimit(element);
+	}
+	
+	public static void updateTransactionFees(CheckingAccount element) throws SQLException {
+		CheckingAccountDB.updateTransactionFees(element);
 	}
 	
 	public static void remove(Integer id) throws SQLException {
@@ -150,6 +169,10 @@ public class CheckingAccount extends Account {
 	
 	public static CheckingAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return CheckingAccountDB.search(id);
+	}
+	
+	public static ArrayList<CheckingAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return CheckingAccountDB.searchByCustomer(customer);
 	}
 	
 	public static ArrayList<CheckingAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber {

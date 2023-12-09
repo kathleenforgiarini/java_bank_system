@@ -126,6 +126,10 @@ public class Transaction {
 		return TransactionDB.search(id);
 	}
 	
+	public static ArrayList<Transaction> searchByAccount(Integer account) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+		return TransactionDB.searchByAccount(account);
+	}
+	
 	public static ArrayList<Transaction> getData() throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		return TransactionDB.select();
 	}

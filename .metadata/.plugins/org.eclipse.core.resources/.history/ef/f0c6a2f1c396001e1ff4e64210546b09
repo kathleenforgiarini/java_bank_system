@@ -1,0 +1,177 @@
+package data;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import bus.*;
+
+public class SavingAccountDB {
+	static private Connection myConnection;
+	static private String mySQLStatement = null;	
+	static private String mySQLQuery = null;
+
+	public static void insert(SavingAccount aNewSavingAccount) throws SQLException 
+	{	
+    	
+    	Integer id = AccountDB.insert(aNewSavingAccount);
+
+	    if (id != null) {
+	        PreparedStatement myPreparedStatement = null ;
+			String sqlStatement;
+			
+			sqlStatement = "insert into SavingAccount values(? , ? , ? , ?)";
+					
+			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			
+			myPreparedStatement.setInt(1, id);
+			myPreparedStatement.setDouble(2, aNewSavingAccount.getInterestRate());
+			myPreparedStatement.setDouble(3, aNewSavingAccount.getGain());
+			myPreparedStatement.setDate(4, Date.valueOf(aNewSavingAccount.getDueDate()));
+			
+			myPreparedStatement.executeUpdate();	
+			
+			myConnection.commit();	
+	    }
+	}
+	
+	public static void updateInterestRate(SavingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update SavingAccount set interest_rate = "    
+			              +   aChangedAccount.getInterestRate() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateGain(SavingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update SavingAccount set gain = "    
+			              +   aChangedAccount.getGain() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateDueDate(SavingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update SavingAccount set due_date = "    
+			              +   Date.valueOf(aNewSavingAccount.getDueDate() + " WHERE  savingsaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static SavingAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		SavingAccount aSavingAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+					+ "FROM accountbank a "
+					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
+					+ "WHERE a.accountid = " + id;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");		//ALTERAR CLASSE PARA RECEBER CUSTOMER ID
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            Double interestRate = myResultSet.getDouble("interest_rate");
+            LocalDate dueDate = myResultSet.getDate("due_date").toLocalDate();
+
+            aSavingAccount = new SavingAccount(accountid, type, customerid, balance, openingDate, interestRate, dueDate); 	//REMOVER TRANSACTIONS DOS ATRIBUTOS DA CLASSE
+		}	
+		
+		return aSavingAccount;
+	}
+	
+public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		SavingAccount aSavingAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+					+ "FROM accountbank a "
+					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
+					+ "WHERE a.customerid = " + customerId;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<SavingAccount> myList = new ArrayList<SavingAccount>();
+		
+		while(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");		//ALTERAR CLASSE PARA RECEBER CUSTOMER ID
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            Double interestRate = myResultSet.getDouble("interest_rate");
+            LocalDate dueDate = myResultSet.getDate("due_date").toLocalDate();
+
+            aSavingAccount = new SavingAccount(accountid, type, customerid, balance, openingDate, interestRate, dueDate); 	//REMOVER TRANSACTIONS DOS ATRIBUTOS DA CLASSE
+            
+            myList.add(aSavingAccount);
+		}	
+		
+		return myList;
+	}
+	
+	public static ArrayList<SavingAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		SavingAccount aSavingAccount = null;
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, s.due_date, s.interest_rate, s.gain"
+				+ "FROM accountbank a "
+				+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid";
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<SavingAccount> myList = new ArrayList<SavingAccount>();
+		
+		while(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            Double interestRate = myResultSet.getDouble("interest_rate");
+            LocalDate dueDate = myResultSet.getDate("due_date").toLocalDate();
+
+            aSavingAccount = new SavingAccount(accountid, type, customerid, balance, openingDate, interestRate, dueDate);
+	
+			myList.add(aSavingAccount);
+		}
+		
+		return myList;
+	}
+}

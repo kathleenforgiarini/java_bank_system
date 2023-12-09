@@ -25,7 +25,7 @@ public abstract class Account implements ITransaction{
 		super();
 		this.accountNumber = accountNumber;
 		this.type = type;
-		setCustomer(customer);
+		this.customer = customer;
 		setBalance(balance);
 		this.openingDate = openingDate;
 	}
@@ -86,8 +86,8 @@ public abstract class Account implements ITransaction{
 	}
 		
 	//ABSTRACT METHODS - NOT IMPLEMENTED IN PARENT CLASS	
-	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull;
-	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber;
+	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull, SQLException;
+	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, SQLException;
 	
 	
 	//////////////////////////////
