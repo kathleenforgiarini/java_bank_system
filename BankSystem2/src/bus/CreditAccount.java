@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import data.AccountDB;
+import data.CheckingAccountDB;
 import data.CreditAccountDB;
 
 public class CreditAccount extends Account{
@@ -61,47 +62,52 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 				
-//		Double debtValue = getLimit() - getBalance();
-//		
-//		if (transactionDate.isBefore(getDueDate())) {
-//				
-//			Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);	
-//			
-//			this.balance += amount;
-//			setDueDate(getDueDate().plusMonths(1));
-//			this.transactions.add(transaction);
-//		}
-//		else 
-//		{
-//			Double taxLate = 0.05;
-//			Double lateFee = taxLate*debtValue;			
-//		 		
-//			Transaction transactionDep = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
-//			Transaction transactionFees = new Transaction("Fee for late payment", transactionDate, lateFee, this, EnumTypeTransaction.Debit);
-//			
-//		 	this.balance += amount;
-//	        this.transactions.add(transactionDep);
-//			
-//	        this.balance -= lateFee;
-//	        this.transactions.add(transactionFees);
-//		}
+		Double debtValue = this.getLimit() - this.getBalance();
+		
+		if (transactionDate.isBefore(this.getDueDate())) {
+				
+			Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Credit);	
+			
+			this.balance += amount;
+			Account.update(this);
+			setDueDate(this.getDueDate().plusMonths(1));
+			CreditAccount.updateDueDate(this);
+			Transaction.add(transaction);
+		}
+		else 
+		{
+			Double taxLate = 0.05;
+			Double lateFee = taxLate*debtValue;			
+		 		
+			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Credit);
+			Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, lateFee, this.accountNumber, EnumTypeTransaction.Debit);
+			
+		 	this.balance += amount;
+		 	Account.update(this);
+	        Transaction.add(transactionDep);
+			
+	        this.balance -= lateFee;
+	        Account.update(this);
+	        Transaction.add(transactionFees);
+		}
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
 		
-//		if (amount <= getBalance()) {
-//			
-//			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
-//			
-//			this.balance -= amount;
-//            this.transactions.add(transaction);
-//		}
-//		else {
-//			throw new ExceptionNotEnoughBalance();
-//		}
+		if (amount <= this.getBalance()) {
+			
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
+			Account.update(this);
+			Transaction.add(transaction);
+		}
+		else {
+			throw new ExceptionNotEnoughBalance();
+		}
 	}
 	
 	@Override
@@ -118,8 +124,12 @@ public class CreditAccount extends Account{
 		CreditAccountDB.insert(element);
 	}
 	
-	public static void update(CreditAccount element) throws SQLException {
-		CreditAccountDB.update(element);
+	public static void updateLimit(CreditAccount element) throws SQLException {
+		CreditAccountDB.updateLimit(element);
+	}
+	
+	public static void updateDueDate(CreditAccount element) throws SQLException {
+		CreditAccountDB.updateDueDate(element);
 	}
 	
 	public static void remove(Integer id) throws SQLException {
@@ -128,6 +138,10 @@ public class CreditAccount extends Account{
 	
 	public static CreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return CreditAccountDB.search(id);
+	}
+	
+	public static ArrayList<CreditAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return CreditAccountDB.searchByCustomer(customer);
 	}
 	
 	public static ArrayList<CreditAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {

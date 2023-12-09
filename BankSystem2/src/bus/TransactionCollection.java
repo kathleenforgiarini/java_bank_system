@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 public class TransactionCollection{
 	
-	public ArrayList<Transaction> searchByMonth(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
-		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
+	public static ArrayList<Transaction> searchByMonth(LocalDate date, ArrayList<Transaction> listOfTransactions) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
+
 		ArrayList<Transaction> listOfTransactionsByMonth = new ArrayList<Transaction>();
 		
 		for (Transaction element : listOfTransactions)
@@ -37,8 +37,8 @@ public class TransactionCollection{
 		Collections.sort(listOfTransactions,amountPredicate);
 	}
 	
-	public int getCountThisMonth(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
-		ArrayList<Transaction> transactions = searchByMonth(date);
-		return transactions.size();
+	public static Integer getCountThisMonth(LocalDate date, ArrayList<Transaction> transactions) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+		ArrayList<Transaction> countTransactions = searchByMonth(date, transactions);
+		return countTransactions.size();
 	}
 }

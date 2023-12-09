@@ -39,13 +39,24 @@ public class CurrencyAccountDB {
 	    }
 	}
 	
-	public static void update(CurrencyAccount aChangedAccount) throws SQLException {
+	public static void updateCurrencyRate(CurrencyAccount aChangedAccount) throws SQLException {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLStatement = "update CurrencyAccount set currency = "    
-			              +   aChangedAccount.getCurrency().toString() + ", currency_rate = " 
-			              +   aChangedAccount.getCurrencyRate() + ", conv_fee = " 
+		mySQLStatement = "update CurrencyAccount set currency_rate = " 
+			              +   aChangedAccount.getCurrencyRate() + " WHERE  currencyaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateConversionFees(CurrencyAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update CurrencyAccount set conv_fee = " 
 			              +   aChangedAccount.getConversionFees() + " WHERE  currencyaccountid = "
 			              +   aChangedAccount.getAccountNumber();
 	

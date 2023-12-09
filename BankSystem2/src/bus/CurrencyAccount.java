@@ -73,35 +73,36 @@ public class CurrencyAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		
-//        double convertedAmount = amount * this.currencyRate;
-//        double conversionFee = convertedAmount * this.conversionFees / 100;
-//
-//        Transaction transactionDep = new Transaction("Deposit", transactionDate, convertedAmount, this, EnumTypeTransaction.Credit);
-//        Transaction transactionFee = new Transaction("Fee for transaction", transactionDate, conversionFee, this, EnumTypeTransaction.Debit);
-//            
-//        this.balance += convertedAmount;
-//        this.transactions.add(transactionDep);
-//          
-//        this.balance -= conversionFee;
-//        this.transactions.add(transactionFee);
-   
+        double convertedAmount = amount * this.currencyRate;
+        double conversionFee = convertedAmount * this.conversionFees / 100;
+
+        Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, convertedAmount, this.accountNumber, EnumTypeTransaction.Credit);
+        Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, conversionFee, this.accountNumber, EnumTypeTransaction.Debit);
+            
+        this.balance += convertedAmount;
+        Account.update(this);
+        Transaction.add(transactionDep);
+          
+        this.balance -= conversionFee;
+        Account.update(this);
+        Transaction.add(transactionFee);
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
-//		if (amount <= this.balance) {
-//			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
-//			
-//			this.balance -= amount;
-//            this.transactions.add(transaction);
-//        }
-//		else {
-//			throw new ExceptionNotEnoughBalance();
-//		}
-//		
+		if (amount <= this.balance) {
+			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
+			Account.update(this);
+			Transaction.add(transaction);
+        }
+		else {
+			throw new ExceptionNotEnoughBalance();
+		}
 	}
 
 	@Override
@@ -117,8 +118,12 @@ public class CurrencyAccount extends Account {
 		CurrencyAccountDB.insert(element);
 	}
 	
-	public static void update(CurrencyAccount element) throws SQLException {
-		CurrencyAccountDB.update(element);
+	public static void updateCurrencyRate(CurrencyAccount element) throws SQLException {
+		CurrencyAccountDB.updateCurrencyRate(element);
+	}
+	
+	public static void updateConversionFees(CurrencyAccount element) throws SQLException {
+		CurrencyAccountDB.updateConversionFees(element);
 	}
 	
 	public static void remove(Integer id) throws SQLException {
@@ -127,6 +132,10 @@ public class CurrencyAccount extends Account {
 	
 	public static CurrencyAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return CurrencyAccountDB.search(id);
+	}
+	
+	public static ArrayList<CurrencyAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return CurrencyAccountDB.searchByCustomer(customer);
 	}
 	
 	public static ArrayList<CurrencyAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {

@@ -38,12 +38,24 @@ public class CheckingAccountDB {
 	    }
 	}
 	
-	public static void update(CheckingAccount aChangedAccount) throws SQLException {
+	public static void updateMonthlyLimit(CheckingAccount aChangedAccount) throws SQLException {
 		
 		myConnection = DBConnection.getConnection();
 		
 		mySQLStatement = "update CheckingAccount set month_trans_limit = "    
-			              +   aChangedAccount.getMonthlyTransactionLimit() + ", trans_fee = " 
+			              +   aChangedAccount.getMonthlyTransactionLimit() + " WHERE checkingaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateTransactionFees(CheckingAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update CheckingAccount set trans_fee = " 
 			              +   aChangedAccount.getTransactionFees() + " WHERE checkingaccountid = "
 			              +   aChangedAccount.getAccountNumber();
 	
