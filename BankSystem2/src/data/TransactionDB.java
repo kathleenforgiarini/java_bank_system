@@ -119,7 +119,7 @@ public class TransactionDB {
 		return myList;
 	}
 	
-public static ArrayList<Transaction> searchByDate(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
+	public static ArrayList<Transaction> searchByDate(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
 		
 		Transaction aTransaction = null;
 		
@@ -127,6 +127,37 @@ public static ArrayList<Transaction> searchByDate(LocalDate date) throws SQLExce
 		
 		mySQLQuery = "SELECT * FROM transactionbank"
 					+ "WHERE transactiondate = " + Date.valueOf(date);
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<Transaction> myList = new ArrayList<Transaction>();
+		
+		if(myResultSet.next()) {
+            Integer transactionid = myResultSet.getInt("transactionid");	
+            String description = myResultSet.getString("description");
+            LocalDate transactiondate = myResultSet.getDate("transactiondate").toLocalDate();
+            Double amount = myResultSet.getDouble("amount");
+            Integer accountid = myResultSet.getInt("accountid");
+            EnumTypeTransaction typeTransaction = EnumTypeTransaction.valueOf(myResultSet.getString("typetransaction"));
+         
+            aTransaction = new Transaction(transactionid, description, transactiondate, amount, accountid, typeTransaction);
+		
+            myList.add(aTransaction);
+		}	
+		
+		return myList;
+	}
+	
+	public static ArrayList<Transaction> searchByAccount(Integer accountNumber) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
+		
+		Transaction aTransaction = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT * FROM transactionbank"
+					+ "WHERE ACCOUNTID = " + accountNumber;
 		
 		Statement myStatemnt = myConnection.createStatement();
 		

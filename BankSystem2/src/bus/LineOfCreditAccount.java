@@ -3,10 +3,8 @@ package bus;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 
 import data.AccountDB;
-import data.CreditAccountDB;
 import data.LineOfCreditAccountDB;
 
 public class LineOfCreditAccount extends CreditAccount{
@@ -82,38 +80,40 @@ public class LineOfCreditAccount extends CreditAccount{
 		this.installment = installment;
 	}
 	
-//	@Override
-//	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber {
-//		
-//		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
-//		
-//		this.setBalance(amount*-1);
-//		this.transactions.add(transaction);
-//	}
-//	
-//	
-//	@Override
-//	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull {
-//		
-//		if (amount >= getInstallment()) {
-//			if (transactionDate.isBefore(this.dueDate))
-//			{
-//				Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
-//				
-//				this.balance += amount;
-//				this.numberOfInstallments--;
-//		        this.transactions.add(transaction);
-//			}
-//			else
-//			{
-//				throw new ExceptionLatePayment();
-//			}
-//		}
-//		else {
-//			throw new ExceptionWrongAmount();
-//		}
-//	}
-//
+	@Override
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
+		
+		Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.lineOfCreditAccountId, EnumTypeTransaction.Debit);
+		
+		this.setBalance(amount*-1);
+		Transaction.add(transaction);
+	}
+	
+	
+	@Override
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+		
+		if (amount >= this.getInstallment()) {
+			if (transactionDate.isBefore(this.dueDate))
+			{
+				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.lineOfCreditAccountId, EnumTypeTransaction.Credit);
+				
+				this.balance += amount;
+				Account.update(this);
+				this.setNbOfInstallments(this.nbOfInstallments--);
+				LineOfCreditAccount.updateNbOfInstallments(this);
+				Transaction.add(transaction);
+			}
+			else
+			{
+				throw new ExceptionLatePayment();
+			}
+		}
+		else {
+			throw new ExceptionWrongAmount();
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "LineOfCreditAccount Id " + this.lineOfCreditAccountId +
@@ -130,8 +130,16 @@ public class LineOfCreditAccount extends CreditAccount{
 		LineOfCreditAccountDB.insert(element);
 	}
 	
-	public static void update(LineOfCreditAccount element) throws SQLException {
-		AccountDB.update(element);
+	public static void updateInterestRate(LineOfCreditAccount element) throws SQLException {
+		LineOfCreditAccountDB.updateInterestRate(element);
+	}
+	
+	public static void updateNbOfInstallments(LineOfCreditAccount element) throws SQLException {
+		LineOfCreditAccountDB.updateNbOfInstallments(element);
+	}
+	
+	public static void updateInstallment(LineOfCreditAccount element) throws SQLException {
+		LineOfCreditAccountDB.updateInstallment(element);
 	}
 	
 	public static void remove(Integer id) throws SQLException {

@@ -70,6 +70,12 @@ public class FormLogin {
 		frmWelcomeToFortis.getContentPane().add(btnLoginCustomer);
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				frmWelcomeToFortis.dispose();
+			}
+		});
 		btnExit.setBounds(264, 175, 85, 21);
 		frmWelcomeToFortis.getContentPane().add(btnExit);
 	}

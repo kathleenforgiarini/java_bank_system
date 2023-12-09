@@ -102,7 +102,7 @@ CREATE TABLE creditaccount (
 
 CREATE TABLE lineofcreditaccount (
     lineofcreditaccountid NUMBER NOT NULL,
-    currency_rate NUMBER (4,2),
+    interest_rate NUMBER (4,2),
     nbofinstall NUMBER(3),
     installment NUMBER (8,2),
     CONSTRAINT pk_lineofcreditaccount PRIMARY KEY (lineofcreditaccountid),

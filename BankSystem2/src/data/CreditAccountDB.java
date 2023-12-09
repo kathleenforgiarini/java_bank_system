@@ -39,13 +39,25 @@ public class CreditAccountDB {
 	    }
 	}
 	
-	public static void update(CreditAccount aChangedAccount) throws SQLException {
+	public static void updateLimit(CreditAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update CreditAccount set limit = " 
+			              +   aChangedAccount.getLimit() + " WHERE creditaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateDueDate(CreditAccount aChangedAccount) throws SQLException {
 		
 		myConnection = DBConnection.getConnection();
 		
 		mySQLStatement = "update CreditAccount set due_date = "    
-			              +   Date.valueOf(aChangedAccount.getDueDate()) + ", limit = " 
-			              +   aChangedAccount.getLimit() + " WHERE creditaccountid = "
+			              +   Date.valueOf(aChangedAccount.getDueDate()) + " WHERE creditaccountid = "
 			              +   aChangedAccount.getAccountNumber();
 	
 		Statement myStatemnt = myConnection.createStatement();

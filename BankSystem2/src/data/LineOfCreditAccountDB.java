@@ -38,13 +38,37 @@ public class LineOfCreditAccountDB {
 	    }
 	}
 	
-	public static void update(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
+	public static void updateInterestRate(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
 		
 		myConnection = DBConnection.getConnection();
 		
 		mySQLStatement = "update LineOfCreditAccount set interest_rate = "    
-			              +   aChangedLineOfCreditAccount.getInterestRate() + ", nbOfInstall = " 
-			              +   aChangedLineOfCreditAccount.getNbOfInstallments() + ", installment = " 
+			              +   aChangedLineOfCreditAccount.getInterestRate()+ " WHERE LINEOFCREDITACCOUNTID = "
+			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateNbOfInstallments(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update LineOfCreditAccount set nbOfInstall = " 
+			              +   aChangedLineOfCreditAccount.getNbOfInstallments() + " WHERE LINEOFCREDITACCOUNTID = "
+			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static void updateInstallment(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update LineOfCreditAccount set installment = " 
 			              +   aChangedLineOfCreditAccount.getInstallment() + " WHERE LINEOFCREDITACCOUNTID = "
 			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
 	
