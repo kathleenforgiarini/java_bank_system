@@ -4,10 +4,12 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FormMenuManager {
 
-	private JFrame frmHomeManager;
+	JFrame frmHomeManager;
 
 	/**
 	 * Launch the application.
@@ -43,22 +45,62 @@ public class FormMenuManager {
 		frmHomeManager.getContentPane().setLayout(null);
 		
 		JButton btnAddCustomer = new JButton("Add New Customer");
+		btnAddCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormAddNewCustomer formAddNewCustomer = new FormAddNewCustomer();
+				formAddNewCustomer.frmAddNewCustomer.setVisible(true);
+				
+				frmHomeManager.dispose();
+			}
+		});
 		btnAddCustomer.setBounds(145, 53, 129, 21);
 		frmHomeManager.getContentPane().add(btnAddCustomer);
 		
 		JButton btnRemoveCustomer = new JButton("Remove Customer");
+		btnRemoveCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormRemoveCustomer formRemoveCustomer = new FormRemoveCustomer();
+				formRemoveCustomer.frmRemoveCustomer.setVisible(true);
+				
+				frmHomeManager.dispose();
+			}
+		});
 		btnRemoveCustomer.setBounds(145, 84, 129, 21);
 		frmHomeManager.getContentPane().add(btnRemoveCustomer);
 		
 		JButton btnOpenAccount = new JButton("Open Account");
+		btnOpenAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuOpenAccount formOpenAccount = new FormMenuOpenAccount();
+				formOpenAccount.frmHomeNewAccount.setVisible(true);
+				
+				frmHomeManager.dispose();
+			}
+		});
 		btnOpenAccount.setBounds(145, 115, 129, 21);
 		frmHomeManager.getContentPane().add(btnOpenAccount);
 		
 		JButton btnCloseAccount = new JButton("Close Account");
+		btnCloseAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormCloseAccount formCloseAccount = new FormCloseAccount();
+				formCloseAccount.frmCloseAccount.setVisible(true);
+				
+				frmHomeManager.dispose();
+			}
+		});
 		btnCloseAccount.setBounds(145, 146, 129, 21);
 		frmHomeManager.getContentPane().add(btnCloseAccount);
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormLogin formLogin = new FormLogin();
+				formLogin.frmWelcomeToFortis.setVisible(true);
+				
+				frmHomeManager.dispose();
+			}
+		});
 		btnExit.setBounds(309, 208, 85, 21);
 		frmHomeManager.getContentPane().add(btnExit);
 	}

@@ -1,0 +1,85 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormRemoveCustomer {
+
+	JFrame frmRemoveCustomer;
+	private JTextField textFieldUsername;
+	private JTextField textFieldPassword;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormRemoveCustomer window = new FormRemoveCustomer();
+					window.frmRemoveCustomer.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormRemoveCustomer() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmRemoveCustomer = new JFrame();
+		frmRemoveCustomer.setTitle("Remove Customer");
+		frmRemoveCustomer.setBounds(100, 100, 450, 300);
+		frmRemoveCustomer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmRemoveCustomer.getContentPane().setLayout(null);
+		
+		JLabel lblUsername = new JLabel("Username to remove:");
+		lblUsername.setBounds(23, 28, 113, 13);
+		frmRemoveCustomer.getContentPane().add(lblUsername);
+		
+		textFieldUsername = new JTextField();
+		textFieldUsername.setBounds(172, 22, 225, 19);
+		frmRemoveCustomer.getContentPane().add(textFieldUsername);
+		textFieldUsername.setColumns(10);
+		
+		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
+		lblPasswordMngr.setBounds(23, 195, 113, 13);
+		frmRemoveCustomer.getContentPane().add(lblPasswordMngr);
+		
+		textFieldPassword = new JTextField();
+		textFieldPassword.setColumns(10);
+		textFieldPassword.setBounds(172, 189, 225, 19);
+		frmRemoveCustomer.getContentPane().add(textFieldPassword);
+		
+		JButton btnRemoveCustomer = new JButton("Remove Customer");
+		btnRemoveCustomer.setBounds(259, 218, 138, 21);
+		frmRemoveCustomer.getContentPane().add(btnRemoveCustomer);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuManager formMenuManager = new FormMenuManager();
+				formMenuManager.frmHomeManager.setVisible(true);
+				
+				frmRemoveCustomer.dispose();
+			}
+		});
+		btnCancel.setBounds(172, 218, 77, 21);
+		frmRemoveCustomer.getContentPane().add(btnCancel);
+	}
+}

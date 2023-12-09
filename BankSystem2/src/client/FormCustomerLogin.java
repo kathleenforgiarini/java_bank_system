@@ -1,6 +1,8 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -67,6 +69,18 @@ public class FormCustomerLogin {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.setBounds(285, 197, 85, 21);
 		frmCustomerAreaLogin.getContentPane().add(btnLogin);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormLogin formLogin = new FormLogin();
+				formLogin.frmWelcomeToFortis.setVisible(true);
+				
+				frmCustomerAreaLogin.dispose();
+			}
+		});
+		btnExit.setBounds(190, 197, 85, 21);
+		frmCustomerAreaLogin.getContentPane().add(btnExit);
 	}
 
 }
