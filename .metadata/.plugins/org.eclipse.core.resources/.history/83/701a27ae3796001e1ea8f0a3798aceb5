@@ -1,0 +1,38 @@
+package data;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import bus.*;
+
+public class SavingAccountDB {
+
+	public static void insert(SavingAccount aNewSavingAccount) throws SQLException 
+	{	
+    	
+    	Integer id = AccountDB.insertAccount(aNewSavingAccount);
+
+	    if (id != null) {
+	        PreparedStatement myPreparedStatement = null ;
+			String sqlStatement;
+			
+			sqlStatement = "insert into SavingAccount values( ? , ? , ? , ? , ? , ? , ?, ?)  ";
+					
+			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			
+			myPreparedStatement.setInt(1, id);
+			myPreparedStatement.setString(2, aNewSavingAccount.getType().toString());
+			myPreparedStatement.setInt(3, aNewSavingAccount.getCustomer());	
+			myPreparedStatement.setDouble(4, aNewSavingAccount.getBalance());
+			myPreparedStatement.setDate(5, Date.valueOf(aNewSavingAccount.getOpeningDate()));
+			myPreparedStatement.setDouble(6, aNewSavingAccount.getInterestRate());
+			myPreparedStatement.setDouble(7, aNewSavingAccount.getGain());
+			myPreparedStatement.setDate(8, Date.valueOf(aNewSavingAccount.getDueDate()));
+			
+			myPreparedStatement.executeUpdate();	
+			
+			myConnection.commit();	
+	    }
+	}
+}

@@ -1,26 +1,35 @@
 package bus;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import data.CustomerDB;
+import data.UserDB;
 
 public class Customer extends User{
-	
-	private static final long serialVersionUID = -3112856540751151482L;
+	private Integer id;
 	private Double salary;
-	private Manager mgr;
+	private Integer mgr;
 	ArrayList<Account> listOfAccounts;
 	
 	public Customer() {
 		super();
+		this.id = null;
 		this.salary = 0.00;
 		this.mgr = null;
-		this.listOfAccounts = new ArrayList<Account>();
 	}
 
-	public Customer(String userName, Integer password, Double salary, Manager mgr, ArrayList<Account> listOfAccounts) throws ExceptionIsNotANumber, ExceptionIsNull {
-		super(userName, password);
+	public Customer(Integer id, String username, Integer password, Double salary, Integer mgr) throws ExceptionIsNotANumber, ExceptionIsNull {
+		super(id, username, password);
+		this.id = id;
 		setSalary(salary);
 		this.mgr = mgr;
-		this.listOfAccounts = listOfAccounts;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Double getSalary() {
@@ -38,39 +47,40 @@ public class Customer extends User{
 		this.salary = salary;
 	}
 
-	public Manager getMgr() {
+	public Integer getMgr() {
 		return mgr;
 	}
 
-	public void setMgr(Manager mgr) {
+	public void setMgr(Integer mgr) {
 		this.mgr = mgr;
-	}
-
-	public ArrayList<Account> getListOfAccounts() {
-		return listOfAccounts;
-	}
-	
-	public void addNewAccount(Account newAccount) {
-		this.listOfAccounts.add(newAccount);
 	}
 
 	@Override
 	public String toString() {
-		return super.toString() + "\nCustomer salary: " + salary + 
-								  "\nManager ID: " + mgr.getUserName() + "\n List of accounts: \n" + this.listOfAccounts;
+		return super.toString() + "\n\tCustomer salary: " + salary + 
+								  "\n\tManager ID: " + mgr;
 	}
 	
-	public static Customer searchById(Integer id) throws ClassNotFoundException, IOException {
-		
-		ArrayList<Customer> customers = new ArrayList<Customer>();
-		customers = FileManagerCustomers.deserialize();
-
-		for(Customer item : customers) {
-			if (item.getIdentificationNumber().equals(id)) {
-				return item;
-			}
-		}
-		return null;
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(Customer element) throws SQLException {
+		CustomerDB.insert(element);
 	}
 	
+	public static void update(Customer element) throws SQLException {
+		CustomerDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		UserDB.delete(id);
+	}
+	
+	public static Customer search(Integer id) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		return CustomerDB.search(id);
+	}
+	
+	public static ArrayList<Customer> getData() throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		return CustomerDB.select();
+	}
 }

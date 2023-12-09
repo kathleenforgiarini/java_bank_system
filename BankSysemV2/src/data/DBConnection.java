@@ -11,13 +11,13 @@ public class DBConnection {
          Connection myConnection = null;		
 	     String userName, password, service, url;
 		
-		 userName = "fortisbank" ;
+		 userName = "C##fortisbank" ;
 		 password = "1234" ;
 		 service = "localhost" ;
 		
 		 url = "jdbc:oracle:thin:";
-		       
-    	myConnection = DriverManager.getConnection(url + userName + "/" + password + "@" + service);
+		 
+		 myConnection = DriverManager.getConnection(url + userName + "/" + password + "@" + service);
   	  
 		return myConnection;		
 	}

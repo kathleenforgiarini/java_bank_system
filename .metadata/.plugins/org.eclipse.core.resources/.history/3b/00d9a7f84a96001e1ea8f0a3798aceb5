@@ -1,0 +1,131 @@
+package bus;
+
+import java.time.LocalDate;
+
+public class Transaction {
+	private Integer transactionId;
+	private String description;
+	private LocalDate transactionDate;
+	private Double amount;
+	private Integer accountId;
+	private EnumTypeTransaction type;
+	
+	public Transaction() {
+		super();
+		this.transactionId = null;
+		this.description = "";
+		this.transactionDate = null;
+		this.amount = (double) 0;
+		this.accountId = null;
+		this.type = EnumTypeTransaction.Undefined;
+	}
+	
+	public Transaction(Integer transactionId, String description, LocalDate transactionDate, Double amount, Integer account,
+			EnumTypeTransaction type) {
+		super();
+		this.transactionId = transactionId;
+		this.description = description;
+		this.transactionDate = transactionDate;
+		setAmount(amount);
+		this.accountId = account;
+		this.type = type;
+	}
+	
+	public void setTransactionId(Integer transactionId) {
+		this.transactionId = transactionId;
+	}
+	public Integer getTransactionId() {
+		return transactionId;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setTransactionDate(LocalDate transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+	public LocalDate getTransactionDate() {
+		return transactionDate;
+	}
+	
+	public void setAmount(Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+		boolean notValidAmount = false;
+		boolean isDouble = false;
+		boolean isNull = false;
+		
+		notValidAmount = Validator.isNegativeOrZero(amount);
+		isDouble = Validator.isDouble(amount);
+		isNull = Validator.isNull(amount);
+		
+		if (notValidAmount)
+		{
+			throw new ExceptionNegativeAmount();
+		}
+		
+		if (!isDouble) {
+			throw new ExceptionIsNotANumber();
+		}
+		if (isNull) {
+			throw new ExceptionIsNull();
+		}
+		
+		this.amount = amount;
+	}
+	
+	
+	
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+
+
+
+
+
+	public void setType(EnumTypeTransaction type) {
+		this.type = type;
+	}
+
+
+	
+
+
+
+	
+
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	
+	
+
+	
+
+
+
+	public EnumTypeTransaction getType() {
+		return type;
+	}
+		
+	//Overridden Methods
+	
+	@Override
+	public String toString() {
+		return "Transaction ID: " + this.transactionNumber + 
+				"\n\tDescription: " + this.description + ", on " + this.transactionDate +
+				"\n\tAmount: CAD$ " + this.amount + " , type " + this.type;
+	}
+
+
+}

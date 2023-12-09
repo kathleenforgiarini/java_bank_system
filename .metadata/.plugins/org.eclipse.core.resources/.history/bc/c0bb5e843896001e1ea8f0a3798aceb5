@@ -1,0 +1,91 @@
+package data;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import bus.*;
+
+public class CurrencyAccountDB {
+	static private Connection myConnection;
+	static private String mySQLStatement = null;	
+	static private String mySQLQuery = null;
+	
+	public static void insert(CurrencyAccount aNewCurrencyAccount) throws SQLException 
+	{	 	
+    	Integer id = AccountDB.insertAccount(aNewCurrencyAccount);
+    	   
+	    if (id != null) {
+	        
+	        PreparedStatement myPreparedStatement = null ;
+			String sqlStatement;
+			
+			sqlStatement = "insert into CurrencyAccount values( ? , ? , ? , ? , ? , ? , ?)  ";
+					
+			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			
+			myPreparedStatement.setInt(1, id);
+			myPreparedStatement.setString(2, aNewCurrencyAccount.getType().toString());
+			myPreparedStatement.setInt(3, aNewCurrencyAccount.getCustomer());	
+			myPreparedStatement.setDouble(4, aNewCurrencyAccount.getBalance());
+			myPreparedStatement.setDate(5, Date.valueOf(aNewCurrencyAccount.getOpeningDate()));
+			myPreparedStatement.setString(6, aNewCurrencyAccount.getCurrency().toString());
+			myPreparedStatement.setDouble(7, aNewCurrencyAccount.getCurrencyRate());
+			myPreparedStatement.setDouble(8, aNewCurrencyAccount.getConversionFees());
+			
+			myPreparedStatement.executeUpdate();	
+			
+			myConnection.commit();	
+	    }
+	}
+	
+	public static void updateCurrencyAccount(CurrencyAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update CurrencyAccount set currency =  \'"    
+			              +   aChangedAccount.getCurrency().toString() + ", currency_rate = \'" 
+			              +   aChangedAccount.getCurrencyRate() + ", conv_fee = \'" 
+			              +   aChangedAccount.getConversionFees() + "\' WHERE  currencyaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static CurrencyAccount searchCurrencyAccount(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		CurrencyAccount aCurrencyAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+					+ "FROM accountbank a "
+					+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid "
+					+ "WHERE a.accountid = " + id ;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");		
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            EnumTypeCurrency currency = EnumTypeCurrency.valueOf(myResultSet.getString("currency"));
+            Double currency_rate = myResultSet.getDouble("currency_rate");
+            Double conv_fee = myResultSet.getDouble("conv_fee");
+
+            aCurrencyAccount = new CurrencyAccount(type, customerid, balance, openingDate, currency, currency_rate, conv_fee);
+		}	
+		
+		return aCurrencyAccount;
+	}
+}

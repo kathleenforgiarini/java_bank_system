@@ -2,52 +2,16 @@ package bus;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.io.Serializable;
+
+import data.TransactionDB;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class TransactionCollection implements Serializable {
-
-	private static final long serialVersionUID = -9208133107708741107L;
-	private ArrayList<Transaction> listOfTransactions = new ArrayList<Transaction>();
+public class TransactionCollection{
 	
-	public ArrayList<Transaction> getListOfTransactions() {
-		return listOfTransactions;
-	}
-
-	public void add(Transaction transaction)
-	{
-		listOfTransactions.add(transaction);
-	}
-
-	public ArrayList<Transaction> searchBytype (EnumTypeTransaction type) 
-	{
-		ArrayList<Transaction> listOfTransactionsByType = new ArrayList<Transaction>();
-		
-		for (Transaction element : listOfTransactions)
-		{
-			if (element.getType().equals(type))
-			{
-				listOfTransactionsByType.add(element);
-			}
-		}
-		return listOfTransactionsByType;
-	}
-	
-	public ArrayList<Transaction> searchByDate (LocalDate date) 
-	{
-		ArrayList<Transaction> listOfTransactionsByDate = new ArrayList<Transaction>();
-		
-		for (Transaction element : listOfTransactions)
-		{
-			if (element.getTransactionDate().equals(date))
-			{
-				listOfTransactionsByDate.add(element);
-			}
-		}
-		return listOfTransactionsByDate;
-	}
-	
-	public ArrayList<Transaction> searchByMonth(LocalDate date){
+	public ArrayList<Transaction> searchByMonth(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
+		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
 		ArrayList<Transaction> listOfTransactionsByMonth = new ArrayList<Transaction>();
 		
 		for (Transaction element : listOfTransactions)
@@ -61,17 +25,19 @@ public class TransactionCollection implements Serializable {
 		return listOfTransactionsByMonth;
 	}
 	
-	public void sortByDate(PredicateDate datePredicate)
+	public void sortByDate(PredicateDate datePredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
 	{
-		Collections.sort(this.listOfTransactions,datePredicate);
+		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
+		Collections.sort(listOfTransactions,datePredicate);
 	}
 	
-	public void sortByAmount(PredicateAmount amountPredicate)
+	public void sortByAmount(PredicateAmount amountPredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
 	{
-		Collections.sort(this.listOfTransactions,amountPredicate);
+		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
+		Collections.sort(listOfTransactions,amountPredicate);
 	}
 	
-	public int getCountThisMonth(LocalDate date) {
+	public int getCountThisMonth(LocalDate date) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		ArrayList<Transaction> transactions = searchByMonth(date);
 		return transactions.size();
 	}

@@ -1,43 +1,41 @@
 package bus;
 
-import java.io.Serializable;
+import java.sql.SQLException;
+import data.UserDB;
 
-public class User implements Serializable{
-
-	private static final long serialVersionUID = 3737716166691896409L;
-	protected static Integer counter = 1;
-	protected Integer identificationNumber;
-	protected String userName;
+public class User{
+	protected Integer id;
+	protected String username;
 	protected Integer password;
 	
 	public User() {
 		super();
-		this.identificationNumber = counter++;
-		this.userName = "";
+		this.id = null;
+		this.username = "";
 		this.password = 0;
 	}
 	
-	public User(String userName, Integer password) {
+	public User(Integer id, String username, Integer password) {
 		super();
-		this.identificationNumber = counter++;
-		this.userName = userName;
+		this.id = id;
+		this.username = username;
 		this.password = password;
 	}
 
-	public Integer getIdentificationNumber() {
-		return identificationNumber;
+	public Integer getId() {
+		return id;
 	}
 	
-	public void setIdentificationNumber(Integer identificationNumber) {
-		this.identificationNumber = counter++;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String userName) {
+		this.username = userName;
 	}
 
 	public Integer getPassword() {
@@ -49,9 +47,23 @@ public class User implements Serializable{
 	}
 
 	//Overridden Methods
-	
 	@Override
 	public String toString() {
-		return "User ID: " + this.identificationNumber + " - Name: " + this.userName;
+		return "User ID: " + this.id + " - Name: " + this.username;
+	}
+	
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(User element) throws SQLException {
+		UserDB.insert(element);
+	}
+	
+	public static void update(User element) throws SQLException {
+		UserDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		UserDB.delete(id);
 	}
 }

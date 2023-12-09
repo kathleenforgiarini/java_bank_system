@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="bus.Manager"/>
     <fullyQualifiedTypeName name="java.io.Serializable"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="bus.Account"/>
+    <fullyQualifiedTypeName name="java.sql.Types"/>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="data.CustomerDB"/>
+    <fullyQualifiedTypeName name="data.UserDB"/>
+    <fullyQualifiedTypeName name="data.ManagerDB"/>
+    <fullyQualifiedTypeName name="data.CheckingAccountDB"/>
+    <fullyQualifiedTypeName name="data.AccountDB"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.sql.SQLException"/>
+    <fullyQualifiedTypeName name="data.CurrencyAccountDB"/>
+    <fullyQualifiedTypeName name="data.CreditAccountDB"/>
+    <fullyQualifiedTypeName name="data.SavingAccountDB"/>
+    <fullyQualifiedTypeName name="data.TransactionDB"/>
+    <fullyQualifiedTypeName name="data.LineOfCreditAccountDB"/>
 </qualifiedTypeNameHistroy>

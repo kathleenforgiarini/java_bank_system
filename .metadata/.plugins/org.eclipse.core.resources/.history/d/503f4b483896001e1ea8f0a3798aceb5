@@ -1,0 +1,45 @@
+package data;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import bus.*;
+
+public class CreditAccountDB {
+	static private Connection myConnection;
+	static private String mySQLStatement = null;	
+	static private String mySQLQuery = null;
+	
+	public static void insert(CreditAccount aNewCreditAccount) throws SQLException 
+	{	 	
+    	Integer id = insertAccount(aNewCreditAccount);
+    	   
+	    if (id != null) {
+	        
+	        PreparedStatement myPreparedStatement = null ;
+			String sqlStatement;
+			
+			sqlStatement = "insert into CurrencyAccount values( ? , ? , ? , ? , ? , ? , ?)  ";
+					
+			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			
+			myPreparedStatement.setInt(1, id);
+			myPreparedStatement.setString(2, aNewCreditAccount.getType().toString());
+			myPreparedStatement.setInt(3, aNewCreditAccount.getCustomer());	
+			myPreparedStatement.setDouble(4, aNewCreditAccount.getBalance());
+			myPreparedStatement.setDate(5, Date.valueOf(aNewCreditAccount.getOpeningDate()));
+			myPreparedStatement.setDate(6, Date.valueOf(aNewCreditAccount.getDueDate()));
+			myPreparedStatement.setDouble(7, aNewCreditAccount.getLimit());
+			
+			myPreparedStatement.executeUpdate();	
+			
+			myConnection.commit();	
+	    }
+	}
+}

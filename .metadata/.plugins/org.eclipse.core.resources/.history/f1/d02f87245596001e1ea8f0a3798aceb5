@@ -1,0 +1,112 @@
+package bus;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import data.AccountDB;
+import data.CheckingAccountDB;
+import data.CreditAccountDB;
+import data.CurrencyAccountDB;
+import data.CustomerDB;
+import data.ManagerDB;
+import data.SavingAccountDB;
+import data.UserDB;
+
+public class Manager extends User {
+	private Integer id;
+
+	public Manager() {
+		super();
+		this.id = null;
+	}
+	
+	public Manager(Integer id, String userName, Integer password) {
+		super(id, userName, password);
+		this.id = id;
+		
+	}
+	
+	public void openSavingAccount(Integer customer, Double balance, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+		SavingAccount savingAccount = new SavingAccount(null, EnumTypeAccount.SavingAccount, customer, balance, LocalDate.now(), 
+				interestRate, dueDate);
+		
+		SavingAccount.add(savingAccount);
+	}
+	
+	public void openCheckingAccount(Integer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+		CheckingAccount checkingAccount = new CheckingAccount(null, EnumTypeAccount.CheckingAccount, customer, balance, LocalDate.now(), 
+				monthlyTransactionLimit, transactionFees);
+		
+		CheckingAccount.add(checkingAccount);
+	}
+	
+	public void openCurrencyAccount(Integer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+		CurrencyAccount currencyAccount = new CurrencyAccount(null, EnumTypeAccount.CurrencyAccount, customer, balance, LocalDate.now(), 
+				currency, currencyRate, conversionFees);
+		
+		CurrencyAccount.add(currencyAccount);
+	}
+	
+	public void openCreditAccount(Integer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+		CreditAccount creditAccount = new CreditAccount(null, EnumTypeAccount.CreditAccount, customer, balance, LocalDate.now(), 
+				dueDate, limit);
+		
+		CreditAccount.add(creditAccount);
+	}
+	
+	public void openLineOfCreditAccount(Integer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException {
+		Account newAccount = new LineOfCreditAccount(EnumTypeAccount.LineOfCreditAccount, customer, LocalDate.now(), 
+				new TransactionCollection(), dueDate, limit, interestRate);
+	}
+
+
+	public void closeAccount(Integer accountNumber) throws SQLException {
+		if (accountNumber != null) {
+			AccountDB.delete(accountNumber);
+		}
+	}
+	
+	public Customer createCustomer(String username, Integer password, Double salary, Integer mgr) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		Customer newCustomer = new Customer(null, username, password, salary, mgr);
+		CustomerDB.insert(newCustomer);
+		
+		return newCustomer;
+		
+	}
+	
+	public void removeCustomer(Integer customer) throws SQLException {
+        if (customer != null) {
+            UserDB.delete(customer);
+        }
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "\n\tManager id: " + this.id;
+	}
+	
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(Manager element) throws SQLException {
+		ManagerDB.insert(element);
+	}
+	
+	public static void update(Manager element) throws SQLException {
+		UserDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		UserDB.delete(id);
+	}
+	
+	public static Manager search(Integer id) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		return ManagerDB.search(id);
+	}
+	
+	public static ArrayList<Manager> getData() throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		return ManagerDB.select();
+	}
+}

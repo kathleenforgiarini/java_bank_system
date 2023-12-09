@@ -1,39 +1,55 @@
 package bus;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+
+import data.AccountDB;
+import data.CreditAccountDB;
+import data.LineOfCreditAccountDB;
 
 public class LineOfCreditAccount extends CreditAccount{
 
-	private static final long serialVersionUID = 46034430825741637L;
-	protected Double interestRate;
-	protected Integer numberOfInstallments;
-	protected Double installment;
+	private Integer lineOfCreditAccountId;
+	private Double interestRate; //	TROCAR NO BANCO DE DADOS
+	private Integer nbOfInstallments;
+	private Double installment;
 	
 	public LineOfCreditAccount() {
 		super();
+		this.lineOfCreditAccountId = null;
 		this.interestRate = 0.00;
-		this.numberOfInstallments = null;
+		this.nbOfInstallments = null;
 		this.installment = 0.00;
 	}
-	
-	public LineOfCreditAccount(EnumTypeAccount type, Customer customer, LocalDate openingDate,
-			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+
+	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, LocalDate openingDate,
+			LocalDate dueDate, Double limit, Double interestRate, Integer nbOfInstallments,
+			Double installment) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+		super(accountNumber, type, customer, 0.00, openingDate, dueDate, limit);
+		this.lineOfCreditAccountId = accountNumber;
+		this.nbOfInstallments = nbOfInstallments;
+		this.installment = installment;
 		
-		//limit = requested value
-		
-		super(type, customer, (double)0, openingDate, transactions, dueDate, limit);
 		setInterestRate(interestRate);
 				
 		Period numberOfMonths = Period.between(openingDate.withDayOfMonth(1), dueDate.withDayOfMonth(1));	//NUMBER OF INSTALLMENTS IS THE QUANTITY OF MONTHS FROM THE OPENING DATE OF THE ACCOUNT AND THE DUE DATE
-		this.numberOfInstallments = numberOfMonths.getMonths();
-
+		this.nbOfInstallments = numberOfMonths.getMonths();
+		
 		
 		Double finalDebt = limit * (1 + getInterestRate());													//CALCULATING THE FINAL PRICE THAT THE CUSTOMER HAS TO PAY: THE AMOUNT ASKED PLUS THE INTEREST RATE
-		this.installment = finalDebt/this.numberOfInstallments;
+		this.installment = finalDebt/this.nbOfInstallments;
 		
-		withdraw(openingDate, finalDebt);
-		
+		//withdraw(openingDate, finalDebt);
+	}
+
+	public Integer getLineOfCreditAccountId() {
+		return lineOfCreditAccountId;
+	}
+
+	public void setLineOfCreditAccountId(Integer lineOfCreditAccountId) {
+		this.lineOfCreditAccountId = lineOfCreditAccountId;
 	}
 
 	public Double getInterestRate() {
@@ -50,58 +66,83 @@ public class LineOfCreditAccount extends CreditAccount{
 		this.interestRate = interestRate;
 	}
 
-	public int getNumberOfInstallments() {
-		return numberOfInstallments;
+	public Integer getNbOfInstallments() {
+		return nbOfInstallments;
 	}
-	
+
+	public void setNbOfInstallments(Integer nbOfInstallments) {
+		this.nbOfInstallments = nbOfInstallments;
+	}
+
+	public Double getInstallment() {
+		return installment;
+	}
+
 	public void setInstallment(Double installment) {
 		this.installment = installment;
 	}
 	
-	public Double getInstallment() {
-		return this.installment;
-	}
-
-	
-	
-	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber {
-		
-		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
-		
-		this.setBalance(amount*-1);
-		this.transactions.add(transaction);
-	}
-	
-	
-	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull {
-		
-		if (amount >= getInstallment()) {
-			if (transactionDate.isBefore(this.dueDate))
-			{
-				Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
-				
-				this.balance += amount;
-				this.numberOfInstallments--;
-		        this.transactions.add(transaction);
-			}
-			else
-			{
-				throw new ExceptionLatePayment();
-			}
-		}
-		else {
-			throw new ExceptionWrongAmount();
-		}
-	}
-
+//	@Override
+//	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber {
+//		
+//		Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
+//		
+//		this.setBalance(amount*-1);
+//		this.transactions.add(transaction);
+//	}
+//	
+//	
+//	@Override
+//	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull {
+//		
+//		if (amount >= getInstallment()) {
+//			if (transactionDate.isBefore(this.dueDate))
+//			{
+//				Transaction transaction = new Transaction("Deposit", transactionDate, amount, this, EnumTypeTransaction.Credit);
+//				
+//				this.balance += amount;
+//				this.numberOfInstallments--;
+//		        this.transactions.add(transaction);
+//			}
+//			else
+//			{
+//				throw new ExceptionLatePayment();
+//			}
+//		}
+//		else {
+//			throw new ExceptionWrongAmount();
+//		}
+//	}
+//
 	@Override
 	public String toString() {
-		return "LineOfCreditAccount "+
-			   "InterestRate = " + interestRate + 
-			   "Installments = " + numberOfInstallments + 
-			   "Limit = " + limit + 
-			   "Balance = " + balance;
+		return "LineOfCreditAccount Id " + this.lineOfCreditAccountId +
+			   "\n\tInterest Rate: " + this.interestRate + 
+			   "\n\tInstallments: " + this.nbOfInstallments + 
+			   "\n\tLimit = " + this.limit + 
+			   "\n\tBalance = " + this.balance;
 	}
+	
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(LineOfCreditAccount element) throws SQLException {
+		LineOfCreditAccountDB.insert(element);
+	}
+	
+	public static void update(LineOfCreditAccount element) throws SQLException {
+		AccountDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		AccountDB.delete(id);
+	}
+	
+//	public static LineOfCreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+//		return LineOfCreditAccountDB.search(id);
+//	}
+//	
+//	public static ArrayList<LineOfCreditAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+//		return LineOfCreditAccountDB.select();
+//	}
 }

@@ -1,0 +1,125 @@
+package bus;
+
+import java.time.LocalDate;
+
+public class CurrencyAccount extends Account {
+	
+	private static final long serialVersionUID = -4499600797564452081L;
+	private Integer accountNumber;
+	private EnumTypeCurrency currency;
+	private Double currencyRate;
+	private Double conversionFees; //percentage fee for each
+	
+	
+	public CurrencyAccount() {
+		super();
+		this.accountNumber = null;
+		this.currency = EnumTypeCurrency.UND;
+		this.currencyRate = 0.00;
+		this.conversionFees = 0.00;
+	}
+	
+	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate,
+			EnumTypeCurrency currency, double currencyRate, double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+		super(accountNumber, type, customer, balance, openingDate);
+		this.currency = currency;
+		this.currencyRate = currencyRate;
+		this.conversionFees = conversionFees;
+	}
+
+	public void setAccountNumber(Integer accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public Integer getAccountNumber() {
+		return accountNumber;
+	}
+	
+	public void setCurrency(EnumTypeCurrency currency) {
+		this.currency = currency;
+	}
+	public double getCurrencyRate() {
+		return currencyRate;
+	}
+	
+	public void setCurrencyRate(Double currencyRate) {
+		this.currencyRate = currencyRate;
+	}
+
+	public void setConversionFees(Double conversionFees) {
+		this.conversionFees = conversionFees;
+	}
+
+	public EnumTypeCurrency getCurrency() {
+		return currency;
+	}
+
+
+
+	public void setCurrencyRate(double currencyRate) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(currencyRate)) {
+			throw new ExceptionIsNotANumber();
+		}
+		
+		if (Validator.isNull(currencyRate)) {
+			throw new ExceptionIsNull();
+		}
+		this.currencyRate = currencyRate;
+	}
+
+	public double getConversionFees() {
+		return conversionFees;
+	}
+
+	public void setConversionFees(double conversionFees) throws ExceptionIsNotANumber, ExceptionIsNull {
+		if (!Validator.isDouble(conversionFees)) {
+			throw new ExceptionIsNotANumber();
+		}
+		
+		if (Validator.isNull(conversionFees)) {
+			throw new ExceptionIsNull();
+		}
+		this.conversionFees = conversionFees;
+	}
+
+	@Override
+	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+
+		//if (amount > 0) {
+		
+            double convertedAmount = amount * this.currencyRate;
+            double conversionFee = convertedAmount * this.conversionFees / 100;
+
+            Transaction transactionDep = new Transaction("Deposit", transactionDate, convertedAmount, this, EnumTypeTransaction.Credit);
+            Transaction transactionFee = new Transaction("Fee for transaction", transactionDate, conversionFee, this, EnumTypeTransaction.Debit);
+            
+            this.balance += convertedAmount;
+            this.transactions.add(transactionDep);
+              
+            this.balance -= conversionFee;
+            this.transactions.add(transactionFee);
+       // }
+		
+	}
+
+	@Override
+	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull {
+
+		if (amount <= this.balance) {
+			Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this, EnumTypeTransaction.Debit);
+			
+			this.balance -= amount;
+            this.transactions.add(transaction);
+        }
+		else {
+			throw new ExceptionNotEnoughBalance();
+		}
+		
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "\n\tCurrency: " + currency + "\n\tCurrency Rate: " + currencyRate + 
+								  "\n\tConversion Fees: " + conversionFees;
+	}
+
+}

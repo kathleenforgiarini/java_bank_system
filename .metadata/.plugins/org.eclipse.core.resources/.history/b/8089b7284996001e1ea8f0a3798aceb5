@@ -1,0 +1,120 @@
+package data;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import bus.*;
+
+public class CreditAccountDB {
+	static private Connection myConnection;
+	static private String mySQLStatement = null;	
+	static private String mySQLQuery = null;
+	
+	public static void insert(CreditAccount aNewCreditAccount) throws SQLException 
+	{	 	
+    	Integer id = AccountDB.insert(aNewCreditAccount);
+    	   
+	    if (id != null) {
+	        
+	        PreparedStatement myPreparedStatement = null ;
+			String sqlStatement;
+			
+			sqlStatement = "insert into CurrencyAccount values(? , ? , ? , ? , ? , ? , ?)";
+					
+			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			
+			myPreparedStatement.setInt(1, id);
+			myPreparedStatement.setString(2, aNewCreditAccount.getType().toString());
+			myPreparedStatement.setInt(3, aNewCreditAccount.getCustomer());	
+			myPreparedStatement.setDouble(4, aNewCreditAccount.getBalance());
+			myPreparedStatement.setDate(5, Date.valueOf(aNewCreditAccount.getOpeningDate()));
+			myPreparedStatement.setDate(6, Date.valueOf(aNewCreditAccount.getDueDate()));
+			myPreparedStatement.setDouble(7, aNewCreditAccount.getLimit());
+			
+			myPreparedStatement.executeUpdate();	
+			
+			myConnection.commit();	
+	    }
+	}
+	
+	public static void update(CreditAccount aChangedAccount) throws SQLException {
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLStatement = "update CreditAccount set due_date = "    
+			              +   Date.valueOf(aChangedAccount.getDueDate()) + ", limit = " 
+			              +   aChangedAccount.getLimit() + " WHERE creditaccountid = "
+			              +   aChangedAccount.getAccountNumber();
+	
+		Statement myStatemnt = myConnection.createStatement();
+		myStatemnt.executeUpdate(mySQLStatement);
+		myConnection.commit();								
+	}
+	
+	public static CreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		CreditAccount aCreditAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+					+ "FROM accountbank a "
+					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
+					+ "WHERE a.accountid = " + id ;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+			Integer accountid = myResultSet.getInt("accountid");
+			Integer customerid = myResultSet.getInt("customerid");		
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
+            Double limit = myResultSet.getDouble("limit");
+
+            aCreditAccount = new CreditAccount(type, customerid, balance, openingDate, dueDate, limit);
+		}	
+		
+		return aCreditAccount;
+	}
+	
+	public static ArrayList<CreditAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+		
+		CreditAccount aCreditAccount = null;
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+				+ "FROM accountbank a "
+				+ "JOIN creditaccount c ON a.accountid = c.creditaccountid ";
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<CreditAccount> myList = new ArrayList<CreditAccount>();
+		
+		while(myResultSet.next()) {
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");		
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
+            Double limit = myResultSet.getDouble("limit");
+
+            aCreditAccount = new CreditAccount(type, customerid, balance, openingDate, dueDate, limit);
+	
+			myList.add(aCreditAccount);
+		}
+		
+		return myList;
+	}
+}

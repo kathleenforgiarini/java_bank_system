@@ -1,57 +1,61 @@
 package bus;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
+import data.TransactionDB;
 
 public class Transaction {
-	private Integer counter = 1;
-	private Integer transactionNumber;
+	private Integer transactionId;
 	private String description;
 	private LocalDate transactionDate;
 	private Double amount;
-	private Account account;
+	private Integer accountId;
 	private EnumTypeTransaction type;
 	
 	public Transaction() {
 		super();
-		this.transactionNumber = counter++;
+		this.transactionId = null;
 		this.description = "";
 		this.transactionDate = null;
 		this.amount = (double) 0;
-		this.setAccount(null);
+		this.accountId = null;
 		this.type = EnumTypeTransaction.Undefined;
 	}
 	
-	public Transaction(String description, LocalDate transactionDate, Double amount, Account account,
+	public Transaction(Integer transactionId, String description, LocalDate transactionDate, Double amount, Integer account,
 			EnumTypeTransaction type) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		super();
-		this.transactionNumber = counter++;
+		this.transactionId = transactionId;
 		this.description = description;
 		this.transactionDate = transactionDate;
 		setAmount(amount);
-		this.setAccount(account);
+		this.accountId = account;
 		this.type = type;
 	}
-
-	public Integer getTransactionNumber() {
-		return transactionNumber;
+	
+	public void setTransactionId(Integer transactionId) {
+		this.transactionId = transactionId;
+	}
+	public Integer getTransactionId() {
+		return transactionId;
 	}
 	
-	public String getDescription() {
-		return description;
-	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public String getDescription() {
+		return description;
+	}
 	
+	public void setTransactionDate(LocalDate transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 	public LocalDate getTransactionDate() {
 		return transactionDate;
 	}
-
-	public Double getAmount() {
-		return amount;
-	}
-
+	
 	public void setAmount(Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		boolean notValidAmount = false;
 		boolean isDouble = false;
@@ -75,23 +79,20 @@ public class Transaction {
 		
 		this.amount = amount;
 	}
-	
-	public void setTransactionNumber(Integer transactionNumber) {
-		if (transactionNumber == null) {
-			this.transactionNumber = counter++;
-		} else {
-			this.transactionNumber = transactionNumber;
-		}
+	public Double getAmount() {
+		return amount;
 	}
 	
-	public Account getAccount() {
-		return account;
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+	public Integer getAccountId() {
+		return accountId;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setType(EnumTypeTransaction type) {
+		this.type = type;
 	}
-
 	public EnumTypeTransaction getType() {
 		return type;
 	}
@@ -100,10 +101,32 @@ public class Transaction {
 	
 	@Override
 	public String toString() {
-		return "Transaction ID: " + this.transactionNumber + 
+		return "Transaction ID: " + this.transactionId + 
 				"\n\tDescription: " + this.description + ", on " + this.transactionDate +
-				"\n\tAmount: CAD$ " + this.amount + " , type " + this.type;
+				"\n\tAmount: " + this.amount + ", Account: " + this.accountId + 
+				"\n\t, Type: " + this.type;
 	}
-
-
+	
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(Transaction element) throws SQLException {
+		TransactionDB.insert(element);
+	}
+	
+	public static void update(Transaction element) throws SQLException {
+		TransactionDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		TransactionDB.delete(id);
+	}
+	
+	public static Transaction search(Integer id) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+		return TransactionDB.search(id);
+	}
+	
+	public static ArrayList<Transaction> getData() throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
+		return TransactionDB.select();
+	}
 }

@@ -1,51 +1,57 @@
 package bus;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
-public abstract class Account implements ITransaction, Serializable {
-	private static final long serialVersionUID = 5787217863065268367L;
-	protected static Integer counter = 1;
+import data.AccountDB;
+
+public abstract class Account implements ITransaction{
 	protected Integer accountNumber;
 	protected EnumTypeAccount type;
-	protected Customer customer;
+	protected Integer customer;
 	protected Double balance;
 	protected LocalDate openingDate;
-	protected TransactionCollection transactions;
 	
 	public Account() {
 		super();
-		this.accountNumber = counter++;
+		this.accountNumber = null;
 		this.type = EnumTypeAccount.Undefined;
 		this.customer = null;
-		this.balance = (double) 0;
+		this.balance = 0.00;
 		this.openingDate = null;
-		this.transactions = new TransactionCollection();
 	}
 	
-	public Account(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions) throws ExceptionIsNull, ExceptionIsNotANumber {
+	public Account(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super();
-		this.accountNumber = counter++;
+		this.accountNumber = accountNumber;
 		this.type = type;
 		setCustomer(customer);
 		setBalance(balance);
 		this.openingDate = openingDate;
-		this.transactions = transactions;
+	}
+	
+	public void setAccountNumber(Integer accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 
 	public Integer getAccountNumber() {
 		return this.accountNumber;
 	}
 
+	public void setType(EnumTypeAccount type) {
+		this.type = type;
+	}
+
 	public EnumTypeAccount getType() {
 		return this.type;
 	}
-
-	public Double getBalance() {
-		return this.balance;
+	
+	public void setCustomer(Integer customer) {
+		this.customer = customer;
+	}
+	
+	public Integer getCustomer() {
+		return this.customer;
 	}
 
 	public void setBalance(Double balance) throws ExceptionIsNull, ExceptionIsNotANumber {
@@ -58,27 +64,23 @@ public abstract class Account implements ITransaction, Serializable {
 		this.balance = balance;
 	}
 
-	public LocalDate getOpeningDate() {
-		return this.openingDate;
+	public Double getBalance() {
+		return this.balance;
 	}
 
-	public Customer getCustomer() {
-		return this.customer;
-	}
-
-	public void setCustomer(Customer customer) throws ExceptionIsNull, ExceptionIsNotANumber {
-		this.customer = customer;
+	public void setOpeningDate(LocalDate openingDate) {
+		this.openingDate = openingDate;
 	}
 	
-	public TransactionCollection getTransactions() {
-		return this.transactions;
+	public LocalDate getOpeningDate() {
+		return this.openingDate;
 	}
 
 	@Override
 	public String toString() {
 		return "Account Number: " + this.accountNumber +
 				"\n\tType: " + this.type + 
-				"\n\tCustomer: " + this.customer.getUserName() + 
+				"\n\tCustomer: " + this.customer + 
 				"\n\tDate of Opening : " + this.openingDate +
 				"\n\tBalance : " + this.balance;
 	}
@@ -87,4 +89,19 @@ public abstract class Account implements ITransaction, Serializable {
 	public abstract void deposit (LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull;
 	public abstract void withdraw (LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber;
 	
+	
+	//////////////////////////////
+	//   public static services //
+	//////////////////////////////
+	public static void add(Account element) throws SQLException {
+		AccountDB.insert(element);
+	}
+	
+	public static void update(Account element) throws SQLException {
+		AccountDB.update(element);
+	}
+	
+	public static void remove(Integer id) throws SQLException {
+		AccountDB.delete(id);
+	}
 }
