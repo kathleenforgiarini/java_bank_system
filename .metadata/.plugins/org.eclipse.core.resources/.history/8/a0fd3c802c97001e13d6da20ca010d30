@@ -1,0 +1,76 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class FormWithdrawCheckingAccount {
+
+	JFrame frmWithdrawCheckingAccount;
+	private JTextField textField;
+	private JTextField textField_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormWithdrawCheckingAccount window = new FormWithdrawCheckingAccount((Integer)null);
+					window.frmWithdrawCheckingAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormWithdrawCheckingAccount(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmWithdrawCheckingAccount = new JFrame();
+		frmWithdrawCheckingAccount.setTitle("Withdraw From a Checking Account");
+		frmWithdrawCheckingAccount.setBounds(100, 100, 450, 300);
+		frmWithdrawCheckingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmWithdrawCheckingAccount.getContentPane().setLayout(null);
+		
+		JLabel lblAccount = new JLabel("Enter the account id:");
+		lblAccount.setBounds(29, 30, 104, 13);
+		frmWithdrawCheckingAccount.getContentPane().add(lblAccount);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(141, 27, 186, 19);
+		frmWithdrawCheckingAccount.getContentPane().add(textField);
+		
+		JLabel lblNewLabel = new JLabel("Enter the amount:");
+		lblNewLabel.setBounds(29, 56, 104, 13);
+		frmWithdrawCheckingAccount.getContentPane().add(lblNewLabel);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(141, 53, 186, 19);
+		frmWithdrawCheckingAccount.getContentPane().add(textField_1);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBounds(179, 208, 85, 21);
+		frmWithdrawCheckingAccount.getContentPane().add(btnExit);
+		
+		JButton btnWithdraw = new JButton("Withdraw");
+		btnWithdraw.setBounds(312, 208, 85, 21);
+		frmWithdrawCheckingAccount.getContentPane().add(btnWithdraw);
+	}
+
+}

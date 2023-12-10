@@ -1,0 +1,43 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class FormWithdrawCurrencyAccount {
+
+	JFrame frmWithdrawCurrencyAccount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormWithdrawCurrencyAccount window = new FormWithdrawCurrencyAccount((Integer)null);
+					window.frmWithdrawCurrencyAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormWithdrawCurrencyAccount(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmWithdrawCurrencyAccount = new JFrame();
+		frmWithdrawCurrencyAccount.setBounds(100, 100, 450, 300);
+		frmWithdrawCurrencyAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}

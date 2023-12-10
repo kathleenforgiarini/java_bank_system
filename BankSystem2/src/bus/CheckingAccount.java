@@ -68,17 +68,17 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
 		ArrayList<Transaction> transactions = Transaction.searchByAccount(accountNumber);
-		Integer getCountThisMonth = TransactionCollection.getCountThisMonth(transactionDate, transactions);
+		Integer getCountThisMonth = TransactionCollection.getCountThisMonth(LocalDate.now(), transactions);
 		
 		if (getCountThisMonth < this.monthlyTransactionLimit) {
 			this.balance += amount;
 			
 			Account.update(this);
 			
-			Transaction transaction = new Transaction(null, "Deposit", transactionDate,
+			Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(),
             		amount, this.getAccountNumber(), EnumTypeTransaction.Credit);
 			
 			transaction.setAccountId(this.accountNumber);
@@ -89,7 +89,7 @@ public class CheckingAccount extends Account {
 			this.balance += amount;
 			Account.update(this);
 			
-			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate,
+			Transaction transactionDep = new Transaction(null, "Deposit", LocalDate.now(),
             		amount, this.accountNumber, EnumTypeTransaction.Credit);
             
 			Transaction.add(transactionDep);
@@ -98,7 +98,7 @@ public class CheckingAccount extends Account {
 			this.balance -= this.transactionFees;
 			Account.update(this);
 
-			Transaction transactionFee = new Transaction(null, "Fee for transaction limit", transactionDate,
+			Transaction transactionFee = new Transaction(null, "Fee for transaction limit", LocalDate.now(),
             		amount, this.accountNumber, EnumTypeTransaction.Debit);
             
 			Transaction.add(transactionFee);
@@ -108,19 +108,19 @@ public class CheckingAccount extends Account {
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void withdraw(Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
 		if (amount <= this.balance) {
 			
 			ArrayList<Transaction> transactions = Transaction.searchByAccount(this.accountNumber);
 			
-			Integer getCountThisMonth = TransactionCollection.getCountThisMonth(transactionDate, transactions);
+			Integer getCountThisMonth = TransactionCollection.getCountThisMonth(LocalDate.now(), transactions);
 			
 			if (getCountThisMonth < this.monthlyTransactionLimit) {
 				this.balance -= amount;
 				Account.update(this);
 
-	            Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+	            Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transaction);
 			
@@ -129,14 +129,14 @@ public class CheckingAccount extends Account {
 				this.balance -= amount;
 				Account.update(this);
 				
-	            Transaction transactionWith = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+	            Transaction transactionWith = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transactionWith);
 	            
 	            this.balance -= this.transactionFees;
 	            Account.update(this);
 	            
-	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", transactionDate, amount, this.accountNumber,
+	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", LocalDate.now(), amount, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transactionFees);
 			

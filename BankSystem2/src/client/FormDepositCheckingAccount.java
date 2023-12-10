@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,8 +12,6 @@ import javax.swing.JTextField;
 
 import bus.Account;
 import bus.CheckingAccount;
-import bus.Customer;
-import bus.Manager;
 
 public class FormDepositCheckingAccount {
 
@@ -65,21 +62,16 @@ public class FormDepositCheckingAccount {
 					CheckingAccount account = CheckingAccount.searchByIdAndCustomer(selectedAccount, customerId);
 					
 					if (account != null) {
-						account.deposit(LocalDate.now(), amount);
+						account.deposit(amount);
 						
 						JOptionPane.showMessageDialog(null, "Deposit successfully! \nNew Balance: " + 
 						Account.getBalance(selectedAccount, customerId));
 					} else {
 						JOptionPane.showMessageDialog(null, "You don't have this account number, try again!");
 					}
-					
-					
 				} catch (Exception exc) {
 					JOptionPane.showMessageDialog(null, exc.getMessage());
 				}
-				
-				
-				
 			}
 		});
 		btnDeposit.setBounds(304, 205, 85, 21);

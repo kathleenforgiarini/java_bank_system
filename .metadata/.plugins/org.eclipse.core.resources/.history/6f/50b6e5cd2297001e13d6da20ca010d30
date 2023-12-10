@@ -1,0 +1,75 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class FormDepositCurrencyAccount {
+
+	private JFrame frmDepositCurrencyAccount;
+	private JTextField textField;
+	private JTextField textField_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormDepositCurrencyAccount window = new FormDepositCurrencyAccount();
+					window.frmDepositCurrencyAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormDepositCurrencyAccount() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmDepositCurrencyAccount = new JFrame();
+		frmDepositCurrencyAccount.setTitle("Deposit On Currency Account");
+		frmDepositCurrencyAccount.setBounds(100, 100, 450, 300);
+		frmDepositCurrencyAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDepositCurrencyAccount.getContentPane().setLayout(null);
+		
+		JLabel lblAccount = new JLabel("Enter the account id:");
+		lblAccount.setBounds(33, 33, 104, 13);
+		frmDepositCurrencyAccount.getContentPane().add(lblAccount);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(145, 30, 186, 19);
+		frmDepositCurrencyAccount.getContentPane().add(textField);
+		
+		JLabel lblNewLabel = new JLabel("Enter the amount:");
+		lblNewLabel.setBounds(33, 59, 104, 13);
+		frmDepositCurrencyAccount.getContentPane().add(lblNewLabel);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(145, 56, 186, 19);
+		frmDepositCurrencyAccount.getContentPane().add(textField_1);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBounds(183, 211, 85, 21);
+		frmDepositCurrencyAccount.getContentPane().add(btnExit);
+		
+		JButton btnDeposit = new JButton("Deposit");
+		btnDeposit.setBounds(316, 211, 85, 21);
+		frmDepositCurrencyAccount.getContentPane().add(btnDeposit);
+	}
+}

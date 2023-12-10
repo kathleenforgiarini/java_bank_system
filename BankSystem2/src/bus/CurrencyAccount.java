@@ -4,8 +4,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import data.AccountDB;
-import data.CreditAccountDB;
 import data.CurrencyAccountDB;
 
 public class CurrencyAccount extends Account {
@@ -29,7 +30,7 @@ public class CurrencyAccount extends Account {
 		setAccountNumber(accountNumber);
 		this.currency = currency;
 		this.currencyRate = currencyRate;
-		this.conversionFees = conversionFees;
+		this.conversionFees = conversionFees / 100;
 	}
 
 	public void setAccountNumber(Integer accountNumber) {
@@ -68,20 +69,22 @@ public class CurrencyAccount extends Account {
 		if (Validator.isNull(conversionFees)) {
 			throw new ExceptionIsNull();
 		}
-		this.conversionFees = conversionFees;
+		this.conversionFees = conversionFees / 100;
 	}
 	public double getConversionFees() {
 		return conversionFees;
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		
         double convertedAmount = amount * this.currencyRate;
-        double conversionFee = convertedAmount * this.conversionFees / 100;
+        double conversionFee = convertedAmount * this.conversionFees;
 
-        Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, convertedAmount, this.accountNumber, EnumTypeTransaction.Credit);
-        Transaction transactionFee = new Transaction(null, "Fee for transaction", transactionDate, conversionFee, this.accountNumber, EnumTypeTransaction.Debit);
+        JOptionPane.showMessageDialog(null, amount + " " + " " + convertedAmount + " " + this.currencyRate + " " + conversionFees);
+        
+        Transaction transactionDep = new Transaction(null, "Deposit", LocalDate.now(), convertedAmount, this.accountNumber, EnumTypeTransaction.Credit);
+        Transaction transactionFee = new Transaction(null, "Fee for transaction", LocalDate.now(), conversionFee, this.accountNumber, EnumTypeTransaction.Debit);
             
         this.balance += convertedAmount;
         Account.update(this);
@@ -93,10 +96,10 @@ public class CurrencyAccount extends Account {
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
 		if (amount <= this.balance) {
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
 			Account.update(this);

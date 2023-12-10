@@ -1,0 +1,79 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormMenuWithdraw {
+
+	JFrame frmMenuWithdraw;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormMenuWithdraw window = new FormMenuWithdraw((Integer)null);
+					window.frmMenuWithdraw.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormMenuWithdraw() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmMenuWithdraw = new JFrame();
+		frmMenuWithdraw.setTitle("Home New Withdraw");
+		frmMenuWithdraw.setBounds(100, 100, 450, 300);
+		frmMenuWithdraw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMenuWithdraw.getContentPane().setLayout(null);
+		
+		JButton btnWithdrawFromChecking = new JButton("Withdraw From Checking Account");
+		btnWithdrawFromChecking.setBounds(117, 36, 192, 21);
+		frmMenuWithdraw.getContentPane().add(btnWithdrawFromChecking);
+		
+		JButton btnWithdrawFromSavings = new JButton("Withdraw From Saving Account");
+		btnWithdrawFromSavings.setBounds(117, 67, 192, 21);
+		frmMenuWithdraw.getContentPane().add(btnWithdrawFromSavings);
+		
+		JButton btnWithdrawFromCurrencyAccount = new JButton("Withdraw From Currency Account");
+		btnWithdrawFromCurrencyAccount.setBounds(117, 98, 192, 21);
+		frmMenuWithdraw.getContentPane().add(btnWithdrawFromCurrencyAccount);
+		
+		JButton btnWithdrawFromCredit = new JButton("Withdraw From Credit Account");
+		btnWithdrawFromCredit.setBounds(117, 129, 192, 21);
+		frmMenuWithdraw.getContentPane().add(btnWithdrawFromCredit);
+		
+		JButton btnWithdrawFromLine = new JButton("Withdraw From Line Of Credit Account");
+		btnWithdrawFromLine.setBounds(117, 160, 192, 21);
+		frmMenuWithdraw.getContentPane().add(btnWithdrawFromLine);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
+				formMenuCustomer.frmHomeCustomer.setVisible(true);
+				frmMenuWithdraw.dispose();
+			}
+		});
+		btnExit.setBounds(306, 209, 85, 21);
+		frmMenuWithdraw.getContentPane().add(btnExit);
+	}
+
+}

@@ -44,32 +44,60 @@ public class FormMenuDeposit {
 		frmMenuDeposit.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMenuDeposit.getContentPane().setLayout(null);
 		
-		JButton btnDepositOnChecking = new JButton("Deposit On Checking Account");
-		btnDepositOnChecking.addActionListener(new ActionListener() {
+		JButton btnDepositIntoChecking = new JButton("Deposit Into Checking Account");
+		btnDepositIntoChecking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormDepositCheckingAccount formDepositCheckingAccount = new FormDepositCheckingAccount(customerId);
 				formDepositCheckingAccount.frmDepositCheckingAccount.setVisible(true);
 				frmMenuDeposit.dispose();
 			}
 		});
-		btnDepositOnChecking.setBounds(127, 26, 192, 21);
-		frmMenuDeposit.getContentPane().add(btnDepositOnChecking);
+		btnDepositIntoChecking.setBounds(127, 26, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositIntoChecking);
 		
-		JButton btnDepositOnSavings = new JButton("Deposit On Savings Account");
-		btnDepositOnSavings.setBounds(127, 57, 192, 21);
-		frmMenuDeposit.getContentPane().add(btnDepositOnSavings);
+		JButton btnDepositIntoSaving = new JButton("Deposit Into Saving Account");
+		btnDepositIntoSaving.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormDepositSavingAccount formDepositSavingAccount = new FormDepositSavingAccount(customerId);
+				formDepositSavingAccount.frmDepositSavingAccount.setVisible(true);
+				frmMenuDeposit.dispose();
+			}
+		});
+		btnDepositIntoSaving.setBounds(127, 57, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositIntoSaving);
 		
-		JButton btnDepositCurrencyAccount = new JButton("Deposit On Currency Account");
-		btnDepositCurrencyAccount.setBounds(127, 88, 192, 21);
-		frmMenuDeposit.getContentPane().add(btnDepositCurrencyAccount);
+		JButton btnDepositIntoCurrencyAccount = new JButton("Deposit Into Currency Account");
+		btnDepositIntoCurrencyAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormDepositCurrencyAccount formDepositCurrencyAccount = new FormDepositCurrencyAccount(customerId);
+				formDepositCurrencyAccount.frmDepositCurrencyAccount.setVisible(true);
+				frmMenuDeposit.dispose();	
+			}
+		});
+		btnDepositIntoCurrencyAccount.setBounds(127, 88, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositIntoCurrencyAccount);
 		
-		JButton btnDepositOnCredit = new JButton("Deposit On Credit Account");
-		btnDepositOnCredit.setBounds(127, 113, 192, 21);
-		frmMenuDeposit.getContentPane().add(btnDepositOnCredit);
+		JButton btnDepositIntoCredit = new JButton("Deposit Into Credit Account");
+		btnDepositIntoCredit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormDepositCreditAccount formDepositCreditAccount = new FormDepositCreditAccount(customerId);
+				formDepositCreditAccount.frmDepositCreditAccount.setVisible(true);
+				frmMenuDeposit.dispose();
+			}
+		});
+		btnDepositIntoCredit.setBounds(127, 119, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositIntoCredit);
 		
-		JButton btnDepositOnLine = new JButton("Deposit On Line Of Credit Account");
-		btnDepositOnLine.setBounds(127, 144, 192, 21);
-		frmMenuDeposit.getContentPane().add(btnDepositOnLine);
+		JButton btnDepositIntoLine = new JButton("Deposit Into Line Of Credit Account");
+		btnDepositIntoLine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormDepositLineOfCreditAccount formDepositLineOfCreditAccount = new FormDepositLineOfCreditAccount(customerId);
+				formDepositLineOfCreditAccount.frmDepositLineOfCreditAccount.setVisible(true);
+				frmMenuDeposit.dispose();
+			}
+		});
+		btnDepositIntoLine.setBounds(127, 150, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositIntoLine);
 		
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {

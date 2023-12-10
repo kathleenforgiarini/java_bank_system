@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import bus.*;
 
 public class SavingAccountDB {
@@ -92,7 +94,7 @@ public class SavingAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date "
 					+ "FROM accountbank a "
 					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
 					+ "WHERE a.accountid = " + id;
@@ -123,7 +125,7 @@ public class SavingAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.typeaccount, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date "
 					+ "FROM accountbank a "
 					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
 					+ "WHERE a.customerid = " + customerId;
@@ -158,7 +160,7 @@ public class SavingAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, s.due_date, s.interest_rate, s.gain "
 					+ "FROM accountbank a "
 					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
 					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;

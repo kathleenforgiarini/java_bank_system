@@ -58,6 +58,14 @@ public class FormMenuCustomer {
 		frmHomeCustomer.getContentPane().add(btnDeposit);
 		
 		JButton btnWithdraw = new JButton("Withdraw");
+		btnWithdraw.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuWithdraw frmMenuWithdraw = new FormMenuWithdraw(customerId);
+				frmMenuWithdraw.frmMenuWithdraw.setVisible(true);
+				
+				frmHomeCustomer.dispose();
+			}
+		});
 		btnWithdraw.setBounds(145, 84, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnWithdraw);
 		

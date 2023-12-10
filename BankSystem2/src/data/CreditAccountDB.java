@@ -60,13 +60,14 @@ public class CreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLStatement = "update CreditAccount set due_date = "    
-			              +   Date.valueOf(aChangedAccount.getDueDate()) + " WHERE creditaccountid = "
-			              +   aChangedAccount.getAccountNumber();
-	
-		Statement myStatemnt = myConnection.createStatement();
-		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();		
+		String mySQLStatement = "UPDATE CreditAccount SET duedate = ? WHERE creditaccountid = ?";
+		PreparedStatement myPreparedStatement = myConnection.prepareStatement(mySQLStatement);		
+		
+		myPreparedStatement.setDate(1, Date.valueOf(aChangedAccount.getDueDate()));
+		myPreparedStatement.setInt(2, aChangedAccount.getAccountNumber());
+
+		myPreparedStatement.executeUpdate();
+		myConnection.commit();	
 		myConnection.close();
 	}
 	
@@ -76,7 +77,7 @@ public class CreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit "
 					+ "FROM accountbank a "
 					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
 					+ "WHERE a.accountid = " + id ;
@@ -106,7 +107,7 @@ public class CreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit "
 					+ "FROM accountbank a "
 					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
 					+ "WHERE a.customerid = " + customerId ;
@@ -140,7 +141,7 @@ public class CreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit "
 					+ "FROM accountbank a "
 					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
 					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
@@ -169,7 +170,7 @@ public class CreditAccountDB {
 		CreditAccount aCreditAccount = null;
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit "
 				+ "FROM accountbank a "
 				+ "JOIN creditaccount c ON a.accountid = c.creditaccountid ";
 		

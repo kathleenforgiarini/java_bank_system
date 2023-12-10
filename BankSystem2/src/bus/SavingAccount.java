@@ -77,9 +77,9 @@ public class SavingAccount extends Account {
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		
-		Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber,
+		Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber,
         		EnumTypeTransaction.Credit);    
         
 		this.balance += amount;
@@ -90,13 +90,13 @@ public class SavingAccount extends Account {
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
-		if (transactionDate.isBefore(this.dueDate)) {
+		if (LocalDate.now().isBefore(this.dueDate)) {
 			
 			if (amount <= this.balance) {
 				
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+			Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
             		EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
@@ -114,7 +114,7 @@ public class SavingAccount extends Account {
 			calcGain();
 			
 			if (amount == this.balance) {
-				Transaction transactionInterest = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber,
+				Transaction transactionInterest = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 				
 				this.balance -= amount;

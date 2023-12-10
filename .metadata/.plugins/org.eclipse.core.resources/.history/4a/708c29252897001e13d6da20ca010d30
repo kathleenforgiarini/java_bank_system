@@ -1,0 +1,76 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class FormDepositLineOfCreditAccount {
+
+	private JFrame frmDepositLineOfCreditAccount;
+	private JTextField textFieldAccount;
+	private JTextField textFieldAmount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormDepositLineOfCreditAccount window = new FormDepositLineOfCreditAccount();
+					window.frmDepositLineOfCreditAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormDepositLineOfCreditAccount() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmDepositLineOfCreditAccount = new JFrame();
+		frmDepositLineOfCreditAccount.setTitle("Deposit On Line Of Credit Account");
+		frmDepositLineOfCreditAccount.setBounds(100, 100, 450, 300);
+		frmDepositLineOfCreditAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDepositLineOfCreditAccount.getContentPane().setLayout(null);
+		
+		JLabel lblAccount = new JLabel("Enter the account id:");
+		lblAccount.setBounds(34, 35, 104, 13);
+		frmDepositLineOfCreditAccount.getContentPane().add(lblAccount);
+		
+		textFieldAccount = new JTextField();
+		textFieldAccount.setColumns(10);
+		textFieldAccount.setBounds(146, 32, 186, 19);
+		frmDepositLineOfCreditAccount.getContentPane().add(textFieldAccount);
+		
+		JLabel lblNewLabel = new JLabel("Enter the amount:");
+		lblNewLabel.setBounds(34, 61, 104, 13);
+		frmDepositLineOfCreditAccount.getContentPane().add(lblNewLabel);
+		
+		textFieldAmount = new JTextField();
+		textFieldAmount.setColumns(10);
+		textFieldAmount.setBounds(146, 58, 186, 19);
+		frmDepositLineOfCreditAccount.getContentPane().add(textFieldAmount);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBounds(184, 213, 85, 21);
+		frmDepositLineOfCreditAccount.getContentPane().add(btnExit);
+		
+		JButton btnDeposit = new JButton("Deposit");
+		btnDeposit.setBounds(317, 213, 85, 21);
+		frmDepositLineOfCreditAccount.getContentPane().add(btnDeposit);
+	}
+
+}

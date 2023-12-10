@@ -183,8 +183,13 @@ public class LineOfCreditAccountDB {
             LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
             Double limit = myResultSet.getDouble("limit");
             Double interestRate = myResultSet.getDouble("interest_rate");
+            Integer nbOfInstall = myResultSet.getInt("nbofinstall");
+            Double installment = myResultSet.getDouble("installment");
+            
 
             aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
+            aLineOfCreditAccount.setNbOfInstallments(nbOfInstall);
+            aLineOfCreditAccount.setInstallment(installment);
 		}	
 		myConnection.close();
 		return aLineOfCreditAccount;
@@ -195,7 +200,7 @@ public class LineOfCreditAccountDB {
 		LineOfCreditAccount aLineOfCreditAccount = null;
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment "
 				+ "FROM accountbank a "
 				+ "JOIN lineofcreditaccount l ON a.accountid = l.lineofcreditaccountid "
 				+ "JOIN creditaccount c ON a.accountid = c.creditaccountid";

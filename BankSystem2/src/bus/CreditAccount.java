@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import data.AccountDB;
-import data.CheckingAccountDB;
 import data.CreditAccountDB;
 
 public class CreditAccount extends Account{
@@ -63,13 +62,13 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 				
 		Double debtValue = this.getLimit() - this.getBalance();
 		
-		if (transactionDate.isBefore(this.getDueDate())) {
+		if (LocalDate.now().isBefore(this.getDueDate())) {
 				
-			Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Credit);	
+			Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Credit);	
 			
 			this.balance += amount;
 			Account.update(this);
@@ -82,8 +81,8 @@ public class CreditAccount extends Account{
 			Double taxLate = 0.05;
 			Double lateFee = taxLate*debtValue;			
 		 		
-			Transaction transactionDep = new Transaction(null, "Deposit", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Credit);
-			Transaction transactionFees = new Transaction(null, "Fee for late payment", transactionDate, lateFee, this.accountNumber, EnumTypeTransaction.Debit);
+			Transaction transactionDep = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Credit);
+			Transaction transactionFees = new Transaction(null, "Fee for late payment", LocalDate.now(), lateFee, this.accountNumber, EnumTypeTransaction.Debit);
 			
 		 	this.balance += amount;
 		 	Account.update(this);
@@ -96,11 +95,11 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
+	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
 		
 		if (amount <= this.getBalance()) {
 			
-			Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.accountNumber, EnumTypeTransaction.Debit);
+			Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Debit);
 			
 			this.balance -= amount;
 			Account.update(this);

@@ -75,22 +75,23 @@ public class LineOfCreditAccount extends CreditAccount{
 	}
 	
 	@Override
-	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
+	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
 		
-		Transaction transaction = new Transaction(null, "Withdraw", transactionDate, amount, this.lineOfCreditAccountId, EnumTypeTransaction.Debit);
+		Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.lineOfCreditAccountId, EnumTypeTransaction.Debit);
 		
 		this.setBalance(amount*-1);
+		Account.update(this);
 		Transaction.add(transaction);
 	}
 	
 	
 	@Override
-	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
+	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		
 		if (amount >= this.getInstallment()) {
-			if (transactionDate.isBefore(this.dueDate))
+			if (LocalDate.now().isBefore(this.dueDate))
 			{
-				Transaction transaction = new Transaction(null, "Deposit", transactionDate, amount, this.lineOfCreditAccountId, EnumTypeTransaction.Credit);
+				Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.lineOfCreditAccountId, EnumTypeTransaction.Credit);
 				
 				this.balance += amount;
 				Account.update(this);

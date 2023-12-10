@@ -75,7 +75,7 @@ public class CurrencyAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee "
 					+ "FROM accountbank a "
 					+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid "
 					+ "WHERE a.accountid = " + id ;
@@ -106,7 +106,7 @@ public class CurrencyAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee "
 					+ "FROM accountbank a "
 					+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid "
 					+ "WHERE a.customerid = " + customerId ;
@@ -140,7 +140,7 @@ public class CurrencyAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee "
 					+ "FROM accountbank a "
 					+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid "
 					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
@@ -170,7 +170,7 @@ public class CurrencyAccountDB {
 		CurrencyAccount aCurrencyAccount = null;
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee "
 				+ "FROM accountbank a "
 				+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid ";
 		
