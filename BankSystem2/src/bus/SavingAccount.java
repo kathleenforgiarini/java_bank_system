@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import data.AccountDB;
-import data.CreditAccountDB;
 import data.SavingAccountDB;
 
 public class SavingAccount extends Account {
@@ -86,7 +85,6 @@ public class SavingAccount extends Account {
 		Account.update(this);
 		Transaction.add(transaction);
 		setGain();
-		SavingAccount.updateGain(this);
 	}
 
 	@Override
@@ -103,7 +101,6 @@ public class SavingAccount extends Account {
 			Account.update(this);
 			Transaction.add(transaction);
 			setGain();
-			SavingAccount.updateGain(this);
 			}
 			else {
 				throw new ExceptionNotEnoughBalance();
@@ -121,7 +118,6 @@ public class SavingAccount extends Account {
 				Account.update(this);
 				Transaction.add(transactionInterest);
 				setGain();
-				SavingAccount.updateGain(this);
 			}
 		}
 	}

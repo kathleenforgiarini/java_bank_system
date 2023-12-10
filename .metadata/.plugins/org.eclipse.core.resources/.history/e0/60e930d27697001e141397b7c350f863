@@ -1,0 +1,44 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class FormTransferBetweenSaving {
+
+	JFrame frmTransferBetweenSaving;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormTransferBetweenSaving window = new FormTransferBetweenSaving((Integer)null);
+					window.frmTransferBetweenSaving.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormTransferBetweenSaving(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmTransferBetweenSaving = new JFrame();
+		frmTransferBetweenSaving.setTitle("Transfer Between Saving Accounts");
+		frmTransferBetweenSaving.setBounds(100, 100, 450, 300);
+		frmTransferBetweenSaving.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}

@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import data.AccountDB;
 import data.CheckingAccountDB;
 

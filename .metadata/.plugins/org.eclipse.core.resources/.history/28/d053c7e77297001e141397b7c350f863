@@ -1,0 +1,44 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class FormTransferBetweenChecking {
+
+	JFrame frmTransferBetweenChecking;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormTransferBetweenChecking window = new FormTransferBetweenChecking((Integer)null);
+					window.frmTransferBetweenChecking.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormTransferBetweenChecking(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmTransferBetweenChecking = new JFrame();
+		frmTransferBetweenChecking.setTitle("Transfer between Checking Accounts");
+		frmTransferBetweenChecking.setBounds(100, 100, 450, 300);
+		frmTransferBetweenChecking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}

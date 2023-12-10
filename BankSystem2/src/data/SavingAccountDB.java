@@ -94,7 +94,7 @@ public class SavingAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date "
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, s.due_date, s.interest_rate, s.gain, s.due_date "
 					+ "FROM accountbank a "
 					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
 					+ "WHERE a.accountid = " + id;

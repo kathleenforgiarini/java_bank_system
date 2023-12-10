@@ -70,6 +70,14 @@ public class FormMenuCustomer {
 		frmHomeCustomer.getContentPane().add(btnWithdraw);
 		
 		JButton btnTransfer = new JButton("Transfer");
+		btnTransfer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuTransfer formMenuTransfer = new FormMenuTransfer(customerId);
+				formMenuTransfer.frmMenuTransfer.setVisible(true);
+				
+				frmHomeCustomer.dispose();
+			}
+		});
 		btnTransfer.setBounds(145, 115, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnTransfer);
 		

@@ -1,0 +1,60 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormTransferBetweenChecking {
+
+	JFrame frmTransferBetweenChecking;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormTransferBetweenChecking window = new FormTransferBetweenChecking((Integer)null);
+					window.frmTransferBetweenChecking.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormTransferBetweenChecking(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmTransferBetweenChecking = new JFrame();
+		frmTransferBetweenChecking.setTitle("Transfer between Checking Accounts");
+		frmTransferBetweenChecking.setBounds(100, 100, 450, 300);
+		frmTransferBetweenChecking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTransferBetweenChecking.getContentPane().setLayout(null);
+		
+		JButton btnExit = new JButton("Cancel");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuTransfer formMenuTransfer = new FormMenuTransfer(customerId);
+				formMenuTransfer.frmMenuCustomer.setVisible(true);
+				
+				frmMenuTransfer.dispose();
+			}
+		});
+		btnExit.setBounds(315, 219, 85, 21);
+		frmTransferBetweenChecking.getContentPane().add(btnExit);
+	}
+
+}
