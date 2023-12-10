@@ -7,7 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bus.Customer;
+import bus.Manager;
+import bus.User;
 
 public class FormCustomerLogin {
 
@@ -67,6 +72,41 @@ public class FormCustomerLogin {
 		frmCustomerAreaLogin.getContentPane().add(lblPassword);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String username = textFieldUsername.getText();
+					Integer password = Integer.parseInt(textFieldPassword.getText());
+					
+					if (username.isEmpty())
+					{
+						JOptionPane.showMessageDialog(null, "Please, enter both fields");
+					}
+					else
+					{
+						User userFound = User.search(username, password);
+						Customer customerFound = Customer.search(userFound.getId());
+						if (customerFound == null)
+						{
+							JOptionPane.showMessageDialog(null, "Invalid Credentials!");
+						}
+						else
+						{
+							FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerFound.getId());
+							formMenuCustomer.frmHomeCustomer.setVisible(true);
+							
+							frmCustomerAreaLogin.dispose();
+						}
+					}
+				} catch (Exception exc)
+				{
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+				
+				
+				
+			}
+		});
 		btnLogin.setBounds(285, 197, 85, 21);
 		frmCustomerAreaLogin.getContentPane().add(btnLogin);
 		

@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CheckingAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.Manager;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -101,18 +102,10 @@ public class FormAddNewCustomer {
 					try {
 						Integer passwordParsed = Integer.parseInt(password);
 						Double salaryParsed = Double.parseDouble(salary);
-						
-						newCustomer.setUsername(username);
-						newCustomer.setPassword(passwordParsed);
-						newCustomer.setSalary(salaryParsed);
-						newCustomer.setMgr(mgrId);
-						Integer addedId = Customer.add(newCustomer);
+											
+						Manager.createCustomer(username, passwordParsed, salaryParsed, mgrId);
 						
 						JOptionPane.showMessageDialog(null, "User Created!");
-						
-						CheckingAccount newCheckingAccount = new CheckingAccount((Integer)null, EnumTypeAccount.CheckingAccount, addedId, 0.00, LocalDate.now(), 3, 5.00);
-						CheckingAccount.add(newCheckingAccount);
-						
 						JOptionPane.showMessageDialog(null, "Checking Account Created!");
 
 						FormMenuManager formMenuManager = new FormMenuManager(mgrId);

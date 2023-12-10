@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CreditAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.Manager;
 import bus.SavingAccount;
 
 import javax.swing.JButton;
@@ -118,15 +119,7 @@ public class FormOpenCreditAccount {
 					
 					Customer selectedCustomer = Customer.search(selectedId);
 					
-					CreditAccount newCreditAccount = new CreditAccount((Integer)null, 
-							EnumTypeAccount.CreditAccount, 
-							selectedCustomer.getId(), 
-							balance, 
-							LocalDate.now(),
-							dueDate,
-							limit);
-					
-					CreditAccount.add(newCreditAccount);
+					Manager.openCreditAccount(selectedCustomer.getId(), balance, dueDate, limit);
 
 					JOptionPane.showMessageDialog(null, "Credit Account Created!");
 					

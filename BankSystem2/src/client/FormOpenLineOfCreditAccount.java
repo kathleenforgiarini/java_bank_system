@@ -11,6 +11,7 @@ import bus.CreditAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
 import bus.LineOfCreditAccount;
+import bus.Manager;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -118,15 +119,7 @@ public class FormOpenLineOfCreditAccount {
 					
 					Customer selectedCustomer = Customer.search(selectedId);
 					
-					LineOfCreditAccount newLineOfCreditAccount = new LineOfCreditAccount((Integer)null, 
-							EnumTypeAccount.LineOfCreditAccount, 
-							selectedCustomer.getId(), 
-							LocalDate.now(),
-							dueDate,
-							limit,
-							interestRate);
-					
-					LineOfCreditAccount.add(newLineOfCreditAccount);
+					Manager.openLineOfCreditAccount(selectedCustomer.getId(), dueDate, limit, interestRate);
 
 					JOptionPane.showMessageDialog(null, "Line of Credit Account Created!");
 					

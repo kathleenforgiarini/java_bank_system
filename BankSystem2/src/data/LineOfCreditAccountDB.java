@@ -5,9 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
 
 import bus.*;
 
@@ -16,11 +15,9 @@ public class LineOfCreditAccountDB {
 	static private String mySQLStatement = null;	
 	static private String mySQLQuery = null;
 	
-	public static void insert(LineOfCreditAccount aNewLineOfCreditAccount) throws SQLException 
+	public static void insert(LineOfCreditAccount aNewLineOfCreditAccount) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance 
 	{	 	
-		JOptionPane.showMessageDialog(null, "Entrei no insert");
 		Integer id = CreditAccountDB.insert(aNewLineOfCreditAccount);
-		JOptionPane.showMessageDialog(null, "Inseri no Credit: id " + id);
 
     	myConnection = DBConnection.getConnection();
     	   
@@ -40,8 +37,17 @@ public class LineOfCreditAccountDB {
 			
 			myConnection.commit();
 			
-			updateNbOfInstallments(aNewLineOfCreditAccount);
-			updateInstallment(aNewLineOfCreditAccount);
+			Period period = Period.between(aNewLineOfCreditAccount.getOpeningDate(), aNewLineOfCreditAccount.getDueDate());
+
+			long monthsLong = period.toTotalMonths();
+			Integer monthsInt = (int) monthsLong;
+			
+			Double finalDebt = aNewLineOfCreditAccount.getLimit() * (1 + aNewLineOfCreditAccount.getInterestRate());	
+
+			aNewLineOfCreditAccount.setAccountNumber(id);
+			aNewLineOfCreditAccount.setNbOfInstallments(monthsInt);
+			aNewLineOfCreditAccount.setInstallment(finalDebt/aNewLineOfCreditAccount.getNbOfInstallments());
+			
 	    }
 	    myConnection.close();
 	}
@@ -52,7 +58,7 @@ public class LineOfCreditAccountDB {
 		
 		mySQLStatement = "update LineOfCreditAccount set interest_rate = "    
 			              +   aChangedLineOfCreditAccount.getInterestRate()+ " WHERE LINEOFCREDITACCOUNTID = "
-			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
+			              +   aChangedLineOfCreditAccount.getAccountNumber();
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
@@ -64,9 +70,9 @@ public class LineOfCreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLStatement = "update LineOfCreditAccount set nbOfInstall = " 
+		mySQLStatement = "update LineOfCreditAccount set NBOFINSTALL = " 
 			              +   aChangedLineOfCreditAccount.getNbOfInstallments() + " WHERE LINEOFCREDITACCOUNTID = "
-			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
+			              +   aChangedLineOfCreditAccount.getAccountNumber();
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
@@ -80,7 +86,7 @@ public class LineOfCreditAccountDB {
 		
 		mySQLStatement = "update LineOfCreditAccount set installment = " 
 			              +   aChangedLineOfCreditAccount.getInstallment() + " WHERE LINEOFCREDITACCOUNTID = "
-			              +   aChangedLineOfCreditAccount.getLineOfCreditAccountId();
+			              +   aChangedLineOfCreditAccount.getAccountNumber();
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
@@ -112,8 +118,6 @@ public class LineOfCreditAccountDB {
             LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
             Double limit = myResultSet.getDouble("limit");
             Double interestRate = myResultSet.getDouble("interest_rate");
-            Integer nbofinstall = myResultSet.getInt("nbofinstall");	
-            Double installment = myResultSet.getDouble("installment");
 
             aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
 		}	
@@ -147,8 +151,6 @@ public class LineOfCreditAccountDB {
             LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
             Double limit = myResultSet.getDouble("limit");
             Double interestRate = myResultSet.getDouble("interest_rate");
-            Integer nbofinstall = myResultSet.getInt("nbofinstall");	
-            Double installment = myResultSet.getDouble("installment");
 
             aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
             
@@ -156,6 +158,36 @@ public class LineOfCreditAccountDB {
 		}	
 		myConnection.close();
 		return myList;
+	}
+	
+	public static LineOfCreditAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+		LineOfCreditAccount aLineOfCreditAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment "
+					+ "FROM accountbank a "
+					+ "JOIN lineofcreditaccount l ON a.accountid = l.lineofcreditaccountid "
+					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
+					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+			Integer customerid = myResultSet.getInt("customerid");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
+            Double limit = myResultSet.getDouble("limit");
+            Double interestRate = myResultSet.getDouble("interest_rate");
+
+            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
+		}	
+		myConnection.close();
+		return aLineOfCreditAccount;
 	}
 	
 	public static ArrayList<LineOfCreditAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance{
@@ -182,8 +214,6 @@ public class LineOfCreditAccountDB {
             LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
             Double limit = myResultSet.getDouble("limit");
             Double interestRate = myResultSet.getDouble("interest_rate");
-            Integer nbofinstall = myResultSet.getInt("nbofinstall");	
-            Double installment = myResultSet.getDouble("installment");
 
             aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
 	
@@ -192,5 +222,7 @@ public class LineOfCreditAccountDB {
 		myConnection.close();
 		return myList;
 	}
+
+
 		
 }

@@ -50,7 +50,8 @@ public class AccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();		
+		myConnection.close();
 	}
 	
 	public static void delete(Integer id) throws SQLException {
@@ -62,6 +63,7 @@ public class AccountDB {
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
 		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static Integer searchMaxId () throws SQLException
@@ -80,6 +82,27 @@ public class AccountDB {
 			idFound = myResultSet.getInt("max");
 		}	
 		
+		myConnection.close();
 		return idFound;
+	}
+	
+	public static Double getBalanceById(Integer accountId, Integer customerId) throws SQLException {
+		myConnection = DBConnection.getConnection();
+		Double balanceFound = null;
+		
+		mySQLQuery = "SELECT balance "
+					+ "FROM accountbank WHERE accountid = " + accountId
+					+ " AND customerid = " + customerId;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			balanceFound = myResultSet.getDouble("balance");
+		}	
+		
+		myConnection.close();
+		return balanceFound;
 	}
 }

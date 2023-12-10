@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CheckingAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.Manager;
 import bus.SavingAccount;
 
 import javax.swing.JButton;
@@ -104,15 +105,7 @@ public class FormOpenSavingAccount {
 					
 					Customer selectedCustomer = Customer.search(selectedId);
 					
-					SavingAccount newSavingsAccount = new SavingAccount((Integer)null, 
-							EnumTypeAccount.SavingAccount, 
-							selectedCustomer.getId(), 
-							balance, 
-							LocalDate.now(), 
-							intRate,
-							dueDate);
-					
-					SavingAccount.add(newSavingsAccount);
+					Manager.openSavingAccount(selectedCustomer.getId(), balance, intRate, dueDate);
 
 					JOptionPane.showMessageDialog(null, "Saving Account Created!");
 					

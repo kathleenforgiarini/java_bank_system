@@ -117,7 +117,7 @@ public class SavingAccountDB {
 		return aSavingAccount;
 	}
 	
-public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
+	public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
 		
 		SavingAccount aSavingAccount = null;
 		
@@ -152,6 +152,37 @@ public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) thro
 		return myList;
 	}
 	
+
+	public static SavingAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		SavingAccount aSavingAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, s.due_date, s.interest_rate, s.gain, s.due_date"
+					+ "FROM accountbank a "
+					+ "JOIN savingaccount s ON a.accountid = s.savingsaccountid "
+					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+            Integer customerid = myResultSet.getInt("customerid");		//ALTERAR CLASSE PARA RECEBER CUSTOMER ID
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            Double interestRate = myResultSet.getDouble("interest_rate");
+            LocalDate dueDate = myResultSet.getDate("due_date").toLocalDate();
+
+            aSavingAccount = new SavingAccount(accountid, type, customerid, balance, openingDate, interestRate, dueDate); 	//REMOVER TRANSACTIONS DOS ATRIBUTOS DA CLASSE
+		}	
+		
+		myConnection.close();
+		return aSavingAccount;
+	}
+	
 	public static ArrayList<SavingAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
 		
 		SavingAccount aSavingAccount = null;
@@ -184,4 +215,5 @@ public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) thro
 		myConnection.close();
 		return myList;
 	}
+
 }

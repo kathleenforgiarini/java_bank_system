@@ -3,16 +3,16 @@ package bus;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
-
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 import data.AccountDB;
+import data.CurrencyAccountDB;
 import data.LineOfCreditAccountDB;
 
 public class LineOfCreditAccount extends CreditAccount{
 
 	private Integer lineOfCreditAccountId;
-	private Double interestRate; //	TROCAR NO BANCO DE DADOS
+	private Double interestRate;
 	private Integer nbOfInstallments;
 	private Double installment;
 	
@@ -28,29 +28,8 @@ public class LineOfCreditAccount extends CreditAccount{
 			LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance, SQLException {
 		
 		super(accountNumber, type, customer, 0.00, openingDate, dueDate, limit);
-		//this.lineOfCreditAccountId = accountNumber;
-		
+		setLineOfCreditAccountId(accountNumber);
 		setInterestRate(interestRate);
-		
-		//JOptionPane.showMessageDialog(null, openingDate);
-		//JOptionPane.showMessageDialog(null, dueDate);
-				
-		Period period = Period.between(openingDate, dueDate);	//NUMBER OF INSTALLMENTS IS THE QUANTITY OF MONTHS FROM THE OPENING DATE OF THE ACCOUNT AND THE DUE DATE
-		//JOptionPane.showMessageDialog(null, "Nb of Months: " + numberOfMonths.toTotalMonths());
-
-		long monthsLong = period.toTotalMonths();
-		Integer monthsInt = (int) monthsLong;
-		
-		setNbOfInstallments(monthsInt);	
-		JOptionPane.showMessageDialog(null, "Setei o nb of installments: " + monthsInt);
-
-		
-		Double finalDebt = limit * (1 + getInterestRate());	
-		JOptionPane.showMessageDialog(null, "Final Debt: " + finalDebt);
-
-		setInstallment(finalDebt/getNbOfInstallments()); //CALCULATING THE FINAL PRICE THAT THE CUSTOMER HAS TO PAY: THE AMOUNT ASKED PLUS THE INTEREST RATE
-		
-		JOptionPane.showMessageDialog(null, "Setei o installment");
 		
 		//withdraw(openingDate, finalDebt);
 	}
@@ -141,7 +120,7 @@ public class LineOfCreditAccount extends CreditAccount{
 	//////////////////////////////
 	//   public static services //
 	//////////////////////////////
-	public static void add(LineOfCreditAccount element) throws SQLException {
+	public static void add(LineOfCreditAccount element) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 		LineOfCreditAccountDB.insert(element);
 	}
 	
@@ -161,11 +140,11 @@ public class LineOfCreditAccount extends CreditAccount{
 		AccountDB.delete(id);
 	}
 	
-//	public static LineOfCreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
-//		return LineOfCreditAccountDB.search(id);
-//	}
-//	
-//	public static ArrayList<LineOfCreditAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
-//		return LineOfCreditAccountDB.select();
-//	}
+	public static LineOfCreditAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+		return LineOfCreditAccountDB.searchByIdAndCustomer(id, customer);
+	}
+	
+	public static LineOfCreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+		return LineOfCreditAccountDB.search(id);
+	}
 }

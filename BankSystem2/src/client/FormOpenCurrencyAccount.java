@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import bus.EnumTypeCurrency;
+import bus.Manager;
 
 public class FormOpenCurrencyAccount {
 
@@ -94,21 +95,10 @@ public class FormOpenCurrencyAccount {
 					Double currRate = Double.parseDouble(textFieldCurrencyRate.getText());
 					Double currFee = Double.parseDouble(textFieldConversionFee.getText());
 					EnumTypeCurrency combobox = (EnumTypeCurrency) comboBoxCurrency.getSelectedItem();
-					//JOptionPane.showMessageDialog(null, combobox);
-					//String selectedValue = (String)comboBoxCurrency.getSelectedItem();
-					
+										
 					Customer selectedCustomer = Customer.search(selectedId);
 					
-					CurrencyAccount newCurrencyAccount = new CurrencyAccount((Integer)null, 
-							EnumTypeAccount.CurrencyAccount, 
-							selectedCustomer.getId(), 
-							balance, 
-							LocalDate.now(), 
-							combobox,
-							currRate, 
-							currFee);
-					
-					CurrencyAccount.add(newCurrencyAccount);
+					Manager.openCurrencyAccount(selectedCustomer.getId(), balance, combobox, currRate, currFee);
 
 					JOptionPane.showMessageDialog(null, "Currency Account Created!");
 					

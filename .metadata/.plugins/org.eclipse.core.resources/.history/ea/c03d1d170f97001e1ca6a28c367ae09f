@@ -1,0 +1,74 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormGetBalance {
+
+	private JFrame frame;
+	private JTextField textFieldAccount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormGetBalance window = new FormGetBalance();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormGetBalance() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 365, 154);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Enter the account Id:");
+		lblNewLabel.setBounds(23, 21, 112, 13);
+		frame.getContentPane().add(lblNewLabel);
+		
+		textFieldAccount = new JTextField();
+		textFieldAccount.setBounds(130, 18, 166, 19);
+		frame.getContentPane().add(textFieldAccount);
+		textFieldAccount.setColumns(10);
+		
+		JButton btnViewBalance = new JButton("View balance");
+		btnViewBalance.setBounds(211, 72, 112, 21);
+		frame.getContentPane().add(btnViewBalance);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
+				formMenuManager.frmHomeManager.setVisible(true);
+				
+				frmHomeNewAccount.dispose();
+			}
+		});
+		btnExit.setBounds(98, 72, 85, 21);
+		frame.getContentPane().add(btnExit);
+	}
+}

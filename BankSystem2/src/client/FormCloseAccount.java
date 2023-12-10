@@ -4,7 +4,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bus.Account;
+import bus.Customer;
+import bus.Manager;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -12,9 +18,8 @@ import java.awt.event.ActionEvent;
 public class FormCloseAccount {
 
 	JFrame frmCloseAccount;
-	private JTextField textFieldUsername;
 	private JTextField textFieldPassword;
-	private JTextField textField;
+	private JTextField textFieldAccount;
 
 	/**
 	 * Launch the application.
@@ -23,7 +28,7 @@ public class FormCloseAccount {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormCloseAccount window = new FormCloseAccount();
+					FormCloseAccount window = new FormCloseAccount((Integer)null);
 					window.frmCloseAccount.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,61 +40,71 @@ public class FormCloseAccount {
 	/**
 	 * Create the application.
 	 */
-	public FormCloseAccount() {
-		initialize();
+	public FormCloseAccount(Integer mgrId) {
+		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer mgrId) {
 		frmCloseAccount = new JFrame();
 		frmCloseAccount.setTitle("Close Account");
-		frmCloseAccount.setBounds(100, 100, 450, 300);
+		frmCloseAccount.setBounds(100, 100, 450, 176);
 		frmCloseAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCloseAccount.getContentPane().setLayout(null);
 		
-		JLabel lblUsername = new JLabel("Select customer username:");
-		lblUsername.setBounds(23, 28, 139, 13);
-		frmCloseAccount.getContentPane().add(lblUsername);
-		
-		textFieldUsername = new JTextField();
-		textFieldUsername.setBounds(172, 22, 225, 19);
-		frmCloseAccount.getContentPane().add(textFieldUsername);
-		textFieldUsername.setColumns(10);
-		
 		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
-		lblPasswordMngr.setBounds(23, 195, 113, 13);
+		lblPasswordMngr.setBounds(23, 77, 113, 13);
 		frmCloseAccount.getContentPane().add(lblPasswordMngr);
 		
 		textFieldPassword = new JTextField();
 		textFieldPassword.setColumns(10);
-		textFieldPassword.setBounds(172, 189, 225, 19);
+		textFieldPassword.setBounds(172, 71, 225, 19);
 		frmCloseAccount.getContentPane().add(textFieldPassword);
 		
 		JButton btnCloseAccount = new JButton("Close Account");
-		btnCloseAccount.setBounds(259, 218, 138, 21);
+		btnCloseAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Integer accountId = Integer.parseInt(textFieldAccount.getText());
+					Manager.closeAccount(accountId);
+					JOptionPane.showMessageDialog(null, "Account DELETED!!");
+					
+					FormMenuManager formMenuManager = new FormMenuManager(mgrId);
+					formMenuManager.frmHomeManager.setVisible(true);
+					
+					frmCloseAccount.dispose();
+					
+				} catch (Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+				
+				
+			}
+		});
+		btnCloseAccount.setBounds(259, 100, 138, 21);
 		frmCloseAccount.getContentPane().add(btnCloseAccount);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuManager formMenuManager = new FormMenuManager();
+				FormMenuManager formMenuManager = new FormMenuManager(mgrId);
 				formMenuManager.frmHomeManager.setVisible(true);
 				
 				frmCloseAccount.dispose();
 			}
 		});
-		btnCancel.setBounds(172, 218, 77, 21);
+		btnCancel.setBounds(172, 100, 77, 21);
 		frmCloseAccount.getContentPane().add(btnCancel);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(172, 51, 225, 19);
-		frmCloseAccount.getContentPane().add(textField);
+		textFieldAccount = new JTextField();
+		textFieldAccount.setColumns(10);
+		textFieldAccount.setBounds(172, 22, 225, 19);
+		frmCloseAccount.getContentPane().add(textFieldAccount);
 		
 		JLabel lblAccountId = new JLabel("Select the ID of the Account:");
-		lblAccountId.setBounds(23, 57, 139, 13);
+		lblAccountId.setBounds(23, 25, 139, 13);
 		frmCloseAccount.getContentPane().add(lblAccountId);
 	}
 }

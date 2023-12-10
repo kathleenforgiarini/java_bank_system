@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import data.AccountDB;
+import data.CreditAccountDB;
 import data.SavingAccountDB;
 
 public class SavingAccount extends Account {
@@ -23,6 +24,7 @@ public class SavingAccount extends Account {
 
 	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, SQLException {
 		super(accountNumber, type, customer, balance, openingDate);
+		setAccountNumber(accountNumber);
 		setInterestRate(interestRate);
 		setDueDate(dueDate);		
 		setGain();
@@ -161,6 +163,10 @@ public class SavingAccount extends Account {
 		return SavingAccountDB.searchByCustomer(customer);
 	}
 	
+	public static SavingAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return SavingAccountDB.searchByIdAndCustomer(id, customer);
+	}
+
 	public static ArrayList<SavingAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return SavingAccountDB.select();
 	}

@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CheckingAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.Manager;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -86,17 +87,9 @@ public class FormOpenCheckingAccount {
 					Double fee = Double.parseDouble(textFieldTransFee.getText());
 					
 					Customer selectedCustomer = Customer.search(selectedId);
+			
+					Manager.openCheckingAccount(selectedCustomer.getId(), balance, monthLimit, fee);
 					
-					CheckingAccount newCheckingAccount = new CheckingAccount((Integer)null, 
-							EnumTypeAccount.CheckingAccount, 
-							selectedCustomer.getId(), 
-							balance, 
-							LocalDate.now(), 
-							monthLimit, 
-							fee);
-					
-					CheckingAccount.add(newCheckingAccount);
-
 					JOptionPane.showMessageDialog(null, "Checking Account Created!");
 					
 					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);

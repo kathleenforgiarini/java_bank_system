@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import data.AccountDB;
+import data.CreditAccountDB;
 import data.CurrencyAccountDB;
 
 public class CurrencyAccount extends Account {
@@ -25,6 +26,7 @@ public class CurrencyAccount extends Account {
 	public CurrencyAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate,
 			EnumTypeCurrency currency, double currencyRate, double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super(accountNumber, type, customer, balance, openingDate);
+		setAccountNumber(accountNumber);
 		this.currency = currency;
 		this.currencyRate = currencyRate;
 		this.conversionFees = conversionFees;
@@ -136,6 +138,10 @@ public class CurrencyAccount extends Account {
 	
 	public static ArrayList<CurrencyAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return CurrencyAccountDB.searchByCustomer(customer);
+	}
+	
+	public static CurrencyAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return CurrencyAccountDB.searchByIdAndCustomer(id, customer);
 	}
 	
 	public static ArrayList<CurrencyAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {

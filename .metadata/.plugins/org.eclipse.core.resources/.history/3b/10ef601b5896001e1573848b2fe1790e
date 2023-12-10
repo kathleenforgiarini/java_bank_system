@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * 
- */
-module BankSystem2 {
-	requires java.sql;
-}

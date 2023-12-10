@@ -135,6 +135,36 @@ public class CurrencyAccountDB {
 		return myList;
 	}
 	
+	public static CurrencyAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber {
+		CurrencyAccount aCurrencyAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.currency, c.currency_rate, c.conv_fee"
+					+ "FROM accountbank a "
+					+ "JOIN currencyaccount c ON a.accountid = c.currencyaccountid "
+					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+			Integer customerid = myResultSet.getInt("customerid");		
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            EnumTypeCurrency currency = EnumTypeCurrency.valueOf(myResultSet.getString("currency"));
+            Double currency_rate = myResultSet.getDouble("currency_rate");
+            Double conv_fee = myResultSet.getDouble("conv_fee");
+
+            aCurrencyAccount = new CurrencyAccount(accountid, type, customerid, balance, openingDate, currency, currency_rate, conv_fee);
+		}	
+		myConnection.close();
+		return aCurrencyAccount;
+	}
+	
 	public static ArrayList<CurrencyAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber{
 		
 		CurrencyAccount aCurrencyAccount = null;

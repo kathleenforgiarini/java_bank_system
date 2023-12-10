@@ -83,7 +83,7 @@ public class FormMenuManager {
 		JButton btnCloseAccount = new JButton("Close Account");
 		btnCloseAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormCloseAccount formCloseAccount = new FormCloseAccount();
+				FormCloseAccount formCloseAccount = new FormCloseAccount(mgrId);
 				formCloseAccount.frmCloseAccount.setVisible(true);
 				
 				frmHomeManager.dispose();

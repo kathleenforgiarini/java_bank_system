@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 public class FormMenuCustomer {
 
-	private JFrame frmHomeCustomer;
+	JFrame frmHomeCustomer;
 
 	/**
 	 * Launch the application.
@@ -18,7 +18,7 @@ public class FormMenuCustomer {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormMenuCustomer window = new FormMenuCustomer();
+					FormMenuCustomer window = new FormMenuCustomer((Integer)null);
 					window.frmHomeCustomer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,14 +30,14 @@ public class FormMenuCustomer {
 	/**
 	 * Create the application.
 	 */
-	public FormMenuCustomer() {
-		initialize();
+	public FormMenuCustomer(Integer customerId) {
+		initialize(customerId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer customerId) {
 		frmHomeCustomer = new JFrame();
 		frmHomeCustomer.setTitle("Home Customer");
 		frmHomeCustomer.setBounds(100, 100, 450, 300);
@@ -45,6 +45,15 @@ public class FormMenuCustomer {
 		frmHomeCustomer.getContentPane().setLayout(null);
 		
 		JButton btnDeposit = new JButton("Deposit");
+		btnDeposit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuDeposit frmMenuDeposit = new FormMenuDeposit(customerId);
+				frmMenuDeposit.frmMenuDeposit.setVisible(true);
+				
+				frmHomeCustomer.dispose();
+				
+			}
+		});
 		btnDeposit.setBounds(145, 53, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnDeposit);
 		
@@ -57,6 +66,14 @@ public class FormMenuCustomer {
 		frmHomeCustomer.getContentPane().add(btnTransfer);
 		
 		JButton btnGetBalance = new JButton("Get Balance");
+		btnGetBalance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormGetBalance formGetBalance = new FormGetBalance(customerId);
+				formGetBalance.frmGetBalance.setVisible(true);
+				
+				frmHomeCustomer.dispose();
+			}
+		});
 		btnGetBalance.setBounds(145, 146, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnGetBalance);
 		

@@ -1,0 +1,84 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormMenuDeposit {
+
+	JFrame frmMenuDeposit;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormMenuDeposit window = new FormMenuDeposit((Integer)null);
+					window.frmMenuDeposit.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormMenuDeposit(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmMenuDeposit = new JFrame();
+		frmMenuDeposit.setTitle("Home New Deposit");
+		frmMenuDeposit.setBounds(100, 100, 431, 262);
+		frmMenuDeposit.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMenuDeposit.getContentPane().setLayout(null);
+		
+		JButton btnDepositOnChecking = new JButton("Deposit On Checking Account");
+		btnDepositOnChecking.setBounds(108, 26, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositOnChecking);
+		
+		JButton btnDepositOnSavings = new JButton("Deposit On Savings Account");
+		btnDepositOnSavings.setBounds(108, 57, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositOnSavings);
+		
+		JButton btnDepositCurrencyAccount = new JButton("Deposit On Currency Account");
+		btnDepositCurrencyAccount.setBounds(108, 88, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositCurrencyAccount);
+		
+		JButton btnDepositOnCredit = new JButton("Deposit On Credit Account");
+		btnDepositOnCredit.setBounds(108, 119, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositOnCredit);
+		
+		JButton btnDepositOnLine = new JButton("Deposit On Line Of Credit Account");
+		btnDepositOnLine.setBounds(108, 150, 192, 21);
+		frmMenuDeposit.getContentPane().add(btnDepositOnLine);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
+					FormLogin formLogin = new FormLogin();
+					formLogin.frmWelcomeToFortis.setVisible(true);
+					
+					frmHomeCustomer.dispose();
+				}
+				
+				
+			}
+		});
+		btnExit.setBounds(322, 194, 85, 21);
+		frmMenuDeposit.getContentPane().add(btnExit);
+	}
+
+}

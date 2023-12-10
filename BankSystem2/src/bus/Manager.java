@@ -28,56 +28,55 @@ public class Manager extends User {
 		
 	}
 	
-	public void openSavingAccount(Integer customer, Double balance, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+	public static void openSavingAccount(Integer customer, Double balance, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
 		SavingAccount savingAccount = new SavingAccount(null, EnumTypeAccount.SavingAccount, customer, balance, LocalDate.now(), 
 				interestRate, dueDate);
 		
 		SavingAccount.add(savingAccount);
 	}
 	
-	public void openCheckingAccount(Integer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+	public static void openCheckingAccount(Integer customer, Double balance, Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
 		CheckingAccount checkingAccount = new CheckingAccount(null, EnumTypeAccount.CheckingAccount, customer, balance, LocalDate.now(), 
 				monthlyTransactionLimit, transactionFees);
 		
 		CheckingAccount.add(checkingAccount);
 	}
 	
-	public void openCurrencyAccount(Integer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+	public static void openCurrencyAccount(Integer customer, Double balance, EnumTypeCurrency currency, Double currencyRate, Double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
 		CurrencyAccount currencyAccount = new CurrencyAccount(null, EnumTypeAccount.CurrencyAccount, customer, balance, LocalDate.now(), 
 				currency, currencyRate, conversionFees);
 		
 		CurrencyAccount.add(currencyAccount);
 	}
 	
-	public void openCreditAccount(Integer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
+	public static void openCreditAccount(Integer customer, Double balance, LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ClassNotFoundException, IOException, SQLException {
 		CreditAccount creditAccount = new CreditAccount(null, EnumTypeAccount.CreditAccount, customer, balance, LocalDate.now(), 
 				dueDate, limit);
 		
 		CreditAccount.add(creditAccount);
 	}
 	
-	public void openLineOfCreditAccount(Integer customer, LocalDate dueDate, Double limit, Double interestRate, Integer nbOfInstallments, Double installment) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException, ExceptionNotEnoughBalance, SQLException {
+	public static void openLineOfCreditAccount(Integer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException, ExceptionNotEnoughBalance, SQLException {
 		LineOfCreditAccount newAccount = new LineOfCreditAccount(null, EnumTypeAccount.LineOfCreditAccount, customer, LocalDate.now(), 
 				dueDate, limit, interestRate);
 		
 		LineOfCreditAccount.add(newAccount);
 	}
 
-	public void closeAccount(Integer accountNumber) throws SQLException {
+	public static void closeAccount(Integer accountNumber) throws SQLException {
 		if (accountNumber != null) {
 			AccountDB.delete(accountNumber);
 		}
 	}
 	
-	public Customer createCustomer(String username, Integer password, Double salary, Integer mgr) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+	public static void createCustomer(String username, Integer password, Double salary, Integer mgr) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
 		Customer newCustomer = new Customer(null, username, password, salary, mgr);
-		CustomerDB.insert(newCustomer);
-		
-		return newCustomer;
-		
+		Integer addedId = Customer.add(newCustomer);
+		CheckingAccount newCheckingAccount = new CheckingAccount((Integer)null, EnumTypeAccount.CheckingAccount, addedId, 0.00, LocalDate.now(), 3, 5.00);
+		CheckingAccount.add(newCheckingAccount);
 	}
 	
-	public void removeCustomer(Integer customer) throws SQLException {
+	public static void removeCustomer(Integer customer) throws SQLException {
         if (customer != null) {
             UserDB.delete(customer);
         }

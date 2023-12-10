@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import bus.*;
 
 public class CheckingAccountDB {
@@ -76,7 +78,7 @@ public class CheckingAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.month_trans_limit, c.trans_fee"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.month_trans_limit, c.trans_fee "
 					+ "FROM accountbank a "
 					+ "JOIN checkingaccount c ON a.accountid = c.checkingaccountid "
 					+ "WHERE a.accountid = " + id ;
@@ -134,6 +136,35 @@ public class CheckingAccountDB {
 		return myList;
 	}
 	
+	public static CheckingAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber {
+		CheckingAccount aCheckingAccount = null;
+		
+			myConnection = DBConnection.getConnection();
+			
+			mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.month_trans_limit, c.trans_fee "
+						+ "FROM accountbank a "
+						+ "JOIN checkingaccount c ON a.accountid = c.checkingaccountid "
+						+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
+			
+			Statement myStatemnt = myConnection.createStatement();
+			
+			ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+			
+			if(myResultSet.next()) {
+				Integer accountid = myResultSet.getInt("accountid");
+				EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+	            Integer customerid = myResultSet.getInt("customerid");		
+	            Double balance = myResultSet.getDouble("balance");
+	            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+	            Integer monthly_limit = myResultSet.getInt("month_trans_limit");
+	            Double transactionFees = myResultSet.getDouble("trans_fee");
+	
+	            aCheckingAccount = new CheckingAccount(accountid, type, customerid, balance, openingDate, monthly_limit, transactionFees);
+			}	
+			myConnection.close();
+			return aCheckingAccount;
+		}
+	
 	public static ArrayList<CheckingAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber{
 		
 		CheckingAccount aCheckingAccount = null;
@@ -165,5 +196,7 @@ public class CheckingAccountDB {
 		myConnection.close();
 		return myList;
 	}
+
+	
 
 }

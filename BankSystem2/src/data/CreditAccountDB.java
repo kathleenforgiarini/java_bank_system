@@ -134,6 +134,36 @@ public class CreditAccountDB {
 		return myList;
 	}
 	
+
+	public static CreditAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		CreditAccount aCreditAccount = null;
+		
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.balance, a.openingdate, a.typeaccount, c.duedate, c.limit"
+					+ "FROM accountbank a "
+					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
+					+ "WHERE a.accountid = " + id + " AND a.customerid = " + customer;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");
+			EnumTypeAccount type = EnumTypeAccount.valueOf(myResultSet.getString("typeaccount"));
+			Integer customerid = myResultSet.getInt("customerid");		
+            Double balance = myResultSet.getDouble("balance");
+            LocalDate openingDate = myResultSet.getDate("openingdate").toLocalDate();
+            LocalDate dueDate = myResultSet.getDate("duedate").toLocalDate();
+            Double limit = myResultSet.getDouble("limit");
+
+            aCreditAccount = new CreditAccount(accountid, type, customerid, balance, openingDate, dueDate, limit);
+		}	
+		myConnection.close();
+		return aCreditAccount;
+	}
+	
 	public static ArrayList<CreditAccount> select() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
 		
 		CreditAccount aCreditAccount = null;
@@ -165,4 +195,5 @@ public class CreditAccountDB {
 		myConnection.close();
 		return myList;
 	}
+
 }

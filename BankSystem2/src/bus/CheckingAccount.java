@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import data.AccountDB;
 import data.CheckingAccountDB;
 
@@ -22,6 +24,7 @@ public class CheckingAccount extends Account {
 	public CheckingAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate,
 			Integer monthlyTransactionLimit, Double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super(accountNumber, type, customer, balance, openingDate);
+		setAccountNumber(accountNumber);
 		setMonthlyTransactionLimit(monthlyTransactionLimit);
 		setTransactionFees(transactionFees);
 	}
@@ -67,8 +70,7 @@ public class CheckingAccount extends Account {
 	@Override
 	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 
-		ArrayList<Transaction> transactions = Transaction.searchByAccount(this.accountNumber);
-		
+		ArrayList<Transaction> transactions = Transaction.searchByAccount(accountNumber);
 		Integer getCountThisMonth = TransactionCollection.getCountThisMonth(transactionDate, transactions);
 		
 		if (getCountThisMonth < this.monthlyTransactionLimit) {
@@ -77,7 +79,9 @@ public class CheckingAccount extends Account {
 			Account.update(this);
 			
 			Transaction transaction = new Transaction(null, "Deposit", transactionDate,
-            		amount, this.accountNumber, EnumTypeTransaction.Credit);
+            		amount, this.getAccountNumber(), EnumTypeTransaction.Credit);
+			
+			transaction.setAccountId(this.accountNumber);
 			
 			Transaction.add(transaction);
 		} 
@@ -173,6 +177,10 @@ public class CheckingAccount extends Account {
 	
 	public static ArrayList<CheckingAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		return CheckingAccountDB.searchByCustomer(customer);
+	}
+	
+	public static CheckingAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+		return CheckingAccountDB.searchByIdAndCustomer(id, customer);
 	}
 	
 	public static ArrayList<CheckingAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber {

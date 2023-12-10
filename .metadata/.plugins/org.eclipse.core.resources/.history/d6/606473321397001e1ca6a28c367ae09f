@@ -1,0 +1,64 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormDepositCheckingAccount {
+
+	JFrame frmDepositCheckingAccount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormDepositCheckingAccount window = new FormDepositCheckingAccount((Integer)null);
+					window.frmDepositCheckingAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormDepositCheckingAccount(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmDepositCheckingAccount = new JFrame();
+		frmDepositCheckingAccount.setTitle("Deposit On Checking Account");
+		frmDepositCheckingAccount.setBounds(100, 100, 450, 300);
+		frmDepositCheckingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDepositCheckingAccount.getContentPane().setLayout(null);
+		
+		JButton btnDeposit = new JButton("Deposit");
+		btnDeposit.setBounds(304, 205, 85, 21);
+		frmDepositCheckingAccount.getContentPane().add(btnDeposit);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
+				formMenuCustomer.frmHomeCustomer.setVisible(true);
+				frmMenuDeposit.dispose();
+				
+			}
+		});
+		btnExit.setBounds(171, 205, 85, 21);
+		frmDepositCheckingAccount.getContentPane().add(btnExit);
+	}
+
+}

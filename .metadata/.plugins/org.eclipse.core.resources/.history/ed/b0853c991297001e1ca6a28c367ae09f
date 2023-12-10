@@ -1,0 +1,44 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class FormDepositCheckingAccount {
+
+	JFrame frmDepositCheckingAccount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormDepositCheckingAccount window = new FormDepositCheckingAccount((Integer)null);
+					window.frmDepositCheckingAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormDepositCheckingAccount() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmDepositCheckingAccount = new JFrame();
+		frmDepositCheckingAccount.setTitle("Deposit On Checking Account");
+		frmDepositCheckingAccount.setBounds(100, 100, 450, 300);
+		frmDepositCheckingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+}

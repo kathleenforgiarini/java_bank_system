@@ -17,6 +17,8 @@ public class TransactionDB {
 	
 	public static void insert(Transaction aNewTransaction) throws SQLException 
 	{	 	
+		myConnection = DBConnection.getConnection();
+		
         PreparedStatement myPreparedStatement = null ;
 		String sqlStatement;
 		
@@ -34,6 +36,7 @@ public class TransactionDB {
 		myPreparedStatement.executeUpdate();	
 		
 		myConnection.commit();	
+		myConnection.close();
 	    
 	}
 	
@@ -42,12 +45,13 @@ public class TransactionDB {
 		myConnection = DBConnection.getConnection();
 		
 		mySQLStatement = "update transactionbank set description = "    
-			              +   aChangedTransaction.getDescription() + "WHERE transactionid = "
+			              +   aChangedTransaction.getDescription() + " WHERE transactionid = "
 			              +   aChangedTransaction.getTransactionId();
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();		
+		myConnection.close();
 	}
 	
 	public static void delete(Integer id) throws SQLException {
@@ -59,6 +63,7 @@ public class TransactionDB {
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
 		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static Transaction search(Integer id) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull{
@@ -85,6 +90,7 @@ public class TransactionDB {
             aTransaction = new Transaction(transactionid, description, transactiondate, amount, accountid, type);
 		}	
 		
+		myConnection.close();
 		return aTransaction;
 	}
 	
@@ -116,6 +122,7 @@ public class TransactionDB {
             myList.add(aTransaction);
 		}	
 		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -147,6 +154,7 @@ public class TransactionDB {
             myList.add(aTransaction);
 		}	
 		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -156,7 +164,7 @@ public class TransactionDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT * FROM transactionbank"
+		mySQLQuery = "SELECT * FROM transactionbank "
 					+ "WHERE ACCOUNTID = " + accountNumber;
 		
 		Statement myStatemnt = myConnection.createStatement();
@@ -178,6 +186,7 @@ public class TransactionDB {
             myList.add(aTransaction);
 		}	
 		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -206,6 +215,7 @@ public class TransactionDB {
 			myList.add(aTransaction);
 		}
 		
+		myConnection.close();
 		return myList;
 	}
 }

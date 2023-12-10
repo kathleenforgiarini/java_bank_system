@@ -149,3 +149,5 @@ INSERT INTO checkingaccount VALUES (3,5,20);
 INSERT INTO customer_has_account VALUES (3,1);
 INSERT INTO customer_has_account VALUES (4,2);
 INSERT INTO customer_has_account VALUES (5,3);
+
+COMMIT;

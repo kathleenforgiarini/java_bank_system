@@ -25,6 +25,7 @@ public class CreditAccount extends Account{
 			LocalDate dueDate, Double limit) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		
 		super(accountNumber, type, customer, balance, openingDate);
+		setAccountNumber(accountNumber);
 		setDueDate(dueDate);
 		setLimit(limit);
 	}
@@ -136,12 +137,16 @@ public class CreditAccount extends Account{
 		AccountDB.delete(id);
 	}
 	
-	public static CreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+	public static CreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 		return CreditAccountDB.search(id);
 	}
 	
-	public static ArrayList<CreditAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+	public static ArrayList<CreditAccount> searchByCustomer(Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
 		return CreditAccountDB.searchByCustomer(customer);
+	}
+	
+	public static CreditAccount searchByIdAndCustomer(Integer id, Integer customer) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+		return CreditAccountDB.searchByIdAndCustomer(id, customer);
 	}
 	
 	public static ArrayList<CreditAccount> getData() throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
