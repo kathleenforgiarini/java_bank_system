@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 
+import javax.swing.JOptionPane;
+
 import data.AccountDB;
 import data.LineOfCreditAccountDB;
 
@@ -23,21 +25,32 @@ public class LineOfCreditAccount extends CreditAccount{
 	}
 
 	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, LocalDate openingDate,
-			LocalDate dueDate, Double limit, Double interestRate, Integer nbOfInstallments,
-			Double installment) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance {
+			LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance, SQLException {
+		
 		super(accountNumber, type, customer, 0.00, openingDate, dueDate, limit);
-		this.lineOfCreditAccountId = accountNumber;
-		this.nbOfInstallments = nbOfInstallments;
-		this.installment = installment;
+		//this.lineOfCreditAccountId = accountNumber;
 		
 		setInterestRate(interestRate);
+		
+		//JOptionPane.showMessageDialog(null, openingDate);
+		//JOptionPane.showMessageDialog(null, dueDate);
 				
-		Period numberOfMonths = Period.between(openingDate.withDayOfMonth(1), dueDate.withDayOfMonth(1));	//NUMBER OF INSTALLMENTS IS THE QUANTITY OF MONTHS FROM THE OPENING DATE OF THE ACCOUNT AND THE DUE DATE
-		this.nbOfInstallments = numberOfMonths.getMonths();
+		Period period = Period.between(openingDate, dueDate);	//NUMBER OF INSTALLMENTS IS THE QUANTITY OF MONTHS FROM THE OPENING DATE OF THE ACCOUNT AND THE DUE DATE
+		//JOptionPane.showMessageDialog(null, "Nb of Months: " + numberOfMonths.toTotalMonths());
+
+		long monthsLong = period.toTotalMonths();
+		Integer monthsInt = (int) monthsLong;
 		
+		setNbOfInstallments(monthsInt);	
+		JOptionPane.showMessageDialog(null, "Setei o nb of installments: " + monthsInt);
+
 		
-		Double finalDebt = limit * (1 + getInterestRate());													//CALCULATING THE FINAL PRICE THAT THE CUSTOMER HAS TO PAY: THE AMOUNT ASKED PLUS THE INTEREST RATE
-		this.installment = finalDebt/this.nbOfInstallments;
+		Double finalDebt = limit * (1 + getInterestRate());	
+		JOptionPane.showMessageDialog(null, "Final Debt: " + finalDebt);
+
+		setInstallment(finalDebt/getNbOfInstallments()); //CALCULATING THE FINAL PRICE THAT THE CUSTOMER HAS TO PAY: THE AMOUNT ASKED PLUS THE INTEREST RATE
+		
+		JOptionPane.showMessageDialog(null, "Setei o installment");
 		
 		//withdraw(openingDate, finalDebt);
 	}
@@ -61,23 +74,25 @@ public class LineOfCreditAccount extends CreditAccount{
 		if (Validator.isNull(interestRate)) {
 			throw new ExceptionIsNull();
 		}
-		this.interestRate = interestRate;
+		this.interestRate = interestRate/100;
 	}
 
 	public Integer getNbOfInstallments() {
 		return nbOfInstallments;
 	}
 
-	public void setNbOfInstallments(Integer nbOfInstallments) {
+	public void setNbOfInstallments(Integer nbOfInstallments) throws SQLException {
 		this.nbOfInstallments = nbOfInstallments;
+		updateNbOfInstallments(this);
 	}
 
 	public Double getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(Double installment) {
+	public void setInstallment(Double installment) throws SQLException {
 		this.installment = installment;
+		updateInstallment(this);
 	}
 	
 	@Override

@@ -21,7 +21,7 @@ public class SavingAccount extends Account {
 		this.dueDate = null;
 	}
 
-	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+	public SavingAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, SQLException {
 		super(accountNumber, type, customer, balance, openingDate);
 		setInterestRate(interestRate);
 		setDueDate(dueDate);		
@@ -48,8 +48,11 @@ public class SavingAccount extends Account {
 		return interestRate;
 	}
 
-	public void setGain() {
+	public void setGain() throws SQLException {
 		this.gain = this.balance * this.interestRate;
+		Account.update(this);
+		updateGain(this);
+		
 	}
 	public Double getGain() {
 		return gain;
@@ -57,6 +60,7 @@ public class SavingAccount extends Account {
 	public void calcGain() throws SQLException {
 		this.balance += getGain();
 		Account.update(this);
+		updateGain(this);
 	}
 	
 	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {

@@ -4,7 +4,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bus.Customer;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -12,7 +16,7 @@ import java.awt.event.ActionEvent;
 public class FormRemoveCustomer {
 
 	JFrame frmRemoveCustomer;
-	private JTextField textFieldUsername;
+	private JTextField textFieldUserID;
 	private JTextField textFieldPassword;
 
 	/**
@@ -22,7 +26,7 @@ public class FormRemoveCustomer {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormRemoveCustomer window = new FormRemoveCustomer();
+					FormRemoveCustomer window = new FormRemoveCustomer((Integer)null);
 					window.frmRemoveCustomer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,28 +38,28 @@ public class FormRemoveCustomer {
 	/**
 	 * Create the application.
 	 */
-	public FormRemoveCustomer() {
-		initialize();
+	public FormRemoveCustomer(Integer mgrId) {
+		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer mgrId) {
 		frmRemoveCustomer = new JFrame();
 		frmRemoveCustomer.setTitle("Remove Customer");
 		frmRemoveCustomer.setBounds(100, 100, 450, 300);
 		frmRemoveCustomer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRemoveCustomer.getContentPane().setLayout(null);
 		
-		JLabel lblUsername = new JLabel("Username to remove:");
-		lblUsername.setBounds(23, 28, 113, 13);
-		frmRemoveCustomer.getContentPane().add(lblUsername);
+		JLabel lblUserID = new JLabel("User ID to remove:");
+		lblUserID.setBounds(23, 28, 113, 13);
+		frmRemoveCustomer.getContentPane().add(lblUserID);
 		
-		textFieldUsername = new JTextField();
-		textFieldUsername.setBounds(172, 22, 225, 19);
-		frmRemoveCustomer.getContentPane().add(textFieldUsername);
-		textFieldUsername.setColumns(10);
+		textFieldUserID = new JTextField();
+		textFieldUserID.setBounds(172, 22, 225, 19);
+		frmRemoveCustomer.getContentPane().add(textFieldUserID);
+		textFieldUserID.setColumns(10);
 		
 		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
 		lblPasswordMngr.setBounds(23, 195, 113, 13);
@@ -67,13 +71,29 @@ public class FormRemoveCustomer {
 		frmRemoveCustomer.getContentPane().add(textFieldPassword);
 		
 		JButton btnRemoveCustomer = new JButton("Remove Customer");
+		btnRemoveCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Integer customerId = Integer.parseInt(textFieldUserID.getText());
+					Customer.remove(customerId);	
+					JOptionPane.showMessageDialog(null, "Customer DELETED!!");
+					
+					FormMenuManager formMenuManager = new FormMenuManager(mgrId);
+					formMenuManager.frmHomeManager.setVisible(true);
+					
+					frmRemoveCustomer.dispose();
+				} catch (Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+			}
+		});
 		btnRemoveCustomer.setBounds(259, 218, 138, 21);
 		frmRemoveCustomer.getContentPane().add(btnRemoveCustomer);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuManager formMenuManager = new FormMenuManager();
+				FormMenuManager formMenuManager = new FormMenuManager(mgrId);
 				formMenuManager.frmHomeManager.setVisible(true);
 				
 				frmRemoveCustomer.dispose();

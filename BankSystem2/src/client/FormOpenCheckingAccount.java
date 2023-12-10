@@ -4,15 +4,22 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bus.CheckingAccount;
+import bus.Customer;
+import bus.EnumTypeAccount;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 
 public class FormOpenCheckingAccount {
 
-	private JFrame frmOpenCheckingAccount;
-	private JTextField textFieldUsername;
+	JFrame frmOpenCheckingAccount;
+	private JTextField textFieldUserId;
 	private JTextField textFieldPassword;
 	private JTextField textFieldBalance;
 	private JTextField textFieldMonthlyLimit;
@@ -25,7 +32,7 @@ public class FormOpenCheckingAccount {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormOpenCheckingAccount window = new FormOpenCheckingAccount();
+					FormOpenCheckingAccount window = new FormOpenCheckingAccount((Integer)null);
 					window.frmOpenCheckingAccount.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,28 +44,28 @@ public class FormOpenCheckingAccount {
 	/**
 	 * Create the application.
 	 */
-	public FormOpenCheckingAccount() {
-		initialize();
+	public FormOpenCheckingAccount(Integer mgrId) {
+		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer mgrId) {
 		frmOpenCheckingAccount = new JFrame();
 		frmOpenCheckingAccount.setTitle("Open Checking Account");
 		frmOpenCheckingAccount.setBounds(100, 100, 450, 300);
 		frmOpenCheckingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmOpenCheckingAccount.getContentPane().setLayout(null);
 		
-		JLabel lblUsername = new JLabel("Select customer username:");
-		lblUsername.setBounds(23, 28, 139, 13);
-		frmOpenCheckingAccount.getContentPane().add(lblUsername);
+		JLabel lblUserId = new JLabel("Select customer ID:");
+		lblUserId.setBounds(23, 28, 139, 13);
+		frmOpenCheckingAccount.getContentPane().add(lblUserId);
 		
-		textFieldUsername = new JTextField();
-		textFieldUsername.setBounds(211, 22, 186, 19);
-		frmOpenCheckingAccount.getContentPane().add(textFieldUsername);
-		textFieldUsername.setColumns(10);
+		textFieldUserId = new JTextField();
+		textFieldUserId.setBounds(211, 22, 186, 19);
+		frmOpenCheckingAccount.getContentPane().add(textFieldUserId);
+		textFieldUserId.setColumns(10);
 		
 		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
 		lblPasswordMngr.setBounds(23, 195, 113, 13);
@@ -70,13 +77,45 @@ public class FormOpenCheckingAccount {
 		frmOpenCheckingAccount.getContentPane().add(textFieldPassword);
 		
 		JButton btnOpenAccount = new JButton("Open Account");
+		btnOpenAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Integer selectedId = Integer.parseInt(textFieldUserId.getText());
+					Double balance = Double.parseDouble(textFieldBalance.getText());
+					Integer monthLimit = Integer.parseInt(textFieldMonthlyLimit.getText());
+					Double fee = Double.parseDouble(textFieldTransFee.getText());
+					
+					Customer selectedCustomer = Customer.search(selectedId);
+					
+					CheckingAccount newCheckingAccount = new CheckingAccount((Integer)null, 
+							EnumTypeAccount.CheckingAccount, 
+							selectedCustomer.getId(), 
+							balance, 
+							LocalDate.now(), 
+							monthLimit, 
+							fee);
+					
+					CheckingAccount.add(newCheckingAccount);
+
+					JOptionPane.showMessageDialog(null, "Checking Account Created!");
+					
+					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+					
+					frmOpenCheckingAccount.dispose();
+					
+				} catch (Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+			}
+		});
 		btnOpenAccount.setBounds(259, 218, 138, 21);
 		frmOpenCheckingAccount.getContentPane().add(btnOpenAccount);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount();
+				FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
 				formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
 				
 				frmOpenCheckingAccount.dispose();

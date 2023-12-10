@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="bus.Manager"/>
     <fullyQualifiedTypeName name="java.io.Serializable"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="bus.Account"/>
     <fullyQualifiedTypeName name="java.sql.Types"/>
     <fullyQualifiedTypeName name="java.sql.Date"/>
-    <fullyQualifiedTypeName name="java.time.LocalDate"/>
     <fullyQualifiedTypeName name="data.CustomerDB"/>
     <fullyQualifiedTypeName name="data.UserDB"/>
-    <fullyQualifiedTypeName name="data.ManagerDB"/>
     <fullyQualifiedTypeName name="data.CheckingAccountDB"/>
     <fullyQualifiedTypeName name="data.AccountDB"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
@@ -19,4 +16,16 @@
     <fullyQualifiedTypeName name="data.SavingAccountDB"/>
     <fullyQualifiedTypeName name="data.TransactionDB"/>
     <fullyQualifiedTypeName name="data.LineOfCreditAccountDB"/>
+    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+    <fullyQualifiedTypeName name="bus.User"/>
+    <fullyQualifiedTypeName name="data.ManagerDB"/>
+    <fullyQualifiedTypeName name="bus.Manager"/>
+    <fullyQualifiedTypeName name="bus.EnumTypeAccount"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="bus.CheckingAccount"/>
+    <fullyQualifiedTypeName name="bus.Customer"/>
+    <fullyQualifiedTypeName name="bus.SavingAccount"/>
+    <fullyQualifiedTypeName name="bus.CurrencyAccount"/>
+    <fullyQualifiedTypeName name="bus.CreditAccount"/>
+    <fullyQualifiedTypeName name="bus.LineOfCreditAccount"/>
 </qualifiedTypeNameHistroy>

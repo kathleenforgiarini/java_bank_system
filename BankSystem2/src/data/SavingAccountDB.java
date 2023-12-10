@@ -20,6 +20,8 @@ public class SavingAccountDB {
 	{	
     	
     	Integer id = AccountDB.insert(aNewSavingAccount);
+    	
+    	myConnection = DBConnection.getConnection();
 
 	    if (id != null) {
 	        PreparedStatement myPreparedStatement = null ;
@@ -38,6 +40,8 @@ public class SavingAccountDB {
 			
 			myConnection.commit();	
 	    }
+	    
+	    myConnection.close();
 	}
 	
 	public static void updateInterestRate(SavingAccount aChangedAccount) throws SQLException {
@@ -50,7 +54,8 @@ public class SavingAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateGain(SavingAccount aChangedAccount) throws SQLException {
@@ -63,7 +68,8 @@ public class SavingAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateDueDate(SavingAccount aChangedAccount) throws SQLException {
@@ -76,7 +82,8 @@ public class SavingAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static SavingAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
@@ -106,6 +113,7 @@ public class SavingAccountDB {
             aSavingAccount = new SavingAccount(accountid, type, customerid, balance, openingDate, interestRate, dueDate); 	//REMOVER TRANSACTIONS DOS ATRIBUTOS DA CLASSE
 		}	
 		
+		myConnection.close();
 		return aSavingAccount;
 	}
 	
@@ -140,6 +148,7 @@ public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) thro
             myList.add(aSavingAccount);
 		}	
 		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -172,6 +181,7 @@ public static ArrayList<SavingAccount> searchByCustomer(Integer customerId) thro
 			myList.add(aSavingAccount);
 		}
 		
+		myConnection.close();
 		return myList;
 	}
 }

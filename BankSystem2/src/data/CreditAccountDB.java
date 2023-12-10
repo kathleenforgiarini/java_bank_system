@@ -16,16 +16,17 @@ public class CreditAccountDB {
 	static private String mySQLStatement = null;	
 	static private String mySQLQuery = null;
 	
-	public static void insert(CreditAccount aNewCreditAccount) throws SQLException 
+	public static Integer insert(CreditAccount aNewCreditAccount) throws SQLException 
 	{	 	
     	Integer id = AccountDB.insert(aNewCreditAccount);
+    	myConnection = DBConnection.getConnection();
     	   
 	    if (id != null) {
 	        
 	        PreparedStatement myPreparedStatement = null ;
 			String sqlStatement;
 			
-			sqlStatement = "insert into CurrencyAccount values(? , ? , ?)";
+			sqlStatement = "insert into CreditAccount values(? , ? , ?)";
 					
 			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
 			
@@ -37,6 +38,8 @@ public class CreditAccountDB {
 			
 			myConnection.commit();	
 	    }
+	    myConnection.close();
+	    return id;
 	}
 	
 	public static void updateLimit(CreditAccount aChangedAccount) throws SQLException {
@@ -49,7 +52,8 @@ public class CreditAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateDueDate(CreditAccount aChangedAccount) throws SQLException {
@@ -62,7 +66,8 @@ public class CreditAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();		
+		myConnection.close();
 	}
 	
 	public static CreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
@@ -91,7 +96,7 @@ public class CreditAccountDB {
 
             aCreditAccount = new CreditAccount(accountid, type, customerid, balance, openingDate, dueDate, limit);
 		}	
-		
+		myConnection.close();
 		return aCreditAccount;
 	}
 	
@@ -125,7 +130,7 @@ public class CreditAccountDB {
             
             myList.add(aCreditAccount);
 		}	
-		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -157,7 +162,7 @@ public class CreditAccountDB {
 	
 			myList.add(aCreditAccount);
 		}
-		
+		myConnection.close();
 		return myList;
 	}
 }
