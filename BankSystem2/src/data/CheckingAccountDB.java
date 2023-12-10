@@ -19,6 +19,8 @@ public class CheckingAccountDB {
 	public static void insert(CheckingAccount aNewCheckingAccount) throws SQLException 
 	{	 	
     	Integer id = AccountDB.insert(aNewCheckingAccount);
+    	
+    	myConnection = DBConnection.getConnection();
    
 	    if (id != null) {
 	        PreparedStatement myPreparedStatement = null ;
@@ -36,6 +38,8 @@ public class CheckingAccountDB {
 			
 			myConnection.commit();	
 	    }
+	    
+	    myConnection.close();
 	}
 	
 	public static void updateMonthlyLimit(CheckingAccount aChangedAccount) throws SQLException {
@@ -48,7 +52,8 @@ public class CheckingAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateTransactionFees(CheckingAccount aChangedAccount) throws SQLException {
@@ -61,7 +66,8 @@ public class CheckingAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static CheckingAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
@@ -90,7 +96,7 @@ public class CheckingAccountDB {
 
             aCheckingAccount = new CheckingAccount(accountid, type, customerid, balance, openingDate, monthly_limit, transactionFees);
 		}	
-		
+		myConnection.close();
 		return aCheckingAccount;
 	}
 	
@@ -124,7 +130,7 @@ public class CheckingAccountDB {
             
             myList.add(aCheckingAccount);
 		}	
-		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -156,7 +162,7 @@ public class CheckingAccountDB {
 
 			myList.add(aCheckingAccount);
 		}
-		
+		myConnection.close();
 		return myList;
 	}
 

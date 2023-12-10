@@ -66,4 +66,9 @@ public class User{
 	public static void remove(Integer id) throws SQLException {
 		UserDB.delete(id);
 	}
+	
+	public static User search(String username, Integer password) throws SQLException {
+		User userFound = UserDB.searchUser(username,password);
+		return userFound;
+	}
 }

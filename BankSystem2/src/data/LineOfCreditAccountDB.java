@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import bus.*;
 
 public class LineOfCreditAccountDB {
@@ -16,26 +18,32 @@ public class LineOfCreditAccountDB {
 	
 	public static void insert(LineOfCreditAccount aNewLineOfCreditAccount) throws SQLException 
 	{	 	
-    	Integer id = AccountDB.insert(aNewLineOfCreditAccount);
+		JOptionPane.showMessageDialog(null, "Entrei no insert");
+		Integer id = CreditAccountDB.insert(aNewLineOfCreditAccount);
+		JOptionPane.showMessageDialog(null, "Inseri no Credit: id " + id);
+
+    	myConnection = DBConnection.getConnection();
     	   
 	    if (id != null) {
 	        
 	        PreparedStatement myPreparedStatement = null ;
 			String sqlStatement;
 			
-			sqlStatement = "insert into LineOfCreditAccount values(? , ? , ? , ?)";
+			sqlStatement = "insert into LineOfCreditAccount (lineofcreditaccountid, interest_rate) values(? , ?)";
 					
 			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
 			
 			myPreparedStatement.setInt(1, id);
 			myPreparedStatement.setDouble(2, aNewLineOfCreditAccount.getInterestRate());
-			myPreparedStatement.setInt(3, aNewLineOfCreditAccount.getNbOfInstallments());	
-			myPreparedStatement.setDouble(4, aNewLineOfCreditAccount.getInstallment());
 			
 			myPreparedStatement.executeUpdate();	
 			
-			myConnection.commit();	
+			myConnection.commit();
+			
+			updateNbOfInstallments(aNewLineOfCreditAccount);
+			updateInstallment(aNewLineOfCreditAccount);
 	    }
+	    myConnection.close();
 	}
 	
 	public static void updateInterestRate(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
@@ -48,7 +56,8 @@ public class LineOfCreditAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateNbOfInstallments(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
@@ -61,7 +70,8 @@ public class LineOfCreditAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateInstallment(LineOfCreditAccount aChangedLineOfCreditAccount) throws SQLException {
@@ -74,7 +84,8 @@ public class LineOfCreditAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static LineOfCreditAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance{
@@ -83,10 +94,10 @@ public class LineOfCreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment "
 					+ "FROM accountbank a "
 					+ "JOIN lineofcreditaccount l ON a.accountid = l.lineofcreditaccountid "
-					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid"
+					+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
 					+ "WHERE a.accountid = " + id ;
 		
 		Statement myStatemnt = myConnection.createStatement();
@@ -104,9 +115,9 @@ public class LineOfCreditAccountDB {
             Integer nbofinstall = myResultSet.getInt("nbofinstall");	
             Double installment = myResultSet.getDouble("installment");
 
-            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate, nbofinstall, installment);
+            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
 		}	
-		
+		myConnection.close();
 		return aLineOfCreditAccount;
 	}
 	
@@ -116,10 +127,10 @@ public class LineOfCreditAccountDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment"
+		mySQLQuery = "SELECT a.accountid, a.customerid, a.openingdate, a.typeaccount, c.duedate, c.limit, l.interest_rate, l.nbofinstall, l.installment "
 				+ "FROM accountbank a "
 				+ "JOIN lineofcreditaccount l ON a.accountid = l.lineofcreditaccountid "
-				+ "JOIN creditaccount c ON a.accountid = c.creditaccountid"
+				+ "JOIN creditaccount c ON a.accountid = c.creditaccountid "
 				+ "WHERE a.customerid = " + customerId ;
 		
 		Statement myStatemnt = myConnection.createStatement();
@@ -139,11 +150,11 @@ public class LineOfCreditAccountDB {
             Integer nbofinstall = myResultSet.getInt("nbofinstall");	
             Double installment = myResultSet.getDouble("installment");
 
-            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate, nbofinstall, installment);
+            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
             
             myList.add(aLineOfCreditAccount);
 		}	
-		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -174,11 +185,11 @@ public class LineOfCreditAccountDB {
             Integer nbofinstall = myResultSet.getInt("nbofinstall");	
             Double installment = myResultSet.getDouble("installment");
 
-            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate, nbofinstall, installment);
+            aLineOfCreditAccount = new LineOfCreditAccount(accountid, type, customerid, openingDate, dueDate, limit, interestRate);
 	
 			myList.add(aLineOfCreditAccount);
 		}
-		
+		myConnection.close();
 		return myList;
 	}
 		

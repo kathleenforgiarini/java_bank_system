@@ -4,18 +4,28 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import bus.CheckingAccount;
+import bus.CurrencyAccount;
+import bus.Customer;
+import bus.EnumTypeAccount;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import bus.EnumTypeCurrency;
 
 public class FormOpenCurrencyAccount {
 
-	private JFrame frmOpenCurrencyAccount;
-	private JTextField textFieldUsername;
+	JFrame frmOpenCurrencyAccount;
+	private JTextField textFieldUserId;
 	private JTextField textFieldPassword;
 	private JTextField textFieldBalance;
-	private JTextField textFieldCurrency;
 	private JTextField textFieldCurrencyRate;
 	private JTextField textFieldConversionFee;
 
@@ -26,7 +36,7 @@ public class FormOpenCurrencyAccount {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormOpenCurrencyAccount window = new FormOpenCurrencyAccount();
+					FormOpenCurrencyAccount window = new FormOpenCurrencyAccount((Integer)null);
 					window.frmOpenCurrencyAccount.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,28 +48,28 @@ public class FormOpenCurrencyAccount {
 	/**
 	 * Create the application.
 	 */
-	public FormOpenCurrencyAccount() {
-		initialize();
+	public FormOpenCurrencyAccount(Integer mgrId) {
+		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer mgrId) {
 		frmOpenCurrencyAccount = new JFrame();
 		frmOpenCurrencyAccount.setTitle("Open Currency Account");
 		frmOpenCurrencyAccount.setBounds(100, 100, 450, 300);
 		frmOpenCurrencyAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmOpenCurrencyAccount.getContentPane().setLayout(null);
 		
-		JLabel lblUsername = new JLabel("Select customer username:");
-		lblUsername.setBounds(23, 28, 139, 13);
-		frmOpenCurrencyAccount.getContentPane().add(lblUsername);
+		JLabel lblUserId = new JLabel("Select customer user id:");
+		lblUserId.setBounds(23, 28, 139, 13);
+		frmOpenCurrencyAccount.getContentPane().add(lblUserId);
 		
-		textFieldUsername = new JTextField();
-		textFieldUsername.setBounds(211, 22, 186, 19);
-		frmOpenCurrencyAccount.getContentPane().add(textFieldUsername);
-		textFieldUsername.setColumns(10);
+		textFieldUserId = new JTextField();
+		textFieldUserId.setBounds(211, 22, 186, 19);
+		frmOpenCurrencyAccount.getContentPane().add(textFieldUserId);
+		textFieldUserId.setColumns(10);
 		
 		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
 		lblPasswordMngr.setBounds(23, 195, 113, 13);
@@ -70,14 +80,55 @@ public class FormOpenCurrencyAccount {
 		textFieldPassword.setBounds(172, 189, 225, 19);
 		frmOpenCurrencyAccount.getContentPane().add(textFieldPassword);
 		
+		JComboBox<EnumTypeCurrency> comboBoxCurrency = new JComboBox<EnumTypeCurrency>();
+		comboBoxCurrency.setModel(new DefaultComboBoxModel<EnumTypeCurrency>(EnumTypeCurrency.values()));
+		comboBoxCurrency.setBounds(211, 80, 186, 21);
+		frmOpenCurrencyAccount.getContentPane().add(comboBoxCurrency);
+		
 		JButton btnOpenAccount = new JButton("Open Account");
+		btnOpenAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Integer selectedId = Integer.parseInt(textFieldUserId.getText());
+					Double balance = Double.parseDouble(textFieldBalance.getText());
+					Double currRate = Double.parseDouble(textFieldCurrencyRate.getText());
+					Double currFee = Double.parseDouble(textFieldConversionFee.getText());
+					EnumTypeCurrency combobox = (EnumTypeCurrency) comboBoxCurrency.getSelectedItem();
+					//JOptionPane.showMessageDialog(null, combobox);
+					//String selectedValue = (String)comboBoxCurrency.getSelectedItem();
+					
+					Customer selectedCustomer = Customer.search(selectedId);
+					
+					CurrencyAccount newCurrencyAccount = new CurrencyAccount((Integer)null, 
+							EnumTypeAccount.CurrencyAccount, 
+							selectedCustomer.getId(), 
+							balance, 
+							LocalDate.now(), 
+							combobox,
+							currRate, 
+							currFee);
+					
+					CurrencyAccount.add(newCurrencyAccount);
+
+					JOptionPane.showMessageDialog(null, "Currency Account Created!");
+					
+					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+					
+					frmOpenCurrencyAccount.dispose();
+					
+				} catch (Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+			}
+		});
 		btnOpenAccount.setBounds(259, 218, 138, 21);
 		frmOpenCurrencyAccount.getContentPane().add(btnOpenAccount);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount();
+				FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
 				formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
 				
 				frmOpenCurrencyAccount.dispose();
@@ -98,11 +149,6 @@ public class FormOpenCurrencyAccount {
 		JLabel lblCurrency = new JLabel("Insert the currency:");
 		lblCurrency.setBounds(23, 86, 178, 13);
 		frmOpenCurrencyAccount.getContentPane().add(lblCurrency);
-		
-		textFieldCurrency = new JTextField();
-		textFieldCurrency.setColumns(10);
-		textFieldCurrency.setBounds(211, 80, 186, 19);
-		frmOpenCurrencyAccount.getContentPane().add(textFieldCurrency);
 		
 		JLabel lblCurrencyRate = new JLabel("Insert the Currency Rate");
 		lblCurrencyRate.setBounds(23, 115, 139, 13);

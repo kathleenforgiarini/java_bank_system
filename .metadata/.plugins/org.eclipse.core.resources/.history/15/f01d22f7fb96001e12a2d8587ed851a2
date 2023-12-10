@@ -1,0 +1,164 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JSpinner;
+
+public class FormOpenLineOfCreditAccount {
+
+	JFrame frmOpenLineOfCreditAccount;
+	private JTextField textFieldUserId;
+	private JTextField textFieldPassword;
+	private JTextField textFieldBalance;
+	private JTextField textFieldLimit;
+	private JTextField textFieldInterestRate;
+	private JTextField textFieldNbInstallments;
+	private JTextField textFieldAmountInstallment;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormOpenLineOfCreditAccount window = new FormOpenLineOfCreditAccount((Integer)null);
+					window.frmOpenLineOfCreditAccount.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormOpenLineOfCreditAccount(Integer mgrId) {
+		initialize(mgrId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer mgrId) {
+		frmOpenLineOfCreditAccount = new JFrame();
+		frmOpenLineOfCreditAccount.setTitle("Open Line Of Credit Account");
+		frmOpenLineOfCreditAccount.setBounds(100, 100, 450, 400);
+		frmOpenLineOfCreditAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmOpenLineOfCreditAccount.getContentPane().setLayout(null);
+		
+		JLabel lblUserid = new JLabel("Select customer user id:");
+		lblUserid.setBounds(23, 28, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblUserid);
+		
+		textFieldUserId = new JTextField();
+		textFieldUserId.setBounds(211, 22, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldUserId);
+		textFieldUserId.setColumns(10);
+		
+		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
+		lblPasswordMngr.setBounds(23, 311, 113, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblPasswordMngr);
+		
+		textFieldPassword = new JTextField();
+		textFieldPassword.setColumns(10);
+		textFieldPassword.setBounds(172, 305, 225, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldPassword);
+		
+		JButton btnOpenAccount = new JButton("Open Account");
+		btnOpenAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnOpenAccount.setBounds(259, 334, 138, 21);
+		frmOpenLineOfCreditAccount.getContentPane().add(btnOpenAccount);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+				formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+				
+				frmOpenLineOfCreditAccount.dispose();
+			}
+		});
+		btnCancel.setBounds(172, 334, 77, 21);
+		frmOpenLineOfCreditAccount.getContentPane().add(btnCancel);
+		
+		textFieldBalance = new JTextField();
+		textFieldBalance.setColumns(10);
+		textFieldBalance.setBounds(211, 51, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldBalance);
+		
+		JLabel lblBalance = new JLabel("Insert the initial Balance:");
+		lblBalance.setBounds(23, 57, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblBalance);
+		
+		JLabel lblLimit = new JLabel("Insert the Limit:");
+		lblLimit.setBounds(23, 176, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblLimit);
+		
+		textFieldLimit = new JTextField();
+		textFieldLimit.setColumns(10);
+		textFieldLimit.setBounds(211, 170, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldLimit);
+		
+		textFieldInterestRate = new JTextField();
+		textFieldInterestRate.setColumns(10);
+		textFieldInterestRate.setBounds(211, 199, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldInterestRate);
+		
+		JLabel lblInterestRate = new JLabel("Insert the Interest Rate:");
+		lblInterestRate.setBounds(23, 205, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblInterestRate);
+		
+		JLabel lblNbInstallments = new JLabel("Insert the Number Of Installments:");
+		lblNbInstallments.setBounds(23, 234, 178, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblNbInstallments);
+		
+		textFieldNbInstallments = new JTextField();
+		textFieldNbInstallments.setColumns(10);
+		textFieldNbInstallments.setBounds(211, 228, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldNbInstallments);
+		
+		textFieldAmountInstallment = new JTextField();
+		textFieldAmountInstallment.setColumns(10);
+		textFieldAmountInstallment.setBounds(211, 257, 186, 19);
+		frmOpenLineOfCreditAccount.getContentPane().add(textFieldAmountInstallment);
+		
+		JLabel lblValueInstallment = new JLabel("Amount for each Installment:");
+		lblValueInstallment.setBounds(23, 263, 178, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblValueInstallment);
+		
+		JLabel lblDueDay = new JLabel("Insert the Due Date Day:");
+		lblDueDay.setBounds(23, 86, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblDueDay);
+		
+		JSpinner spinnerDay = new JSpinner();
+		spinnerDay.setBounds(211, 80, 186, 20);
+		frmOpenLineOfCreditAccount.getContentPane().add(spinnerDay);
+		
+		JSpinner spinnerMonth = new JSpinner();
+		spinnerMonth.setBounds(211, 112, 186, 20);
+		frmOpenLineOfCreditAccount.getContentPane().add(spinnerMonth);
+		
+		JLabel lblDueDateMonth = new JLabel("Insert the Due Date Month:");
+		lblDueDateMonth.setBounds(23, 115, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblDueDateMonth);
+		
+		JLabel lblDueDateYear = new JLabel("Insert the Due Date Year:");
+		lblDueDateYear.setBounds(23, 143, 139, 13);
+		frmOpenLineOfCreditAccount.getContentPane().add(lblDueDateYear);
+		
+		JSpinner spinnerYear = new JSpinner();
+		spinnerYear.setBounds(211, 140, 186, 20);
+		frmOpenLineOfCreditAccount.getContentPane().add(spinnerYear);
+	}
+}

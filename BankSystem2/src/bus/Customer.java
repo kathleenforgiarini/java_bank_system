@@ -1,6 +1,9 @@
 package bus;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import data.CustomerDB;
 import data.UserDB;
 
@@ -64,8 +67,10 @@ public class Customer extends User{
 	//////////////////////////////
 	//   public static services //
 	//////////////////////////////
-	public static void add(Customer element) throws SQLException {
-		CustomerDB.insert(element);
+	public static Integer add(Customer element) throws SQLException {
+		//JOptionPane.showMessageDialog(null, "Entrei no Customer Add");
+		Integer id = CustomerDB.insert(element);
+		return id;
 	}
 	
 	public static void update(Customer element) throws SQLException {

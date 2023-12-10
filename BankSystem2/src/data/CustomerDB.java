@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import java.sql.PreparedStatement;
 import bus.*;
 
@@ -12,26 +15,34 @@ public class CustomerDB {
 	static private String mySQLStatement = null;	
 	static private String mySQLQuery = null;
 	
-	public static void insert(Customer aNewCustomer) throws SQLException 
+	public static Integer insert(Customer aNewCustomer) throws SQLException 
 	{	 	
-    	Integer id = UserDB.insert(aNewCustomer);
+		myConnection = DBConnection.getConnection();
+		//JOptionPane.showMessageDialog(null, "Entrei no CustomerDB Insert");
+		Integer id = UserDB.insert(aNewCustomer);
+		//JOptionPane.showMessageDialog(null, id);
+
    
 	    if (id != null) {
-	        PreparedStatement myPreparedStatement = null ;
-			String sqlStatement;
+	        PreparedStatement myPreparedStatement2 = null ;
+			String sqlStatement2;
 			
-			sqlStatement = "insert into customerbank values(? , ? , ?)";
+			sqlStatement2 = "insert into customerbank values(? , ? , ?)";
 					
-			myPreparedStatement = myConnection.prepareStatement(sqlStatement);		
+			myPreparedStatement2 = myConnection.prepareStatement(sqlStatement2);		
 			
-			myPreparedStatement.setInt(1, id);
-			myPreparedStatement.setDouble(2, aNewCustomer.getSalary());
-			myPreparedStatement.setInt(3, aNewCustomer.getMgr());	// ALTERADO CLASSE PARA MANAGER SER INTEGER AO INVES DE OBJ
+			myPreparedStatement2.setInt(1, id);
+			myPreparedStatement2.setDouble(2, aNewCustomer.getSalary());
+			myPreparedStatement2.setInt(3, aNewCustomer.getMgr());	// ALTERADO CLASSE PARA MANAGER SER INTEGER AO INVES DE OBJ
 			
-			myPreparedStatement.executeUpdate();	
+			//JOptionPane.showMessageDialog(null, myPreparedStatement2);
+			
+			myPreparedStatement2.executeUpdate();	
 			
 			myConnection.commit();	
 	    }
+	    myConnection.close();
+	    return id;
 	}
 	
 	public static void update(Customer aChangedCustomer) throws SQLException {
@@ -54,9 +65,9 @@ public class CustomerDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT u.userid, u.username, u.password, c.salary, c.mgrid"
+		mySQLQuery = "SELECT u.userid, u.username, u.password, c.salary, c.mgrid "
 					+ "FROM userbank u "
-					+ "JOIN customerbank c ON u.userid = c.customerid"
+					+ "JOIN customerbank c ON u.userid = c.customerid "
 					+ "WHERE u.userid = " + id ;
 		
 		Statement myStatemnt = myConnection.createStatement();

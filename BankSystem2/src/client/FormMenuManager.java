@@ -18,7 +18,7 @@ public class FormMenuManager {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormMenuManager window = new FormMenuManager();
+					FormMenuManager window = new FormMenuManager((Integer)null);
 					window.frmHomeManager.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,14 +30,14 @@ public class FormMenuManager {
 	/**
 	 * Create the application.
 	 */
-	public FormMenuManager() {
-		initialize();
+	public FormMenuManager(Integer mgrId) {
+		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Integer mgrId) {
 		frmHomeManager = new JFrame();
 		frmHomeManager.setTitle("Home Manager");
 		frmHomeManager.setBounds(100, 100, 450, 300);
@@ -47,7 +47,7 @@ public class FormMenuManager {
 		JButton btnAddCustomer = new JButton("Add New Customer");
 		btnAddCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormAddNewCustomer formAddNewCustomer = new FormAddNewCustomer();
+				FormAddNewCustomer formAddNewCustomer = new FormAddNewCustomer(mgrId);
 				formAddNewCustomer.frmAddNewCustomer.setVisible(true);
 				
 				frmHomeManager.dispose();
@@ -59,7 +59,7 @@ public class FormMenuManager {
 		JButton btnRemoveCustomer = new JButton("Remove Customer");
 		btnRemoveCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormRemoveCustomer formRemoveCustomer = new FormRemoveCustomer();
+				FormRemoveCustomer formRemoveCustomer = new FormRemoveCustomer(mgrId);
 				formRemoveCustomer.frmRemoveCustomer.setVisible(true);
 				
 				frmHomeManager.dispose();
@@ -71,7 +71,7 @@ public class FormMenuManager {
 		JButton btnOpenAccount = new JButton("Open Account");
 		btnOpenAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuOpenAccount formOpenAccount = new FormMenuOpenAccount();
+				FormMenuOpenAccount formOpenAccount = new FormMenuOpenAccount(mgrId);
 				formOpenAccount.frmHomeNewAccount.setVisible(true);
 				
 				frmHomeManager.dispose();

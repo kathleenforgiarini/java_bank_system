@@ -11,8 +11,11 @@ import bus.*;
 public class AccountDB {
 	static private Connection myConnection;
 	static private String mySQLStatement = null;
+	static private String mySQLQuery = null;
 	
 	public static Integer insert(Account aNewAccount) throws SQLException {
+		myConnection = DBConnection.getConnection();
+		
 		PreparedStatement myPreparedStatement = null ;
 		ResultSet generatedKeys = null;
 		String sqlStatement;
@@ -31,13 +34,10 @@ public class AccountDB {
 		
 		myConnection.commit();	
 		
-		generatedKeys = myPreparedStatement.getGeneratedKeys();
-
-	    if (generatedKeys.next()) {
-	        int generatedId = generatedKeys.getInt(1);
-	        return generatedId;
-	    }
-		return null;
+		Integer maxId = searchMaxId();
+		myConnection.close();
+		
+		return maxId;
 	}
 	
 	public static void update(Account aChangedAccount) throws SQLException {
@@ -62,5 +62,24 @@ public class AccountDB {
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
 		myConnection.commit();	
+	}
+	
+	public static Integer searchMaxId () throws SQLException
+	{
+		myConnection = DBConnection.getConnection();
+		Integer idFound = null;
+		
+		mySQLQuery = "SELECT MAX(accountid) as max "
+					+ "FROM accountbank";
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			idFound = myResultSet.getInt("max");
+		}	
+		
+		return idFound;
 	}
 }

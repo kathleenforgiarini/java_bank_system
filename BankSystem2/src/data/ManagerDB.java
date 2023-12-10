@@ -39,10 +39,10 @@ public class ManagerDB {
 		
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT u.userid, u.username, u.password"
-					+ "FROM userbank u "
-					+ "JOIN managerbank m ON u.userid = m.mgrid"
-					+ "WHERE u.userid = " + id ;
+		mySQLQuery = "SELECT u.userid, u.username, u.password "
+				+ "FROM userbank u "
+				+ "JOIN managerbank m ON u.userid = m.mgrid "
+				+ "WHERE u.userid = " + id;
 		
 		Statement myStatemnt = myConnection.createStatement();
 		

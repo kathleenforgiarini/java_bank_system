@@ -18,6 +18,7 @@ public class CurrencyAccountDB {
 	public static void insert(CurrencyAccount aNewCurrencyAccount) throws SQLException 
 	{	 	
     	Integer id = AccountDB.insert(aNewCurrencyAccount);
+    	myConnection = DBConnection.getConnection();
     	   
 	    if (id != null) {
 	        
@@ -37,6 +38,7 @@ public class CurrencyAccountDB {
 			
 			myConnection.commit();	
 	    }
+	    myConnection.close();
 	}
 	
 	public static void updateCurrencyRate(CurrencyAccount aChangedAccount) throws SQLException {
@@ -49,7 +51,8 @@ public class CurrencyAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static void updateConversionFees(CurrencyAccount aChangedAccount) throws SQLException {
@@ -62,7 +65,8 @@ public class CurrencyAccountDB {
 	
 		Statement myStatemnt = myConnection.createStatement();
 		myStatemnt.executeUpdate(mySQLStatement);
-		myConnection.commit();								
+		myConnection.commit();	
+		myConnection.close();
 	}
 	
 	public static CurrencyAccount search(Integer id) throws SQLException, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate{
@@ -92,7 +96,7 @@ public class CurrencyAccountDB {
 
             aCurrencyAccount = new CurrencyAccount(accountid, type, customerid, balance, openingDate, currency, currency_rate, conv_fee);
 		}	
-		
+		myConnection.close();
 		return aCurrencyAccount;
 	}
 	
@@ -127,7 +131,7 @@ public class CurrencyAccountDB {
             
             myList.add(aCurrencyAccount);
 		}	
-		
+		myConnection.close();
 		return myList;
 	}
 	
@@ -160,7 +164,7 @@ public class CurrencyAccountDB {
 	
 			myList.add(aCurrencyAccount);
 		}
-		
+		myConnection.close();
 		return myList;
 	}
 }
