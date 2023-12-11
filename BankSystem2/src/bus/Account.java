@@ -108,4 +108,8 @@ public abstract class Account implements ITransaction{
 	public static Double getBalance(Integer accountId, Integer customerId) throws SQLException {
 		return AccountDB.getBalanceById(accountId, customerId);
 	}
+	
+	public static String getType(Integer accountId, Integer customerId) throws SQLException {
+		return AccountDB.getTypeById(accountId, customerId);
+	}
 }

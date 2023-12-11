@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CreditAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.ExceptionIsPassedDate;
 import bus.Manager;
 import bus.SavingAccount;
 
@@ -113,9 +114,14 @@ public class FormOpenCreditAccount {
 					Integer month = (Integer) spinnerMonth.getValue();
 					Integer year = (Integer) spinnerYear.getValue();
 					
-					Double limit = Double.parseDouble(textFieldLimit.getText());
+					Double limit = Double.parseDouble(textFieldLimit.getText())*(-1);
 					
 					LocalDate dueDate = LocalDate.of(year, month, day);
+					
+					LocalDate now = LocalDate.now();
+					if (dueDate.isBefore(now)) {
+						throw new ExceptionIsPassedDate();
+					}
 					
 					Customer selectedCustomer = Customer.search(selectedId);
 					

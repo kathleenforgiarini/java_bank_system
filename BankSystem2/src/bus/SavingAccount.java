@@ -43,7 +43,7 @@ public class SavingAccount extends Account {
 		if (Validator.isNull(interestRate)) {
 			throw new ExceptionIsNull();
 		}
-		this.interestRate = interestRate/100;
+		this.interestRate = interestRate;
 	}
 	public double getInterestRate() {
 		return interestRate;
@@ -51,7 +51,7 @@ public class SavingAccount extends Account {
 
 	public void setGain() throws SQLException {
 		this.gain = this.balance * this.interestRate;
-		Account.update(this);
+		//Account.update(this);
 		updateGain(this);
 		
 	}
@@ -65,10 +65,10 @@ public class SavingAccount extends Account {
 	}
 	
 	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
-		LocalDate now = LocalDate.now();
-		if (dueDate.isBefore(now)) {
-			throw new ExceptionIsPassedDate();
-		}
+//		LocalDate now = LocalDate.now();
+//		if (dueDate.isBefore(now)) {
+//			throw new ExceptionIsPassedDate();
+//		}
 		this.dueDate = dueDate;
 	}
 	public LocalDate getDueDate() {
@@ -107,17 +107,26 @@ public class SavingAccount extends Account {
 			}
 		}
 		else {
-			
-			calcGain();
-			
-			if (amount == this.balance) {
-				Transaction transactionInterest = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
-	            		EnumTypeTransaction.Debit);
-				
-				this.balance -= amount;
-				Account.update(this);
-				Transaction.add(transactionInterest);
-				setGain();
+			if (amount <= this.balance + this.gain) {
+				if (amount == this.balance + this.gain) {
+					calcGain();
+					
+					Transaction transactionInterest = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
+		            		EnumTypeTransaction.Debit);
+					
+					this.balance -= amount;
+					Account.update(this);
+					Transaction.add(transactionInterest);
+					setGain();
+				}
+				else
+				{
+					Double funds = this.balance + this.gain;
+					throw new ExceptionNotEnoughBalance("You must withdraw all your funds : " + funds);
+				}
+			}
+			else {
+				throw new ExceptionNotEnoughBalance();
 			}
 		}
 	}

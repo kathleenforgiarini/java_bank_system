@@ -1,0 +1,99 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import bus.Account;
+import bus.Customer;
+
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormGetBalance {
+
+	JFrame frmGetBalance;
+	private JTextField textFieldAccount;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormGetBalance window = new FormGetBalance((Integer)null);
+					window.frmGetBalance.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormGetBalance(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmGetBalance = new JFrame();
+		frmGetBalance.setTitle("Get Balance");
+		frmGetBalance.setBounds(100, 100, 365, 154);
+		frmGetBalance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmGetBalance.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Enter the account Id:");
+		lblNewLabel.setBounds(23, 21, 136, 13);
+		frmGetBalance.getContentPane().add(lblNewLabel);
+		
+		textFieldAccount = new JTextField();
+		textFieldAccount.setBounds(169, 18, 127, 19);
+		frmGetBalance.getContentPane().add(textFieldAccount);
+		textFieldAccount.setColumns(10);
+		
+		JButton btnViewBalance = new JButton("View balance");
+		btnViewBalance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Integer selectedId = Integer.parseInt(textFieldAccount.getText());
+					Double balance = Account.getBalance(selectedId, customerId);
+					
+					if (balance != null) {
+						JOptionPane.showMessageDialog(null, balance);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "You don't have this account id, try again!");
+					}
+					
+				}
+				catch(Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+				
+			}
+		});
+		btnViewBalance.setBounds(211, 72, 112, 21);
+		frmGetBalance.getContentPane().add(btnViewBalance);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
+				formMenuCustomer.frmHomeCustomer.setVisible(true);
+				frmGetBalance.dispose();
+			}
+		});
+		btnExit.setBounds(98, 72, 85, 21);
+		frmGetBalance.getContentPane().add(btnExit);
+	}
+}

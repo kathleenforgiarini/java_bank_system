@@ -105,4 +105,24 @@ public class AccountDB {
 		myConnection.close();
 		return balanceFound;
 	}
+	
+	public static String getTypeById(Integer accountId, Integer customerId) throws SQLException {
+		myConnection = DBConnection.getConnection();
+		String typeFound = null;
+		
+		mySQLQuery = "SELECT typeaccount "
+					+ "FROM accountbank WHERE accountid = " + accountId
+					+ " AND customerid = " + customerId;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			typeFound = myResultSet.getString("typeaccount");
+		}	
+		
+		myConnection.close();
+		return typeFound;
+	}
 }

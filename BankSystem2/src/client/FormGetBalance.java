@@ -8,10 +8,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import bus.Account;
+import bus.CreditAccount;
 import bus.Customer;
+import bus.SavingAccount;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 
 public class FormGetBalance {
@@ -67,13 +70,36 @@ public class FormGetBalance {
 				try {
 					Integer selectedId = Integer.parseInt(textFieldAccount.getText());
 					Double balance = Account.getBalance(selectedId, customerId);
+					String type = Account.getType(selectedId, customerId);
 					
-					if (balance != null) {
-						JOptionPane.showMessageDialog(null, balance);
+					if (balance != null)
+					{
+						if (type.equals("SavingAccount"))
+						{
+							SavingAccount savingAccount = SavingAccount.searchByIdAndCustomer(selectedId, customerId);
+							Double gain = savingAccount.getGain();
+							JOptionPane.showMessageDialog(null, "Your balance is: " + balance
+									+ "\nYour gain is: " + gain
+									+ "\nThis amount will be available on " + savingAccount.getDueDate());
+						}
+						else if (type.equals("CreditAccount"))
+						{
+							CreditAccount creditAccount = CreditAccount.searchByIdAndCustomer(selectedId, customerId);
+							Double limit = creditAccount.getLimit();
+							LocalDate dueDate = creditAccount.getDueDate();
+							JOptionPane.showMessageDialog(null, "The value of your invoice, at this moment, is : " + balance*(-1)
+									+ "\nYou have " + (balance - limit) + " to spend until your Due Date."
+									+ "\nYour next due date will be on " + dueDate);
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Your balance is: " + balance);
+						}
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "You don't have this account id, try again!");
 					}
+					
 					
 				}
 				catch(Exception exc) {

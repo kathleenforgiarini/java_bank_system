@@ -28,6 +28,7 @@ CREATE TABLE userbank (
 );
 
 ALTER TABLE userbank ADD CONSTRAINT pk_user PRIMARY KEY (userid);
+ALTER TABLE userbank ADD CONSTRAINT unique_user UNIQUE (username);
 
 CREATE TABLE managerbank (
     mgrid NUMBER NOT NULL,

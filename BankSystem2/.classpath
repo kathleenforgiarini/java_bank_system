@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/kforg/OneDrive/Área de Trabalho/LaSalle/Fall 2023/Advanced Object Oriented Programming/workspace/ojdbc/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="C:/Files/LaSalle/Cursos/Fall 2023/Adv OOP/Project/CodeV3/java_bank_system/ojdbc6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -173,7 +173,7 @@ public class TransactionDB {
 		
 		ArrayList<Transaction> myList = new ArrayList<Transaction>();
 		
-		if(myResultSet.next()) {
+		while(myResultSet.next()) {
             Integer transactionid = myResultSet.getInt("transactionid");	
             String description = myResultSet.getString("description");
             LocalDate transactiondate = myResultSet.getDate("transactiondate").toLocalDate();
