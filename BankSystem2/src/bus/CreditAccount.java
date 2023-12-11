@@ -37,10 +37,10 @@ public class CreditAccount extends Account{
 	}
 	
 	public void setDueDate(LocalDate dueDate) throws ExceptionIsPassedDate {
-		LocalDate now = LocalDate.now();
-		if (dueDate.isBefore(now)) {
-			throw new ExceptionIsPassedDate();
-		}
+//		LocalDate now = LocalDate.now();
+//		if (dueDate.isBefore(now)) {
+//			throw new ExceptionIsPassedDate();
+//		}
 		this.dueDate = dueDate;
 	}
 	public LocalDate getDueDate() {
@@ -64,22 +64,39 @@ public class CreditAccount extends Account{
 	@Override
 	public void deposit(Double amount) throws ExceptionNegativeAmount, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate, ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 				
-		Double debtValue = this.getLimit() - this.getBalance();
+		Double debtValue = this.getBalance();
 		
-		if (LocalDate.now().isBefore(this.getDueDate())) {
+		if (LocalDate.now().isBefore(this.getDueDate()) || LocalDate.now().isEqual(this.getDueDate())) {
 				
 			Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Credit);	
 			
 			this.balance += amount;
 			Account.update(this);
-			setDueDate(this.getDueDate().plusMonths(1));
-			CreditAccount.updateDueDate(this);
+			
+			if (this.balance==0)
+			{
+				//calculating the new due date - same day of month ALWAYS
+				// add one month based on payment day.
+				LocalDate originalDueDate = this.getDueDate();
+				int originalDueDateDay = originalDueDate.getDayOfMonth();
+				
+				LocalDate paymentDay = LocalDate.now();
+				LocalDate paymentDayPlusOneMonth = paymentDay.plusMonths(1);
+				
+				LocalDate newDueDate = LocalDate.of(paymentDayPlusOneMonth.getYear(),
+						paymentDayPlusOneMonth.getMonthValue(),
+						originalDueDateDay);
+				
+				setDueDate(newDueDate);
+				CreditAccount.updateDueDate(this);
+			}
+			
 			Transaction.add(transaction);
 		}
 		else 
 		{
 			Double taxLate = 0.05;
-			Double lateFee = taxLate*debtValue;			
+			Double lateFee = taxLate*debtValue*(-1);			
 		 		
 			Transaction transactionDep = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Credit);
 			Transaction transactionFees = new Transaction(null, "Fee for late payment", LocalDate.now(), lateFee, this.accountNumber, EnumTypeTransaction.Debit);
@@ -87,6 +104,12 @@ public class CreditAccount extends Account{
 		 	this.balance += amount;
 		 	Account.update(this);
 	        Transaction.add(transactionDep);
+	       
+	        if (this.balance == 0)
+	        {
+	        	setDueDate(this.getDueDate().plusMonths(1));
+				CreditAccount.updateDueDate(this);
+	        }
 			
 	        this.balance -= lateFee;
 	        Account.update(this);
@@ -97,7 +120,7 @@ public class CreditAccount extends Account{
 	@Override
 	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
 		
-		if (amount <= this.getBalance()) {
+		if (amount <= (this.getBalance() - this.getLimit())) {
 			
 			Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Debit);
 			
@@ -106,7 +129,7 @@ public class CreditAccount extends Account{
 			Transaction.add(transaction);
 		}
 		else {
-			throw new ExceptionNotEnoughBalance();
+			throw new ExceptionNotEnoughBalance("You don't have enough limit!");
 		}
 	}
 	

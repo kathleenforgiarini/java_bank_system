@@ -93,8 +93,9 @@ public class FormDepositCreditAccount {
 					
 					if (account != null) {
 						account.deposit(amount);
-						JOptionPane.showMessageDialog(null, "Deposit successfully! \nNew Balance: " + 
-						Account.getBalance(selectedAccount, customerId));
+						JOptionPane.showMessageDialog(null, "Payment received!\n" +
+								"The value of your invoice, at this moment, is : " +
+								Account.getBalance(selectedAccount, customerId)*(-1));
 					} else {
 						JOptionPane.showMessageDialog(null, "You don't have this account number, try again!");
 					}

@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import bus.CheckingAccount;
 import bus.Customer;
 import bus.EnumTypeAccount;
+import bus.ExceptionIsPassedDate;
 import bus.Manager;
 import bus.SavingAccount;
 
@@ -60,7 +61,7 @@ public class FormOpenSavingAccount {
 		frmOpenSavingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmOpenSavingAccount.getContentPane().setLayout(null);
 		
-		JLabel lblUserId = new JLabel("Select customer username:");
+		JLabel lblUserId = new JLabel("Select customer user id:");
 		lblUserId.setBounds(23, 28, 139, 13);
 		frmOpenSavingAccount.getContentPane().add(lblUserId);
 		
@@ -97,11 +98,17 @@ public class FormOpenSavingAccount {
 					Integer selectedId = Integer.parseInt(textFieldUserId.getText());
 					Double balance = Double.parseDouble(textFieldBalance.getText());
 					Double intRate = Double.parseDouble(textFieldInterestRate.getText());
+					intRate = intRate/100;
 					Integer day = (Integer) spinnerDay.getValue();
 					Integer month = (Integer) spinnerMonth.getValue();
 					Integer year = (Integer) spinnerYear.getValue();
 					
 					LocalDate dueDate = LocalDate.of(year, month, day);
+					
+					LocalDate now = LocalDate.now();
+					if (dueDate.isBefore(now)) {
+						throw new ExceptionIsPassedDate();
+					}
 					
 					Customer selectedCustomer = Customer.search(selectedId);
 					

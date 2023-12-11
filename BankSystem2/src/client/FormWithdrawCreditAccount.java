@@ -94,8 +94,9 @@ public class FormWithdrawCreditAccount {
 					if (account != null) {
 						account.withdraw(amount);
 						
-						JOptionPane.showMessageDialog(null, "Withdraw successfully! \nNew Balance: " + 
-						Account.getBalance(selectedAccount, customerId));
+						JOptionPane.showMessageDialog(null, "Withdraw successfully! \n" +
+								"The value of your invoice, at this moment, is : " + 
+								Account.getBalance(selectedAccount, customerId)*(-1));
 					} else {
 						JOptionPane.showMessageDialog(null, "You don't have this account number, try again!");
 					}

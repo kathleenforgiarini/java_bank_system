@@ -11,35 +11,35 @@ import data.LineOfCreditAccountDB;
 
 public class LineOfCreditAccount extends CreditAccount{
 
-	private Integer lineOfCreditAccountId;
+	private Integer accountNumber;
 	private Double interestRate;
 	private Integer nbOfInstallments;
 	private Double installment;
 	
 	public LineOfCreditAccount() {
 		super();
-		this.lineOfCreditAccountId = null;
+		this.accountNumber = null;
 		this.interestRate = 0.00;
 		this.nbOfInstallments = null;
 		this.installment = 0.00;
 	}
 
-	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, LocalDate openingDate,
+	public LineOfCreditAccount(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate,
 			LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ExceptionNotEnoughBalance, SQLException {
 		
-		super(accountNumber, type, customer, 0.00, openingDate, dueDate, limit);
-		setLineOfCreditAccountId(accountNumber);
+		super(accountNumber, type, customer, balance, openingDate, dueDate, limit);
+		setAccountNumber(accountNumber);
 		setInterestRate(interestRate);
 		
-		//withdraw(openingDate, finalDebt);
+		//withdraw(finalDebt);
 	}
 
-	public Integer getLineOfCreditAccountId() {
-		return lineOfCreditAccountId;
+	public Integer getAccountNumber() {
+		return accountNumber;
 	}
 
-	public void setLineOfCreditAccountId(Integer lineOfCreditAccountId) {
-		this.lineOfCreditAccountId = lineOfCreditAccountId;
+	public void setAccountNumber(Integer lineOfCreditAccountId) {
+		this.accountNumber = lineOfCreditAccountId;
 	}
 
 	public Double getInterestRate() {
@@ -77,7 +77,7 @@ public class LineOfCreditAccount extends CreditAccount{
 	@Override
 	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
 		
-		Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.lineOfCreditAccountId, EnumTypeTransaction.Debit);
+		Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Debit);
 		
 		this.setBalance(amount*-1);
 		Account.update(this);
@@ -91,12 +91,15 @@ public class LineOfCreditAccount extends CreditAccount{
 		if (amount >= this.getInstallment()) {
 			if (LocalDate.now().isBefore(this.dueDate))
 			{
-				Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.lineOfCreditAccountId, EnumTypeTransaction.Credit);
+				Transaction transaction = new Transaction(null, "Deposit", LocalDate.now(), amount, this.accountNumber, EnumTypeTransaction.Credit);
 				
-				this.balance += amount;
+				this.balance = this.getBalance() + amount;
 				Account.update(this);
 				this.setNbOfInstallments(this.nbOfInstallments--);
-				LineOfCreditAccount.updateNbOfInstallments(this);
+				updateNbOfInstallments(this);
+				
+				this.setInstallment(this.getBalance()/this.getNbOfInstallments());
+				
 				Transaction.add(transaction);
 			}
 			else
@@ -111,7 +114,7 @@ public class LineOfCreditAccount extends CreditAccount{
 
 	@Override
 	public String toString() {
-		return "LineOfCreditAccount Id " + this.lineOfCreditAccountId +
+		return "LineOfCreditAccount Id " + this.accountNumber +
 			   "\n\tInterest Rate: " + this.interestRate + 
 			   "\n\tInstallments: " + this.nbOfInstallments + 
 			   "\n\tLimit = " + this.limit + 

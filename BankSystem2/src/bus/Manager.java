@@ -57,7 +57,7 @@ public class Manager extends User {
 	}
 	
 	public static void openLineOfCreditAccount(Integer customer, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate, ExceptionNegativeAmount, ClassNotFoundException, IOException, ExceptionNotEnoughBalance, SQLException {
-		LineOfCreditAccount newAccount = new LineOfCreditAccount(null, EnumTypeAccount.LineOfCreditAccount, customer, LocalDate.now(), 
+		LineOfCreditAccount newAccount = new LineOfCreditAccount(null, EnumTypeAccount.LineOfCreditAccount, customer, 0.00, LocalDate.now(), 
 				dueDate, limit, interestRate);
 		
 		LineOfCreditAccount.add(newAccount);
