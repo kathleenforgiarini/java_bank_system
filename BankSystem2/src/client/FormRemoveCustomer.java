@@ -8,16 +8,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import bus.Customer;
+import bus.ExceptionIsNotANumber;
+import bus.ExceptionIsNull;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class FormRemoveCustomer {
 
 	JFrame frmRemoveCustomer;
-	private JTextField textFieldUserID;
-	private JTextField textFieldPassword;
 
 	/**
 	 * Launch the application.
@@ -37,44 +40,48 @@ public class FormRemoveCustomer {
 
 	/**
 	 * Create the application.
+	 * @throws ExceptionIsNull 
+	 * @throws ExceptionIsNotANumber 
+	 * @throws SQLException 
 	 */
-	public FormRemoveCustomer(Integer mgrId) {
+	public FormRemoveCustomer(Integer mgrId) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
 		initialize(mgrId);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws ExceptionIsNull 
+	 * @throws ExceptionIsNotANumber 
+	 * @throws SQLException 
 	 */
-	private void initialize(Integer mgrId) {
+	private void initialize(Integer mgrId) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		
+		ArrayList<Customer> customers = Customer.searchByManager(mgrId);
+		
 		frmRemoveCustomer = new JFrame();
 		frmRemoveCustomer.setTitle("Remove Customer");
 		frmRemoveCustomer.setBounds(100, 100, 450, 300);
 		frmRemoveCustomer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRemoveCustomer.getContentPane().setLayout(null);
 		
-		JLabel lblUserID = new JLabel("User ID to remove:");
-		lblUserID.setBounds(23, 28, 113, 13);
-		frmRemoveCustomer.getContentPane().add(lblUserID);
+		Integer[] array = new Integer[customers.size()];
+		for(int i = 0; i < array.length; i++) {
+			array[i] = customers.get(i).getId();
+		}
+		JComboBox comboBoxCustomer = new JComboBox(array);
+		comboBoxCustomer.setBounds(146, 22, 120, 21);
+		frmRemoveCustomer.getContentPane().add(comboBoxCustomer);
 		
-		textFieldUserID = new JTextField();
-		textFieldUserID.setBounds(172, 22, 225, 19);
-		frmRemoveCustomer.getContentPane().add(textFieldUserID);
-		textFieldUserID.setColumns(10);
-		
-		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
-		lblPasswordMngr.setBounds(23, 195, 113, 13);
-		frmRemoveCustomer.getContentPane().add(lblPasswordMngr);
-		
-		textFieldPassword = new JTextField();
-		textFieldPassword.setColumns(10);
-		textFieldPassword.setBounds(172, 189, 225, 19);
-		frmRemoveCustomer.getContentPane().add(textFieldPassword);
+		JLabel lblCustomer = new JLabel("Customer:");
+		lblCustomer.setBounds(23, 26, 113, 13);
+		frmRemoveCustomer.getContentPane().add(lblCustomer);
 		
 		JButton btnRemoveCustomer = new JButton("Remove Customer");
 		btnRemoveCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Integer customerId = Integer.parseInt(textFieldUserID.getText());
+					Integer customerId = (Integer) comboBoxCustomer.getSelectedItem();
+
 					Customer.remove(customerId);	
 					JOptionPane.showMessageDialog(null, "Customer DELETED!!");
 					
@@ -101,5 +108,8 @@ public class FormRemoveCustomer {
 		});
 		btnCancel.setBounds(172, 218, 77, 21);
 		frmRemoveCustomer.getContentPane().add(btnCancel);
+
+		
+		
 	}
 }

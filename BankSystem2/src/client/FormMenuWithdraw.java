@@ -40,7 +40,7 @@ public class FormMenuWithdraw {
 	private void initialize(Integer customerId) {
 		frmMenuWithdraw = new JFrame();
 		frmMenuWithdraw.setTitle("Home New Withdraw");
-		frmMenuWithdraw.setBounds(100, 100, 450, 300);
+		frmMenuWithdraw.setBounds(100, 100, 451, 259);
 		frmMenuWithdraw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMenuWithdraw.getContentPane().setLayout(null);
 		
@@ -88,17 +88,6 @@ public class FormMenuWithdraw {
 		btnWithdrawFromCredit.setBounds(117, 129, 192, 21);
 		frmMenuWithdraw.getContentPane().add(btnWithdrawFromCredit);
 		
-		JButton btnWithdrawFromLine = new JButton("Withdraw From Line Of Credit Account");
-		btnWithdrawFromLine.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				FormWithdrawLineOfCreditAccount formWithdrawLineOfCreditAccount = new FormWithdrawLineOfCreditAccount(customerId);
-				formWithdrawLineOfCreditAccount.frmWithdrawLineOfCreditAccount.setVisible(true);
-				frmMenuWithdraw.dispose();
-			}
-		});
-		btnWithdrawFromLine.setBounds(117, 160, 192, 21);
-		frmMenuWithdraw.getContentPane().add(btnWithdrawFromLine);
-		
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -107,7 +96,7 @@ public class FormMenuWithdraw {
 				frmMenuWithdraw.dispose();
 			}
 		});
-		btnExit.setBounds(306, 209, 85, 21);
+		btnExit.setBounds(306, 185, 85, 21);
 		frmMenuWithdraw.getContentPane().add(btnExit);
 	}
 

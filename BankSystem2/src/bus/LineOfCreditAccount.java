@@ -31,7 +31,6 @@ public class LineOfCreditAccount extends CreditAccount{
 		setAccountNumber(accountNumber);
 		setInterestRate(interestRate);
 		
-		//withdraw(finalDebt);
 	}
 
 	public Integer getAccountNumber() {
@@ -95,7 +94,7 @@ public class LineOfCreditAccount extends CreditAccount{
 				
 				this.balance = this.getBalance() + amount;
 				Account.update(this);
-				this.setNbOfInstallments(this.nbOfInstallments--);
+				this.setNbOfInstallments(this.nbOfInstallments - 1);
 				updateNbOfInstallments(this);
 				
 				this.setInstallment(this.getBalance()/this.getNbOfInstallments());

@@ -1,0 +1,73 @@
+package client;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FormViewTransactions {
+
+	JFrame frmViewTransactions;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FormViewTransactions window = new FormViewTransactions((Integer)null);
+					window.frmViewTransactions.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public FormViewTransactions(Integer customerId) {
+		initialize(customerId);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(Integer customerId) {
+		frmViewTransactions = new JFrame();
+		frmViewTransactions.setBounds(100, 100, 450, 300);
+		frmViewTransactions.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmViewTransactions.getContentPane().setLayout(null);
+		
+		JButton btnViewTransactions = new JButton("View Transactions");
+		btnViewTransactions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+				
+				
+				
+				
+			}
+		});
+		btnViewTransactions.setBounds(321, 232, 85, 21);
+		frmViewTransactions.getContentPane().add(btnViewTransactions);
+		
+		JButton btnExit = new JButton("Cancel");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
+				formMenuCustomer.frmHomeCustomer.setVisible(true);
+				frmViewTransactions.dispose();
+			}
+		});
+		btnExit.setBounds(210, 232, 85, 21);
+		frmViewTransactions.getContentPane().add(btnExit);
+	}
+
+}

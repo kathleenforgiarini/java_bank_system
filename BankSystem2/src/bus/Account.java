@@ -2,6 +2,7 @@ package bus;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import data.AccountDB;
  
@@ -111,5 +112,9 @@ public abstract class Account implements ITransaction{
 	
 	public static String getType(Integer accountId, Integer customerId) throws SQLException {
 		return AccountDB.getTypeById(accountId, customerId);
+	}
+	
+	public static ArrayList<Integer> searchByCustomerId(Integer customerId) throws SQLException {
+		return AccountDB.searchByCustomerId(customerId);
 	}
 }

@@ -80,9 +80,7 @@ public class CurrencyAccount extends Account {
 		
         double convertedAmount = amount * this.currencyRate;
         double conversionFee = convertedAmount * this.conversionFees;
-
-        JOptionPane.showMessageDialog(null, amount + " " + " " + convertedAmount + " " + this.currencyRate + " " + conversionFees);
-        
+       
         Transaction transactionDep = new Transaction(null, "Deposit", LocalDate.now(), convertedAmount, this.accountNumber, EnumTypeTransaction.Credit);
         Transaction transactionFee = new Transaction(null, "Fee for transaction", LocalDate.now(), conversionFee, this.accountNumber, EnumTypeTransaction.Debit);
             

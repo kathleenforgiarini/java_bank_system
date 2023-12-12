@@ -3,6 +3,7 @@ package client;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -54,7 +55,7 @@ public class FormMenuCustomer {
 				
 			}
 		});
-		btnDeposit.setBounds(145, 53, 129, 21);
+		btnDeposit.setBounds(146, 26, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnDeposit);
 		
 		JButton btnWithdraw = new JButton("Withdraw");
@@ -66,7 +67,7 @@ public class FormMenuCustomer {
 				frmHomeCustomer.dispose();
 			}
 		});
-		btnWithdraw.setBounds(145, 84, 129, 21);
+		btnWithdraw.setBounds(146, 57, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnWithdraw);
 		
 		JButton btnTransfer = new JButton("Transfer");
@@ -78,7 +79,7 @@ public class FormMenuCustomer {
 				frmHomeCustomer.dispose();
 			}
 		});
-		btnTransfer.setBounds(145, 115, 129, 21);
+		btnTransfer.setBounds(146, 88, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnTransfer);
 		
 		JButton btnGetBalance = new JButton("Get Balance");
@@ -90,7 +91,7 @@ public class FormMenuCustomer {
 				frmHomeCustomer.dispose();
 			}
 		});
-		btnGetBalance.setBounds(145, 146, 129, 21);
+		btnGetBalance.setBounds(146, 119, 129, 21);
 		frmHomeCustomer.getContentPane().add(btnGetBalance);
 		
 		JButton btnExit = new JButton("Exit");
@@ -104,6 +105,22 @@ public class FormMenuCustomer {
 		});
 		btnExit.setBounds(309, 208, 85, 21);
 		frmHomeCustomer.getContentPane().add(btnExit);
+		
+		JButton btnViewTransactions = new JButton("View Transactions");
+		btnViewTransactions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					FormViewTransactions formViewTransactions = new FormViewTransactions(customerId);
+					formViewTransactions.frmViewTransactions.setVisible(true);
+					
+					frmHomeCustomer.dispose();
+				}
+				catch(Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
+			}
+		});
+		btnViewTransactions.setBounds(146, 150, 129, 21);
+		frmHomeCustomer.getContentPane().add(btnViewTransactions);
 	}
-
 }

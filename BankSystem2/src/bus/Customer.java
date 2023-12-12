@@ -88,4 +88,8 @@ public class Customer extends User{
 	public static ArrayList<Customer> getData() throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
 		return CustomerDB.select();
 	}
+	
+	public static ArrayList<Customer> searchByManager(Integer mgr) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		return CustomerDB.searchByManager(mgr);
+	}
 }

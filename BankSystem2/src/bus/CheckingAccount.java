@@ -97,7 +97,7 @@ public class CheckingAccount extends Account {
 			Account.update(this);
 
 			Transaction transactionFee = new Transaction(null, "Fee for transaction limit", LocalDate.now(),
-            		amount, this.accountNumber, EnumTypeTransaction.Debit);
+					this.transactionFees, this.accountNumber, EnumTypeTransaction.Debit);
             
 			Transaction.add(transactionFee);
 		}
@@ -134,7 +134,7 @@ public class CheckingAccount extends Account {
 	            this.balance -= this.transactionFees;
 	            Account.update(this);
 	            
-	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", LocalDate.now(), amount, this.accountNumber,
+	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", LocalDate.now(), this.transactionFees, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transactionFees);
 			

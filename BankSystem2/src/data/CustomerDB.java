@@ -92,7 +92,7 @@ public class CustomerDB {
 		Customer aCustomer = null;
 		myConnection = DBConnection.getConnection();
 		
-		mySQLQuery = "SELECT u.userid, u.username, u.password, c.salary, c.mgrid"
+		mySQLQuery = "SELECT u.userid, u.username, u.password, c.salary, c.mgrid "
 				+ "FROM userbank u "
 				+ "JOIN customerbank c ON u.userid = c.customerid";
 		
@@ -109,6 +109,34 @@ public class CustomerDB {
             Integer mgr = myResultSet.getInt("mgrid");
 
             aCustomer = new Customer(customerid, username, password, salary, mgr);
+			myList.add(aCustomer);
+		}
+		
+		return myList;
+	}
+
+	public static ArrayList<Customer> searchByManager(Integer mgr) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		Customer aCustomer = null;
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT u.userid, u.username, u.password, c.salary, c.mgrid "
+				+ "FROM userbank u "
+				+ "JOIN customerbank c ON u.userid = c.customerid "
+				+ "WHERE c.mgrid = " + mgr;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<Customer> myList = new ArrayList<Customer>();
+		
+		while(myResultSet.next()) {
+			Integer customerid = myResultSet.getInt("userid");	
+            String username = myResultSet.getString("username");
+            Integer password = myResultSet.getInt("password");
+            Double salary = myResultSet.getDouble("salary");
+            Integer mgrid = myResultSet.getInt("mgrid");
+
+            aCustomer = new Customer(customerid, username, password, salary, mgrid);
 			myList.add(aCustomer);
 		}
 		

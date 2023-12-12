@@ -3,6 +3,7 @@ package client;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -59,10 +60,16 @@ public class FormMenuManager {
 		JButton btnRemoveCustomer = new JButton("Remove Customer");
 		btnRemoveCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormRemoveCustomer formRemoveCustomer = new FormRemoveCustomer(mgrId);
-				formRemoveCustomer.frmRemoveCustomer.setVisible(true);
+				try {
+					FormRemoveCustomer formRemoveCustomer = new FormRemoveCustomer(mgrId);
+					formRemoveCustomer.frmRemoveCustomer.setVisible(true);
+					
+					frmHomeManager.dispose();
+				}
+				catch(Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
 				
-				frmHomeManager.dispose();
 			}
 		});
 		btnRemoveCustomer.setBounds(145, 84, 129, 21);

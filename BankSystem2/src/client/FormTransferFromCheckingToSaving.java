@@ -106,22 +106,27 @@ public class FormTransferFromCheckingToSaving {
 					Integer selectedAccountTo = Integer.parseInt(textFieldTo.getText());
 					Double amount = Double.parseDouble(textFieldAmount.getText());
 					
-					CheckingAccount accountFrom = CheckingAccount.searchByIdAndCustomer(selectedAccountFrom, customerId);
-					SavingAccount accountTo = SavingAccount.search(selectedAccountTo);
+					if (selectedAccountFrom != selectedAccountTo) {
 					
-					if (accountFrom != null && accountTo != null) {
-						accountFrom.withdraw(amount);
-						JOptionPane.showMessageDialog(null, "Withdraw successfully from account " +
-						selectedAccountFrom + "\nNew Balance: " + 
-								Account.getBalance(selectedAccountFrom, customerId));
+						CheckingAccount accountFrom = CheckingAccount.searchByIdAndCustomer(selectedAccountFrom, customerId);
+						SavingAccount accountTo = SavingAccount.search(selectedAccountTo);
 						
-						accountTo.deposit(amount);
-						JOptionPane.showMessageDialog(null, "Deposit successfully to account " +
-								selectedAccountTo);
-						
+						if (accountFrom != null && accountTo != null) {
+							accountFrom.withdraw(amount);
+							JOptionPane.showMessageDialog(null, "Withdraw successfully from account " +
+							selectedAccountFrom + "\nNew Balance: " + 
+									Account.getBalance(selectedAccountFrom, customerId));
+							
+							accountTo.deposit(amount);
+							JOptionPane.showMessageDialog(null, "Deposit successfully to account " +
+									selectedAccountTo);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Invalid account number!");
+						}
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Invalid account number!");
+						JOptionPane.showMessageDialog(null, "You must enter two different accounts!");
 					}
 					
 				} catch (Exception exc) {

@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import bus.*;
 
@@ -17,7 +19,6 @@ public class AccountDB {
 		myConnection = DBConnection.getConnection();
 		
 		PreparedStatement myPreparedStatement = null ;
-		ResultSet generatedKeys = null;
 		String sqlStatement;
 		
 		sqlStatement = "insert into AccountBank values(? , ? , ? , ? , ?)";
@@ -124,5 +125,27 @@ public class AccountDB {
 		
 		myConnection.close();
 		return typeFound;
+	}
+
+	public static ArrayList<Integer> searchByCustomerId(Integer customerId) throws SQLException {
+		myConnection = DBConnection.getConnection();
+		
+		mySQLQuery = "SELECT accountid "
+				+ "FROM accountbank "
+				+ "WHERE customerid = " + customerId
+				+ " ORDER BY accountid";
+		
+		Statement myStatemnt = myConnection.createStatement();
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		ArrayList<Integer> myList = new ArrayList<Integer>();
+		
+		while(myResultSet.next()) {
+			Integer accountid = myResultSet.getInt("accountid");	
+			
+			myList.add(accountid);
+		}
+		
+		return myList;
 	}
 }

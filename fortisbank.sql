@@ -8,8 +8,6 @@ GRANT ALL PRIVILEGES TO C##fortisbank;
 
 CONNECT C##fortisbank/1234;
 
---DROP TABLE account_has_transaction;
---DROP TABLE customer_has_account;
 --DROP TABLE lineofcreditaccount;
 --DROP TABLE creditaccount;
 --DROP TABLE currencyaccount;
@@ -110,22 +108,6 @@ CREATE TABLE lineofcreditaccount (
     CONSTRAINT fk_lineofcreditaccount_lineofcreditaccountid FOREIGN KEY (lineofcreditaccountid) REFERENCES creditaccount (creditaccountid) ON DELETE CASCADE
 );
 
-CREATE TABLE customer_has_account (
-    customerid NUMBER NOT NULL,
-    accountid NUMBER NOT NULL,
-    CONSTRAINT pk_customerhasaccount PRIMARY KEY (customerid,accountid),
-    CONSTRAINT fk_customerhasaccount_customerid FOREIGN KEY (customerid) REFERENCES customerbank (customerid) ON DELETE CASCADE,
-    CONSTRAINT fk_customerhasaccount_accountid FOREIGN KEY (accountid) REFERENCES accountbank (accountid) ON DELETE CASCADE
-);
-
-CREATE TABLE account_has_transaction (
-    accountid NUMBER NOT NULL,
-    transactionid NUMBER NOT NULL,
-    CONSTRAINT pk_accounthastransaction PRIMARY KEY (accountid, transactionid),
-    CONSTRAINT fk_accounthastransaction_accountid FOREIGN KEY (accountid) REFERENCES accountbank (accountid) ON DELETE CASCADE,
-    CONSTRAINT fk_accounthastransaction_transactionid FOREIGN KEY (transactionid) REFERENCES transactionbank (transactionid) ON DELETE CASCADE
-);
-
 INSERT INTO userbank VALUES (null,'John','1234');
 INSERT INTO userbank VALUES (null,'Mary','1234');
 INSERT INTO userbank VALUES (null,'Bruno','1234');
@@ -146,9 +128,5 @@ INSERT INTO accountbank VALUES (null,'CheckingAccount',5,50000,TO_DATE('2022-08-
 INSERT INTO checkingaccount VALUES (1,3,10);
 INSERT INTO checkingaccount VALUES (2,4,15);
 INSERT INTO checkingaccount VALUES (3,5,20);
-
-INSERT INTO customer_has_account VALUES (3,1);
-INSERT INTO customer_has_account VALUES (4,2);
-INSERT INTO customer_has_account VALUES (5,3);
 
 COMMIT;

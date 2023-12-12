@@ -9,7 +9,9 @@ import javax.swing.JTextField;
 
 import bus.Account;
 import bus.CreditAccount;
+import bus.CurrencyAccount;
 import bus.Customer;
+import bus.LineOfCreditAccount;
 import bus.SavingAccount;
 
 import javax.swing.JButton;
@@ -90,6 +92,20 @@ public class FormGetBalance {
 							JOptionPane.showMessageDialog(null, "The value of your invoice, at this moment, is : " + balance*(-1)
 									+ "\nYou have " + (balance - limit) + " to spend until your Due Date."
 									+ "\nYour next due date will be on " + dueDate);
+						}
+						else if (type.equals("CurrencyAccount")) {
+							CurrencyAccount currencyAccount = CurrencyAccount.searchByIdAndCustomer(selectedId, customerId);
+							String currency = currencyAccount.getCurrency().toString();
+							JOptionPane.showMessageDialog(null, "Your balance is : " + currency + " "
+									+ balance);
+						}
+						else if (type.equals("LineOfCreditAccount")) {
+							LineOfCreditAccount lineofcreditAccount = LineOfCreditAccount.searchByIdAndCustomer(selectedId, customerId);
+							Double installment = lineofcreditAccount.getInstallment();
+							Integer nbInstallments = lineofcreditAccount.getNbOfInstallments();
+							JOptionPane.showMessageDialog(null, "Your balance is: " + balance
+									+ "\nThe value of your installment is: " + installment
+									+ "\nThe number of installments remaining is: " + nbInstallments);
 						}
 						else
 						{
