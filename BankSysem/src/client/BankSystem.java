@@ -734,43 +734,6 @@ public class BankSystem {
 			catch(Exception exc) {
 				System.out.println(exc.getMessage());
 			}
-			
-			
-			
-			
-//			if (transfer.equals("Y")) {
-//				System.out.println("\nEnter the number of the checking account you want to transfer FROM: ");
-//				
-//				idAccount = Integer.parseInt(scan.nextLine());
-//				CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, EnumTypeAccount.CheckingAccount, customer);
-//				
-//				if (checkingAccountToWithdraw != null) {
-//					System.out.println("\nEnter the number of the checking account you want to transfer TO: ");
-//					
-//					idAccount = Integer.parseInt(scan.nextLine());
-//					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchById(idAccount, EnumTypeAccount.CheckingAccount);
-//					
-//					if (checkingAccountToDeposit != null) {
-//						Double amount = null;
-//						System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
-//						System.out.println("Enter an amount to transfer: ");
-//						amount = Double.parseDouble(scan.nextLine());
-//						
-//						checkingAccountToWithdraw.withdraw(LocalDate.now(), amount);
-//						checkingAccountToDeposit.deposit(LocalDate.now(), amount);
-//						
-//						System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
-//						System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
-//
-//					}
-//					else {
-//						System.out.println("Invalid account number");
-//					}
-//				}
-//				else {
-//					System.out.println("Invalid account number");
-//				}
-//			}
 			System.out.println("\nDo you want to make a new transfer? (Y/N) ");
 			transfer = scan.nextLine();
 		}
