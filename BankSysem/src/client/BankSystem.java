@@ -10,42 +10,32 @@ import bus.*;
 public class BankSystem {
 	static Scanner scan = new Scanner(System.in);
 	
-	public static void main(String[] args) throws IOException, ClassNotFoundException, ExceptionIsNotANumber, ExceptionIsNull {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, ExceptionIsNotANumber, ExceptionIsNull, ExceptionIsPassedDate, ExceptionNegativeAmount {
 		
 		
 		System.out.println("\t\t\n WELCOME TO FORTIS BANK\n");
 		
 		ArrayList<Manager> listOfManagerFromConsole = new ArrayList<Manager>();
-		ArrayList<Manager> listOfManagerFromFile = new ArrayList<Manager>();
 		
 		Manager manager1 = new Manager("John", 1234, new ArrayList<Customer>());
-		Manager manager2 = new Manager("Maria", 1234, new ArrayList<Customer>());
 		
 		listOfManagerFromConsole.add(manager1);
-		listOfManagerFromConsole.add(manager2);
 		
 		ArrayList<Customer> listOfCustomerFromConsole = new ArrayList<Customer>();
 		
-		Customer customer1 = new Customer("John", 1234, 12.3, manager1, new ArrayList<Account>());
-		Customer customer2 = new Customer("Maria", 1234, 14.3, manager2, new ArrayList<Account>());
+		Customer customer1 = manager1.createCustomer("Jose", 1234, 12.3, manager1);
 		
 		listOfCustomerFromConsole.add(customer1);
-		listOfCustomerFromConsole.add(customer2);
 		
-		ArrayList<Account> listOfAccountFromConsole = new ArrayList<Account>();
-		
-		Account account1 = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer1, 1200.00, LocalDate.now(), new TransactionCollection(), 3, 10);
-		Account account2 = new CheckingAccount(EnumTypeAccount.CheckingAccount, customer2, 2400.00, LocalDate.now(), new TransactionCollection(), 3, 10);
-		
-		listOfAccountFromConsole.add(account1);
-		listOfAccountFromConsole.add(account2);
-				
-		customer1.addNewAccount(account1);
-		customer2.addNewAccount(account2);
-		
-		FileManagerManagers.serialize(listOfManagerFromConsole);
 		FileManagerCustomers.serialize(listOfCustomerFromConsole);
-		FileManagerAccounts.serialize(listOfAccountFromConsole);
+		
+		Account account1 = manager1.openCheckingAccount(customer1, 1000.00, 3, 2.00);
+		Account account2 = manager1.openSavingAccount(customer1, 1000.00, 10.00, LocalDate.now());
+		Account account3 = manager1.openCurrencyAccount(customer1, 1000.00, EnumTypeCurrency.Real, 2.00, 5.00);
+		Account account4 = manager1.openCreditAccount(customer1, 0.00, LocalDate.now(), -1000.00);
+		//Account account5 = manager1.openLineOfCreditAccount(customer1, LocalDate.now(), -1000.00, 2.00);
+
+		FileManagerManagers.serialize(listOfManagerFromConsole);
 		
 		Boolean auth = true;
 		int typeUser;
@@ -123,8 +113,7 @@ public class BankSystem {
 			System.out.println("3 - Create a customer");
 			System.out.println("4 - Remove a customer");
 			System.out.println("5 - View all customers");
-			System.out.println("6 - View all accounts");
-			System.out.println("7 - Exit");
+			System.out.println("6 - Exit");
 			
 			try {
 				option = Integer.parseInt(scan.nextLine());
@@ -146,9 +135,6 @@ public class BankSystem {
 					displayAllCustomers();
 					break;
 				case 6:
-					displayAllAccounts();
-					break;
-				case 7:
 					auth = false;
 					break;
 				default:
@@ -173,16 +159,6 @@ public class BankSystem {
 		}
 		
 	}	
-	
-	private static void displayAllAccounts() throws ClassNotFoundException, IOException {
-		ArrayList<Account> accounts = new ArrayList<Account>();
-		accounts = FileManagerAccounts.deserialize();
-		
-		for(Account item : accounts) {
-			System.out.println(item.toString());
-		}
-		
-	}
 
 	private static void createCustomer(Manager manager) throws ExceptionIsNotANumber, ExceptionIsNull, ExceptionIsPassedDate, ClassNotFoundException, IOException {
 		String username, createCustomer; int password, monthlyLimit; double salary, balance, transactionFees; 
@@ -282,6 +258,10 @@ public class BankSystem {
 						 year = Integer.parseInt(scan.nextLine());
 						 dueDate = LocalDate.of(year, month, day);
 						 
+						 if (dueDate.isBefore(LocalDate.now()))
+						 {
+							 throw new ExceptionIsPassedDate();
+						 }
 						 manager.openSavingAccount(customer, balance, interestRate, dueDate);
 
 					 }
@@ -307,6 +287,10 @@ public class BankSystem {
 						 dueDate = LocalDate.of(year, month, day);
 						 System.out.println("\nEnter the limit of credit: ");
 						 limit = Double.parseDouble(scan.nextLine());
+						 if (dueDate.isBefore(LocalDate.now()))
+						 {
+							 throw new ExceptionIsPassedDate();
+						 }
 						 
 						 manager.openCreditAccount(customer, balance, dueDate, limit);
 
@@ -371,6 +355,10 @@ public class BankSystem {
 						 limit = Double.parseDouble(scan.nextLine());
 						 System.out.println("\nEnter the interest rate: ");
 						 interestRate = Double.parseDouble(scan.nextLine());
+						 if (dueDate.isBefore(LocalDate.now()))
+						 {
+							 throw new ExceptionIsPassedDate();
+						 }
 						 
 						 manager.openLineOfCreditAccount(customer, dueDate, limit, interestRate);
 
@@ -527,9 +515,16 @@ public class BankSystem {
 					break;
 				}
 			}
+			
+			catch (ExceptionNotEnoughBalance exc){
+				System.out.println(exc.getMessage());
+			}
+			
 			catch (Exception e){
 				System.out.println("Please enter a valid option");
 			}
+			
+
 		}
 		while(auth);
 	}
@@ -563,123 +558,79 @@ public class BankSystem {
 
 	private static void withdraw(Customer customer) throws ClassNotFoundException, IOException, ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		String withdraw; 
-		do {
-			System.out.println("\nDo you want to make a withdraw? (Y/N) ");
-			withdraw = scan.nextLine();
+		do {			
+			Integer idAccount = null;
+			System.out.println("\nEnter the account number: ");
+			idAccount = Integer.parseInt(scan.nextLine());
 			
-			Integer idAccount = null; EnumTypeAccount typeAccount = null;
-			String chooseType = null;
-			
-			if (withdraw.equals("Y")) {
-				System.out.println("\nEnter the type of the account: ");
-				System.out.println("1 - Checking Account");
-				System.out.println("2 - Saving Account");
-				System.out.println("3 - Credit Account");
-				System.out.println("4 - Currency Account");
-				System.out.println("5 - Line of Credit Account");
-				chooseType = scan.nextLine();
+			Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
+			if (account != null) {
 				
-				switch (chooseType) {
-				case "1":
-					typeAccount = EnumTypeAccount.CheckingAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CheckingAccount checkingAccount = (CheckingAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (checkingAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + checkingAccount.getBalance());
+				EnumTypeAccount type = account.getType();
+				
+				Double amount = null;
+				
+				switch(type) {
+					case CheckingAccount:
+						System.out.println("Balance: " + account.getBalance());
 						System.out.println("Enter an amount to withdraw: ");
 						amount = Double.parseDouble(scan.nextLine());
+						CheckingAccount checkingAccount = (CheckingAccount) account;
 						checkingAccount.withdraw(LocalDate.now(), amount);
+						System.out.println("Updated balance: " + account.getBalance());
+						FileManagerCustomers.saveNewCustomer(customer);
+						break;
 						
-						System.out.println("Updated balance: " + checkingAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					
-					break;
-				case "2":
-					typeAccount = EnumTypeAccount.SavingAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					SavingAccount savingAccount = (SavingAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (savingAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + savingAccount.getBalance());
+					case SavingAccount:
+						SavingAccount savingAccount = (SavingAccount) account;
+						
+						if (LocalDate.now().isBefore(savingAccount.getDueDate())) {
+							System.out.println("Your balance is " + 
+										(savingAccount.getBalance() + savingAccount.getGain())
+										+ "\nThis value will be available only on " + savingAccount.getDueDate());
+						}
+						else {
+							System.out.println("Balance availabe: " + (savingAccount.getBalance() + savingAccount.getGain()));
+							System.out.println("Enter an amount to withdraw: ");
+							amount = Double.parseDouble(scan.nextLine());
+							
+							savingAccount.withdraw(LocalDate.now(), amount);
+							System.out.println("Updated balance: " + account.getBalance());
+							FileManagerCustomers.saveNewCustomer(customer);
+						}
+						
+						break;
+						
+					case CurrencyAccount:
+						System.out.println("Balance: " + account.getBalance());
 						System.out.println("Enter an amount to withdraw: ");
 						amount = Double.parseDouble(scan.nextLine());
-						savingAccount.withdraw(LocalDate.now(), amount);
+						CurrencyAccount currencyAccount = (CurrencyAccount) account;
+						currencyAccount.withdraw(LocalDate.now(), amount);
+						System.out.println("Updated balance: " + account.getBalance());
+						FileManagerCustomers.saveNewCustomer(customer);
+						break;
 						
-						System.out.println("Updated balance: " + savingAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "3":
-					typeAccount = EnumTypeAccount.CreditAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CreditAccount creditAccount = (CreditAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (creditAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + creditAccount.getBalance());
-						System.out.println("Enter an amount to withdraw: ");
+					case CreditAccount:
+						CreditAccount creditAccount = (CreditAccount) account;
+						System.out.println("Balance: " + creditAccount.getBalance() + 
+								"\nYour available funds is: " + (creditAccount.getBalance() - 
+										creditAccount.getLimit()));
+						System.out.println("Enter the value of your purchase: ");
 						amount = Double.parseDouble(scan.nextLine());
 						creditAccount.withdraw(LocalDate.now(), amount);
-						
-						System.out.println("Updated balance: " + creditAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "4":
-					typeAccount = EnumTypeAccount.CurrencyAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CurrencyAccount currencyAccount = (CurrencyAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (currencyAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + currencyAccount.getBalance());
-						System.out.println("Enter an amount to withdraw: ");
-						amount = Double.parseDouble(scan.nextLine());
-						currencyAccount.withdraw(LocalDate.now(), amount);
-						
-						System.out.println("Updated balance: " + currencyAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "5":
-					typeAccount = EnumTypeAccount.LineOfCreditAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (lineOfCreditAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + lineOfCreditAccount.getBalance());
-						System.out.println("Enter an amount to withdraw: ");
-						amount = Double.parseDouble(scan.nextLine());
-						lineOfCreditAccount.withdraw(LocalDate.now(), amount);
-						
-						System.out.println("Updated balance: " + lineOfCreditAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				default:
-					System.out.println("Invalid account type");
+						System.out.println("Updated balance: " + account.getBalance());
+						FileManagerCustomers.saveNewCustomer(customer);
+						break;
+					default:
+						System.out.println("\nInvalid account to withdraw!");
+						break;
 				}
+				
+				
 			}
+			System.out.println("\nDo you want to make a new withdraw? (Y/N) ");
+			withdraw = scan.nextLine();
 		}
 		while(withdraw.equals("Y"));
 		
@@ -688,122 +639,54 @@ public class BankSystem {
 	private static void deposit(Customer customer) throws ClassNotFoundException, IOException, ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, ExceptionWrongAmount, ExceptionLatePayment, ExceptionIsPassedDate {
 		String deposit; 
 		do {
-			System.out.println("\nDo you want to make a deposit? (Y/N) ");
-			deposit = scan.nextLine();
+			Integer idAccount = null; 
+			System.out.println("\nEnter the account number: ");
+			idAccount = Integer.parseInt(scan.nextLine());
 			
-			Integer idAccount = null; EnumTypeAccount typeAccount = null;
-			String chooseType = null;
-			
-			if (deposit.equals("Y")) {
-				System.out.println("\nEnter the type of the account: ");
-				System.out.println("1 - Checking Account");
-				System.out.println("2 - Saving Account");
-				System.out.println("3 - Credit Account");
-				System.out.println("4 - Currency Account");
-				System.out.println("5 - Line of Credit Account");
-				chooseType = scan.nextLine();
+			Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
+			if (account != null) {
 				
-				switch (chooseType) {
-				case "1":
-					typeAccount = EnumTypeAccount.CheckingAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CheckingAccount checkingAccount = (CheckingAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (checkingAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + checkingAccount.getBalance());
-						System.out.println("Enter an amount to deposit: ");
-						amount = Double.parseDouble(scan.nextLine());
+				EnumTypeAccount type = account.getType();
+				
+				Double amount = null;
+				System.out.println("Balance: " + account.getBalance());
+				System.out.println("Enter an amount to deposit: ");
+				amount = Double.parseDouble(scan.nextLine());
+				
+				
+				switch(type) {
+					case CheckingAccount:
+						CheckingAccount checkingAccount = (CheckingAccount) account;
 						checkingAccount.deposit(LocalDate.now(), amount);
+						break;
 						
-						System.out.println("Updated balance: " + checkingAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					
-					break;
-				case "2":
-					typeAccount = EnumTypeAccount.SavingAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					SavingAccount savingAccount = (SavingAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (savingAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + savingAccount.getBalance());
-						System.out.println("Enter an amount to deposit: ");
-						amount = Double.parseDouble(scan.nextLine());
+					case SavingAccount:
+						SavingAccount savingAccount = (SavingAccount) account;
 						savingAccount.deposit(LocalDate.now(), amount);
+						break;
 						
-						System.out.println("Updated balance: " + savingAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "3":
-					typeAccount = EnumTypeAccount.CreditAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CreditAccount creditAccount = (CreditAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (creditAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + creditAccount.getBalance());
-						System.out.println("Enter an amount to deposit: ");
-						amount = Double.parseDouble(scan.nextLine());
-						creditAccount.deposit(LocalDate.now(), amount);
-						
-						System.out.println("Updated balance: " + creditAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "4":
-					typeAccount = EnumTypeAccount.CurrencyAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					CurrencyAccount currencyAccount = (CurrencyAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (currencyAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + currencyAccount.getBalance());
-						System.out.println("Enter an amount to deposit: ");
-						amount = Double.parseDouble(scan.nextLine());
+					case CurrencyAccount:
+						CurrencyAccount currencyAccount = (CurrencyAccount) account;
 						currencyAccount.deposit(LocalDate.now(), amount);
+						break;
 						
-						System.out.println("Updated balance: " + currencyAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				case "5":
-					typeAccount = EnumTypeAccount.LineOfCreditAccount;
-					System.out.println("\nEnter the account number: ");
-					idAccount = Integer.parseInt(scan.nextLine());
-					
-					LineOfCreditAccount lineOfCreditAccount = (LineOfCreditAccount) AccountCollection.searchById(idAccount, typeAccount);
-					if (lineOfCreditAccount != null) {
-						Double amount = null;
-						System.out.println("Balance: " + lineOfCreditAccount.getBalance());
-						System.out.println("Enter an amount to deposit: ");
-						amount = Double.parseDouble(scan.nextLine());
-						lineOfCreditAccount.deposit(LocalDate.now(), amount);
-						
-						System.out.println("Updated balance: " + lineOfCreditAccount.getBalance());
-					}
-					else {
-						System.out.println("Invalid account number");
-					}
-					break;
-				default:
-					System.out.println("Invalid account type");
+					case CreditAccount:
+						CreditAccount creditAccount = (CreditAccount) account;
+						creditAccount.deposit(LocalDate.now(), amount);
+						break;
+					default:
+						break;
 				}
+				
+				System.out.println("Updated balance: " + account.getBalance());
+				FileManagerCustomers.saveNewCustomer(customer);
+				
 			}
+			else {
+				System.out.println("Invalid account number");
+			}
+			System.out.println("\nDo you want to make a new deposit? (Y/N) ");
+			deposit = scan.nextLine();
 		}
 		while(deposit.equals("Y"));
 		
@@ -812,24 +695,20 @@ public class BankSystem {
 	private static void transfer(Customer customer) throws ClassNotFoundException, IOException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull, ExceptionNotEnoughBalance {
 		String transfer; 
 		do {
-			System.out.println("\nDo you want to make a transfer? (Y/N) ");
-			transfer = scan.nextLine();
+			Integer idAccountFrom = null, idAccountTo = null;
 			
-			Integer idAccount = null;
-
-			if (transfer.equals("Y")) {
+			try {
 				System.out.println("\nEnter the number of the checking account you want to transfer FROM: ");
+				idAccountFrom = Integer.parseInt(scan.nextLine());
 				
-				idAccount = Integer.parseInt(scan.nextLine());
-				CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, EnumTypeAccount.CheckingAccount, customer);
+				System.out.println("\nEnter the number of the checking account you want to transfer TO: ");
+				idAccountTo = Integer.parseInt(scan.nextLine());
 				
-				if (checkingAccountToWithdraw != null) {
-					System.out.println("\nEnter the number of the checking account you want to transfer TO: ");
+				if (idAccountFrom != idAccountTo) {
+					CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountFrom, customer);
+					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountTo, customer);
 					
-					idAccount = Integer.parseInt(scan.nextLine());
-					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchById(idAccount, EnumTypeAccount.CheckingAccount);
-					
-					if (checkingAccountToDeposit != null) {
+					if (checkingAccountToWithdraw != null && checkingAccountToDeposit != null) {
 						Double amount = null;
 						System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
 						System.out.println("Enter an amount to transfer: ");
@@ -840,19 +719,62 @@ public class BankSystem {
 						
 						System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
 						System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
-
+						FileManagerCustomers.saveNewCustomer(customer);
 					}
 					else {
 						System.out.println("Invalid account number");
 					}
+					
+					
 				}
 				else {
-					System.out.println("Invalid account number");
+					System.out.println("You can not transfer to the same account");
 				}
 			}
+			catch(Exception exc) {
+				System.out.println(exc.getMessage());
+			}
+			
+			
+			
+			
+//			if (transfer.equals("Y")) {
+//				System.out.println("\nEnter the number of the checking account you want to transfer FROM: ");
+//				
+//				idAccount = Integer.parseInt(scan.nextLine());
+//				CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, EnumTypeAccount.CheckingAccount, customer);
+//				
+//				if (checkingAccountToWithdraw != null) {
+//					System.out.println("\nEnter the number of the checking account you want to transfer TO: ");
+//					
+//					idAccount = Integer.parseInt(scan.nextLine());
+//					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchById(idAccount, EnumTypeAccount.CheckingAccount);
+//					
+//					if (checkingAccountToDeposit != null) {
+//						Double amount = null;
+//						System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
+//						System.out.println("Enter an amount to transfer: ");
+//						amount = Double.parseDouble(scan.nextLine());
+//						
+//						checkingAccountToWithdraw.withdraw(LocalDate.now(), amount);
+//						checkingAccountToDeposit.deposit(LocalDate.now(), amount);
+//						
+//						System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
+//						System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
+//
+//					}
+//					else {
+//						System.out.println("Invalid account number");
+//					}
+//				}
+//				else {
+//					System.out.println("Invalid account number");
+//				}
+//			}
+			System.out.println("\nDo you want to make a new transfer? (Y/N) ");
+			transfer = scan.nextLine();
 		}
-		while(transfer.equals("Y"));
-		
+		while(transfer.equals("Y"));	
 	}
 	
 	private static void displayTransactions(Customer customer) throws ClassNotFoundException, IOException {
@@ -861,16 +783,12 @@ public class BankSystem {
 		System.out.println("\nEnter the number of the account you want to view the transactions: ");
 		
 		idAccount = Integer.parseInt(scan.nextLine());
-		Account account = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccount, customer);
+		Account account = AccountCollection.searchByIdAndCustomer(idAccount, customer);
 		
 		//System.out.println(account);
 		if (account != null) {
-			TransactionCollection transactions = account.getTransactions();
-			System.out.println(transactions);
 			
-			ArrayList<Transaction> listOfTransactions = transactions.getListOfTransactions();
-			
-			System.out.println(listOfTransactions);
+			ArrayList<Transaction> listOfTransactions = account.getTransactions();
 			
 			for (Transaction element : listOfTransactions)
 			{

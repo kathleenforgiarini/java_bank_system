@@ -1,6 +1,7 @@
 package bus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class SavingAccount extends Account {
 
@@ -17,7 +18,7 @@ public class SavingAccount extends Account {
 	}
 
 	public SavingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+			ArrayList<Transaction> transactions, Double interestRate, LocalDate dueDate) throws ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		super(type, customer, balance, openingDate, transactions);
 		setInterestRate(interestRate);
 		setDueDate(dueDate);		
@@ -98,15 +99,26 @@ public class SavingAccount extends Account {
 		}
 		else {
 			
-			calcGain();
-			
-			if (amount == this.balance) {
-				Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount, this,
-	            		EnumTypeTransaction.Debit);
-				
-				this.balance -= amount;
-				setGain();
-				this.transactions.add(transactionInterest);
+			if (amount <= this.balance + this.gain) {
+				if (amount == this.balance + this.gain) {
+					calcGain();
+					
+					Transaction transactionInterest = new Transaction("Withdraw", transactionDate, amount, this,
+		            		EnumTypeTransaction.Debit);
+					
+					this.balance -= amount;
+					
+					this.transactions.add(transactionInterest);
+					setGain();
+				}
+				else
+				{
+					Double funds = this.balance + this.gain;
+					throw new ExceptionNotEnoughBalance("You must withdraw all your funds : " + funds);
+				}
+			}
+			else {
+				throw new ExceptionNotEnoughBalance();
 			}
 		}
 	}

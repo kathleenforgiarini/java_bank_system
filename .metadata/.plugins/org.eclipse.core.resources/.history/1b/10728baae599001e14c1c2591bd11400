@@ -1,0 +1,74 @@
+package bus;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.io.IOException;
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class AccountCollection implements Serializable {
+
+	private static final long serialVersionUID = -2294971623918335466L;
+
+	public static Account searchById(Integer id) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = FileManagerAccounts.deserialize();
+
+		for(Account item : accounts) {
+			if (item.getAccountNumber().equals(id)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public static Account searchById(Integer id, EnumTypeAccount type) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = FileManagerAccounts.deserialize();
+		
+		for(Account item : accounts) {
+			if (item.getAccountNumber().equals(id) && item.getType().equals(type)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public static Account searchByIdAndCustomer(Integer id, EnumTypeAccount type, Customer customer) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = FileManagerAccounts.deserialize();
+		
+		for(Account item : accounts) {
+			Integer idCustomerAccount = item.getCustomer().getIdentificationNumber();
+			Integer idCustomerPar = customer.getIdentificationNumber();
+			
+			if (item.getAccountNumber().equals(id) && item.getType().equals(type) && idCustomerAccount.equals(idCustomerPar)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public static Account searchByIdAndCustomer(Integer id, Customer customer) throws ClassNotFoundException, IOException {
+		
+		ArrayList<Account> customersAccounts = customer.getListOfAccounts();
+
+		for(Account item : customersAccounts) {
+			if (item.getAccountNumber().equals(id)) {
+				return item;
+			}
+			
+			
+			Integer idCustomerAccount = item.getCustomer().getIdentificationNumber();
+			Integer idCustomerPar = customer.getIdentificationNumber();
+
+			if (item.getAccountNumber().equals(id) && idCustomerAccount.equals(idCustomerPar)) {
+				return item;
+			}
+		}
+		return null;
+	}
+}

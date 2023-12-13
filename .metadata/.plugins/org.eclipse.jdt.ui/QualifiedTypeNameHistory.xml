@@ -21,11 +21,16 @@
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
     <fullyQualifiedTypeName name="bus.Manager"/>
     <fullyQualifiedTypeName name="bus.Customer"/>
-    <fullyQualifiedTypeName name="bus.Account"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="bus.SavingAccount"/>
     <fullyQualifiedTypeName name="bus.CheckingAccount"/>
-    <fullyQualifiedTypeName name="bus.CurrencyAccount"/>
     <fullyQualifiedTypeName name="bus.CreditAccount"/>
+    <fullyQualifiedTypeName name="bus.CurrencyAccount"/>
     <fullyQualifiedTypeName name="bus.LineOfCreditAccount"/>
+    <fullyQualifiedTypeName name="bus.Account"/>
+    <fullyQualifiedTypeName name="bus.PredicateDate"/>
+    <fullyQualifiedTypeName name="bus.PredicateAmount"/>
+    <fullyQualifiedTypeName name="bus.Transaction"/>
+    <fullyQualifiedTypeName name="bus.TransactionCollection"/>
+    <fullyQualifiedTypeName name="bus.FileManagerCustomers"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

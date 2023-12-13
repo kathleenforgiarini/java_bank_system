@@ -50,6 +50,15 @@ public class Customer extends User{
 		return listOfAccounts;
 	}
 	
+	public void removeAccount(Integer accountNumber) {
+		for (Account accountList : this.listOfAccounts) {
+			if (accountList.getAccountNumber().equals(accountNumber)) {
+				this.listOfAccounts.remove(accountList);
+				break;
+			}
+		}
+	}
+	
 	public void addNewAccount(Account newAccount) {
 		this.listOfAccounts.add(newAccount);
 	}

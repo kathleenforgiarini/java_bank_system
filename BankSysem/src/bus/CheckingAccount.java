@@ -1,6 +1,7 @@
 package bus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class CheckingAccount extends Account {
 	private static final long serialVersionUID = -536443424779652112L;
@@ -14,7 +15,7 @@ public class CheckingAccount extends Account {
 	}
 	
 	public CheckingAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, int monthlyTransactionLimit, double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+			ArrayList<Transaction> transactions, int monthlyTransactionLimit, double transactionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super(type, customer, balance, openingDate, transactions);
 		setMonthlyTransactionLimit(monthlyTransactionLimit);
 		setTransactionFees(transactionFees);
@@ -57,7 +58,9 @@ public class CheckingAccount extends Account {
 	public void deposit(LocalDate transactionDate, Double amount) throws ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
 		if (amount > 0) {
 			
-			if (transactions.getCountThisMonth(transactionDate) < this.monthlyTransactionLimit) {
+			Integer getCountThisMonth = TransactionCollection.getCountThisMonth(LocalDate.now(), this.getTransactions());
+
+			if (getCountThisMonth < this.monthlyTransactionLimit) {
 				this.balance += amount;
 
 	            Transaction transaction = new Transaction("Deposit", transactionDate,
@@ -77,7 +80,7 @@ public class CheckingAccount extends Account {
 				this.balance -= this.transactionFees;
 
 				Transaction transactionFee = new Transaction("Fee for transaction limit", transactionDate,
-	            		amount, this, EnumTypeTransaction.Debit);
+						this.transactionFees, this, EnumTypeTransaction.Debit);
 	            
 	            this.transactions.add(transactionFee);
 			}
@@ -87,15 +90,17 @@ public class CheckingAccount extends Account {
 
 	@Override
 	public void withdraw(LocalDate transactionDate, Double amount) throws ExceptionNotEnoughBalance, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {
-
+		
 			if (amount <= this.balance) {
-				if (transactions.getCountThisMonth(transactionDate) < monthlyTransactionLimit) {
+				
+				Integer getCountThisMonth = TransactionCollection.getCountThisMonth(LocalDate.now(), this.getTransactions());
+				
+				if (getCountThisMonth < this.monthlyTransactionLimit) {
 					this.balance -= amount;
 
 		            Transaction transaction = new Transaction("Withdraw", transactionDate, amount, this,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transaction);
-				
 				}
 				else {
 					this.balance -= amount;
@@ -106,7 +111,7 @@ public class CheckingAccount extends Account {
 		            
 		            this.balance -= this.transactionFees;
 		            
-		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, amount, this,
+		            Transaction transactionFees = new Transaction("Fee for transaction limit", transactionDate, this.transactionFees, this,
 		            		EnumTypeTransaction.Debit);
 		            this.transactions.add(transactionFees);
 				

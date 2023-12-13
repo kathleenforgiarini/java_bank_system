@@ -103,8 +103,8 @@ public class Transaction {
 	public String toString() {
 		return "Transaction ID: " + this.transactionId + 
 				"\n\tDescription: " + this.description + ", on " + this.transactionDate +
-				"\n\tAmount: " + this.amount + ", Account: " + this.accountId + 
-				"\n\t, Type: " + this.type;
+				"\n\tAmount: " + this.amount + 
+				"\n\tType: " + this.type;
 	}
 	
 	//////////////////////////////

@@ -25,16 +25,14 @@ public class TransactionCollection{
 		return listOfTransactionsByMonth;
 	}
 	
-	public void sortByDate(PredicateDate datePredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
+	public static void sortByDate(ArrayList<Transaction> transactions, PredicateDate datePredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
 	{
-		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
-		Collections.sort(listOfTransactions,datePredicate);
+		Collections.sort(transactions,datePredicate);
 	}
 	
-	public void sortByAmount(PredicateAmount amountPredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
+	public static void sortByAmount(ArrayList<Transaction> transactions, PredicateAmount amountPredicate) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull
 	{
-		ArrayList<Transaction> listOfTransactions = TransactionDB.select();
-		Collections.sort(listOfTransactions,amountPredicate);
+		Collections.sort(transactions,amountPredicate);
 	}
 	
 	public static Integer getCountThisMonth(LocalDate date, ArrayList<Transaction> transactions) throws SQLException, ExceptionNegativeAmount, ExceptionIsNotANumber, ExceptionIsNull {

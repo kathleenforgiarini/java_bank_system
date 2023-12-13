@@ -11,11 +11,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 
 import bus.Account;
 import bus.Customer;
+import bus.PredicateAmount;
+import bus.PredicateDate;
+import bus.Transaction;
+import bus.TransactionCollection;
 
 public class FormViewTransactions {
 
@@ -52,6 +57,7 @@ public class FormViewTransactions {
 	private void initialize(Integer customerId) throws SQLException {
 		ArrayList<Integer> accounts = Account.searchByCustomerId(customerId);
 		frmViewTransactions = new JFrame();
+		frmViewTransactions.setTitle("Menu View Transactions");
 		frmViewTransactions.setBounds(100, 100, 450, 300);
 		frmViewTransactions.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmViewTransactions.getContentPane().setLayout(null);
@@ -65,10 +71,34 @@ public class FormViewTransactions {
 		comboBoxAccount.setBounds(109, 65, 111, 21);
 		frmViewTransactions.getContentPane().add(comboBoxAccount);
 		
+		JComboBox comboBoxSort = new JComboBox();
+		comboBoxSort.setModel(new DefaultComboBoxModel(new String[] {"Date", "Amount"}));
+		comboBoxSort.setBounds(109, 101, 111, 21);
+		frmViewTransactions.getContentPane().add(comboBoxSort);
+		
 		JButton btnViewTransactions = new JButton("View Transactions");
 		btnViewTransactions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
+					Integer accountId = (Integer) comboBoxAccount.getSelectedItem();
+					String sortBy = (String) comboBoxSort.getSelectedItem();
+					
+					ArrayList<Transaction> transactions = Transaction.searchByAccount(accountId);
+					if (sortBy.equals("Date")) {
+						TransactionCollection.sortByDate(transactions, new PredicateDate());
+						FormShowTransactions formShowTransactions = new FormShowTransactions(transactions);
+						formShowTransactions.frmShowTransactions.setVisible(true);
+						
+					} 
+					else if (sortBy.equals("Amount")) {
+						TransactionCollection.sortByAmount(transactions, new PredicateAmount());
+						FormShowTransactions formShowTransactions = new FormShowTransactions(transactions);
+						formShowTransactions.frmShowTransactions.setVisible(true);
+					}
+				}
+				catch(Exception exc) {
+					JOptionPane.showMessageDialog(null, exc.getMessage());
+				}
 				
 				
 				
@@ -90,11 +120,6 @@ public class FormViewTransactions {
 		});
 		btnExit.setBounds(210, 232, 85, 21);
 		frmViewTransactions.getContentPane().add(btnExit);
-		
-		JComboBox comboBoxSort = new JComboBox();
-		comboBoxSort.setModel(new DefaultComboBoxModel(new String[] {"Date", "Amount"}));
-		comboBoxSort.setBounds(109, 101, 111, 21);
-		frmViewTransactions.getContentPane().add(comboBoxSort);
 		
 		JLabel lblNewLabel = new JLabel("Sort by:");
 		lblNewLabel.setBounds(54, 105, 45, 13);

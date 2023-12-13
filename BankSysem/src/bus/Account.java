@@ -13,7 +13,7 @@ public abstract class Account implements ITransaction, Serializable {
 	protected Customer customer;
 	protected Double balance;
 	protected LocalDate openingDate;
-	protected TransactionCollection transactions;
+	protected ArrayList<Transaction> transactions;
 	
 	public Account() {
 		super();
@@ -22,11 +22,11 @@ public abstract class Account implements ITransaction, Serializable {
 		this.customer = null;
 		this.balance = (double) 0;
 		this.openingDate = null;
-		this.transactions = new TransactionCollection();
+		this.transactions = new ArrayList<Transaction>();
 	}
 	
 	public Account(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions) throws ExceptionIsNull, ExceptionIsNotANumber {
+			ArrayList<Transaction> transactions) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super();
 		this.accountNumber = counter++;
 		this.type = type;
@@ -70,7 +70,7 @@ public abstract class Account implements ITransaction, Serializable {
 		this.customer = customer;
 	}
 	
-	public TransactionCollection getTransactions() {
+	public ArrayList<Transaction> getTransactions() {
 		return this.transactions;
 	}
 

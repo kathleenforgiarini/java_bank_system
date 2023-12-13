@@ -1,6 +1,7 @@
 package bus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class CurrencyAccount extends Account {
 	
@@ -18,7 +19,7 @@ public class CurrencyAccount extends Account {
 	}
 	
 	public CurrencyAccount(EnumTypeAccount type, Customer customer, Double balance, LocalDate openingDate,
-			TransactionCollection transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
+			ArrayList<Transaction> transactions, EnumTypeCurrency currency, double currencyRate, double conversionFees) throws ExceptionIsNull, ExceptionIsNotANumber {
 		super(type, customer, balance, openingDate, transactions);
 		this.currency = currency;
 		this.currencyRate = currencyRate;

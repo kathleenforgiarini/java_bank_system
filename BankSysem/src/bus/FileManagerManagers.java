@@ -17,6 +17,7 @@ public class FileManagerManagers {
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 		objectOutputStream.writeObject(listFromConsole);
 		objectOutputStream.close();
+		
 	}
 
 	@SuppressWarnings("unchecked")

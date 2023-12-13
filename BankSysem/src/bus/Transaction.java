@@ -1,9 +1,11 @@
 package bus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Transaction {
-	private Integer counter = 1;
+public class Transaction implements Serializable {
+	private static final long serialVersionUID = 5517651797689724534L;
+	private static Integer counter = 1;
 	private Integer transactionNumber;
 	private String description;
 	private LocalDate transactionDate;
@@ -102,7 +104,7 @@ public class Transaction {
 	public String toString() {
 		return "Transaction ID: " + this.transactionNumber + 
 				"\n\tDescription: " + this.description + ", on " + this.transactionDate +
-				"\n\tAmount: CAD$ " + this.amount + " , type " + this.type;
+				"\n\tAmount: CAD$ " + this.amount + ", type " + this.type;
 	}
 
 

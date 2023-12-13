@@ -2,6 +2,7 @@ package bus;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 
 public class LineOfCreditAccount extends CreditAccount{
 
@@ -18,7 +19,7 @@ public class LineOfCreditAccount extends CreditAccount{
 	}
 	
 	public LineOfCreditAccount(EnumTypeAccount type, Customer customer, LocalDate openingDate,
-			TransactionCollection transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
+			ArrayList<Transaction> transactions, LocalDate dueDate, Double limit, Double interestRate) throws ExceptionNegativeAmount, ExceptionIsNull, ExceptionIsNotANumber, ExceptionIsPassedDate {
 		
 		//limit = requested value
 		
