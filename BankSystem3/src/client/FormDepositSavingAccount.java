@@ -64,13 +64,13 @@ public class FormDepositSavingAccount {
 		
 		JLabel lblAccount = new JLabel("Enter the account id:");
 		lblAccount.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAccount.setBounds(39, 33, 104, 13);
+		lblAccount.setBounds(10, 33, 133, 13);
 		frmDepositSavingAccount.getContentPane().add(lblAccount);
 		
 		
 		lblAmount = new JLabel("Amount to deposit:");
 		lblAmount.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAmount.setBounds(39, 72, 104, 13);
+		lblAmount.setBounds(10, 72, 133, 13);
 		frmDepositSavingAccount.getContentPane().add(lblAmount);
 		
 		textFieldAmount = new JTextField();
