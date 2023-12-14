@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,9 +11,11 @@ import javax.swing.JTextField;
 import bus.Account;
 import bus.CreditAccount;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class FormDepositCreditAccount {
 
@@ -53,22 +56,24 @@ public class FormDepositCreditAccount {
 		frmDepositCreditAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDepositCreditAccount.getContentPane().setLayout(null);
 		
-		JLabel lblAccount = new JLabel("Enter the account id:");
-		lblAccount.setBounds(32, 31, 104, 13);
+		JLabel lblAccount = new JLabel("Account id:");
+		lblAccount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAccount.setBounds(50, 35, 104, 13);
 		frmDepositCreditAccount.getContentPane().add(lblAccount);
 		
 		textFieldAccount = new JTextField();
 		textFieldAccount.setColumns(10);
-		textFieldAccount.setBounds(144, 28, 186, 19);
+		textFieldAccount.setBounds(177, 31, 186, 19);
 		frmDepositCreditAccount.getContentPane().add(textFieldAccount);
 		
-		JLabel lblNewLabel = new JLabel("Enter the amount:");
-		lblNewLabel.setBounds(32, 57, 104, 13);
-		frmDepositCreditAccount.getContentPane().add(lblNewLabel);
+		JLabel lblAmount = new JLabel("Enter the amount:");
+		lblAmount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAmount.setBounds(50, 69, 104, 13);
+		frmDepositCreditAccount.getContentPane().add(lblAmount);
 		
 		textFieldAmount = new JTextField();
 		textFieldAmount.setColumns(10);
-		textFieldAmount.setBounds(144, 54, 186, 19);
+		textFieldAmount.setBounds(177, 65, 186, 19);
 		frmDepositCreditAccount.getContentPane().add(textFieldAmount);
 		
 		JButton btnExit = new JButton("Exit");
@@ -108,6 +113,14 @@ public class FormDepositCreditAccount {
 		});
 		btnDeposit.setBounds(315, 209, 85, 21);
 		frmDepositCreditAccount.getContentPane().add(btnDeposit);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 130, 107, 105);
+		frmDepositCreditAccount.getContentPane().add(lblNewLabel);
+		
 	}
 
 }

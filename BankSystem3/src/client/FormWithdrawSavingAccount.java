@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -10,9 +11,11 @@ import bus.SavingAccount;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class FormWithdrawSavingAccount {
 
@@ -55,20 +58,22 @@ public class FormWithdrawSavingAccount {
 		
 		textFieldAccount = new JTextField();
 		textFieldAccount.setColumns(10);
-		textFieldAccount.setBounds(143, 29, 186, 19);
+		textFieldAccount.setBounds(176, 32, 186, 19);
 		frmWithdrawSavingAccount.getContentPane().add(textFieldAccount);
 		
-		JLabel lblAccount = new JLabel("Enter the account id:");
-		lblAccount.setBounds(31, 32, 104, 13);
+		JLabel lblAccount = new JLabel("Account id:");
+		lblAccount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAccount.setBounds(32, 38, 124, 13);
 		frmWithdrawSavingAccount.getContentPane().add(lblAccount);
 		
-		JLabel lblNewLabel = new JLabel("Enter the amount:");
-		lblNewLabel.setBounds(31, 58, 104, 13);
-		frmWithdrawSavingAccount.getContentPane().add(lblNewLabel);
+		JLabel lblAmount = new JLabel("Amount to Withdraw:");
+		lblAmount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAmount.setBounds(32, 80, 124, 13);
+		frmWithdrawSavingAccount.getContentPane().add(lblAmount);
 		
 		textFieldAmount = new JTextField();
 		textFieldAmount.setColumns(10);
-		textFieldAmount.setBounds(143, 55, 186, 19);
+		textFieldAmount.setBounds(176, 74, 186, 19);
 		frmWithdrawSavingAccount.getContentPane().add(textFieldAmount);
 		
 		JButton btnExit = new JButton("Exit");
@@ -106,8 +111,15 @@ public class FormWithdrawSavingAccount {
 				}
 			}
 		});
-		btnWithdraw.setBounds(314, 210, 85, 21);
+		btnWithdraw.setBounds(292, 210, 107, 21);
 		frmWithdrawSavingAccount.getContentPane().add(btnWithdraw);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmWithdrawSavingAccount.getContentPane().add(lblNewLabel);
 	}
 
 }

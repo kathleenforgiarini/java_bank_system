@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -13,7 +14,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import bus.Account;
 import bus.Customer;
@@ -68,12 +71,12 @@ public class FormViewTransactions {
 		}
 		
 		JComboBox comboBoxAccount = new JComboBox(array);
-		comboBoxAccount.setBounds(109, 65, 111, 21);
+		comboBoxAccount.setBounds(198, 68, 111, 21);
 		frmViewTransactions.getContentPane().add(comboBoxAccount);
 		
 		JComboBox comboBoxSort = new JComboBox();
 		comboBoxSort.setModel(new DefaultComboBoxModel(new String[] {"Date", "Amount"}));
-		comboBoxSort.setBounds(109, 101, 111, 21);
+		comboBoxSort.setBounds(198, 104, 111, 21);
 		frmViewTransactions.getContentPane().add(comboBoxSort);
 		
 		JButton btnViewTransactions = new JButton("View Transactions");
@@ -102,12 +105,9 @@ public class FormViewTransactions {
 				
 				
 				
-				
-				
-				
 			}
 		});
-		btnViewTransactions.setBounds(321, 232, 85, 21);
+		btnViewTransactions.setBounds(244, 232, 162, 21);
 		frmViewTransactions.getContentPane().add(btnViewTransactions);
 		
 		JButton btnExit = new JButton("Cancel");
@@ -118,16 +118,25 @@ public class FormViewTransactions {
 				frmViewTransactions.dispose();
 			}
 		});
-		btnExit.setBounds(210, 232, 85, 21);
+		btnExit.setBounds(137, 232, 85, 21);
 		frmViewTransactions.getContentPane().add(btnExit);
 		
-		JLabel lblNewLabel = new JLabel("Sort by:");
-		lblNewLabel.setBounds(54, 105, 45, 13);
-		frmViewTransactions.getContentPane().add(lblNewLabel);
+		JLabel lblSort = new JLabel("Sort by:");
+		lblSort.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSort.setBounds(82, 108, 74, 13);
+		frmViewTransactions.getContentPane().add(lblSort);
 		
 		JLabel lblNewLabel_1 = new JLabel("Account:");
-		lblNewLabel_1.setBounds(54, 69, 45, 13);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_1.setBounds(82, 72, 74, 13);
 		frmViewTransactions.getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmViewTransactions.getContentPane().add(lblNewLabel);
 		
 
 	}

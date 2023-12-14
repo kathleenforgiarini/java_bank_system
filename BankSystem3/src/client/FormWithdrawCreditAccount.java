@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,15 +11,18 @@ import javax.swing.JTextField;
 import bus.Account;
 import bus.CreditAccount;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class FormWithdrawCreditAccount {
 
 	JFrame frmWithdrawCreditAccount;
 	private JTextField textFieldAccount;
 	private JTextField textFieldAmount;
+	private JLabel lblAmount;
 
 	/**
 	 * Launch the application.
@@ -53,21 +57,24 @@ public class FormWithdrawCreditAccount {
 		frmWithdrawCreditAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWithdrawCreditAccount.getContentPane().setLayout(null);
 		
-		JLabel lblAccount = new JLabel("Enter the account id:");
-		lblAccount.setBounds(31, 30, 104, 13);
+		JLabel lblAccount = new JLabel("Account id:");
+		lblAccount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAccount.setBounds(28, 38, 124, 13);
 		frmWithdrawCreditAccount.getContentPane().add(lblAccount);
 		
 		textFieldAccount = new JTextField();
-		textFieldAccount.setBounds(143, 27, 186, 19);
+		textFieldAccount.setBounds(160, 35, 186, 19);
 		textFieldAccount.setColumns(10);
 		frmWithdrawCreditAccount.getContentPane().add(textFieldAccount);
 		
-		JLabel lblNewLabel = new JLabel("Enter the amount:");
-		lblNewLabel.setBounds(31, 56, 104, 13);
-		frmWithdrawCreditAccount.getContentPane().add(lblNewLabel);
+		
+		lblAmount = new JLabel("Amount to Withdraw:");
+		lblAmount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAmount.setBounds(28, 75, 124, 13);
+		frmWithdrawCreditAccount.getContentPane().add(lblAmount);
 		
 		textFieldAmount = new JTextField();
-		textFieldAmount.setBounds(143, 53, 186, 19);
+		textFieldAmount.setBounds(160, 72, 186, 19);
 		textFieldAmount.setColumns(10);
 		frmWithdrawCreditAccount.getContentPane().add(textFieldAmount);
 		
@@ -107,8 +114,15 @@ public class FormWithdrawCreditAccount {
 				}
 			}
 		});
-		btnWithdraw.setBounds(314, 208, 85, 21);
+		btnWithdraw.setBounds(287, 208, 112, 21);
 		frmWithdrawCreditAccount.getContentPane().add(btnWithdraw);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmWithdrawCreditAccount.getContentPane().add(lblNewLabel);
 	}
 
 }

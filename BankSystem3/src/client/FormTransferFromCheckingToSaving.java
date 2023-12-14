@@ -6,14 +6,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import bus.Account;
 import bus.CheckingAccount;
 import bus.SavingAccount;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.Image;
 
 public class FormTransferFromCheckingToSaving {
 
@@ -56,34 +60,35 @@ public class FormTransferFromCheckingToSaving {
 		frmTransferFromCheckingToSaving.getContentPane().setLayout(null);
 		
 		JLabel lblAccountId = new JLabel("Account Id");
-		lblAccountId.setBounds(115, 23, 66, 13);
+		lblAccountId.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAccountId.setBounds(169, 25, 66, 13);
 		frmTransferFromCheckingToSaving.getContentPane().add(lblAccountId);
 		
-		JLabel lblNewLabel = new JLabel("FROM");
-		lblNewLabel.setBounds(42, 50, 45, 13);
-		frmTransferFromCheckingToSaving.getContentPane().add(lblNewLabel);
+		JLabel lblFrom = new JLabel("FROM");
+		lblFrom.setBounds(96, 52, 45, 13);
+		frmTransferFromCheckingToSaving.getContentPane().add(lblFrom);
 		
 		JLabel lblTo = new JLabel("TO");
-		lblTo.setBounds(42, 83, 45, 13);
+		lblTo.setBounds(96, 85, 45, 13);
 		frmTransferFromCheckingToSaving.getContentPane().add(lblTo);
 		
 		JLabel lblTo_1 = new JLabel("Amount");
-		lblTo_1.setBounds(30, 126, 45, 13);
+		lblTo_1.setBounds(84, 128, 45, 13);
 		frmTransferFromCheckingToSaving.getContentPane().add(lblTo_1);
 		
 		textFieldAmount = new JTextField();
 		textFieldAmount.setColumns(10);
-		textFieldAmount.setBounds(86, 123, 127, 19);
+		textFieldAmount.setBounds(140, 125, 127, 19);
 		frmTransferFromCheckingToSaving.getContentPane().add(textFieldAmount);
 		
 		textFieldTo = new JTextField();
 		textFieldTo.setColumns(10);
-		textFieldTo.setBounds(86, 80, 127, 19);
+		textFieldTo.setBounds(140, 82, 127, 19);
 		frmTransferFromCheckingToSaving.getContentPane().add(textFieldTo);
 		
 		textFieldFrom = new JTextField();
 		textFieldFrom.setColumns(10);
-		textFieldFrom.setBounds(86, 47, 127, 19);
+		textFieldFrom.setBounds(140, 49, 127, 19);
 		frmTransferFromCheckingToSaving.getContentPane().add(textFieldFrom);
 		
 		JButton btnExit = new JButton("Cancel");
@@ -136,6 +141,13 @@ public class FormTransferFromCheckingToSaving {
 		});
 		btnTransfer.setBounds(318, 232, 85, 21);
 		frmTransferFromCheckingToSaving.getContentPane().add(btnTransfer);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmTransferFromCheckingToSaving.getContentPane().add(lblNewLabel);
 	}
 
 }

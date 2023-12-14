@@ -3,9 +3,14 @@ package client;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.Image;
 
 public class FormMenuWithdraw {
 
@@ -44,7 +49,7 @@ public class FormMenuWithdraw {
 		frmMenuWithdraw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMenuWithdraw.getContentPane().setLayout(null);
 		
-		JButton btnWithdrawFromSaving = new JButton("Withdraw From Saving Account");
+		JButton btnWithdrawFromSaving = new JButton("Saving Account");
 		btnWithdrawFromSaving.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormWithdrawSavingAccount formWithdrawSavingAccount = new FormWithdrawSavingAccount(customerId);
@@ -52,10 +57,10 @@ public class FormMenuWithdraw {
 				frmMenuWithdraw.dispose();
 			}
 		});
-		btnWithdrawFromSaving.setBounds(117, 67, 192, 21);
+		btnWithdrawFromSaving.setBounds(117, 91, 192, 21);
 		frmMenuWithdraw.getContentPane().add(btnWithdrawFromSaving);
 		
-		JButton btnWithdrawFromChecking = new JButton("Withdraw From Checking Account");
+		JButton btnWithdrawFromChecking = new JButton("Checking Account");
 		btnWithdrawFromChecking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormWithdrawCheckingAccount formWithdrawCheckingAccount = new FormWithdrawCheckingAccount(customerId);
@@ -63,10 +68,10 @@ public class FormMenuWithdraw {
 				frmMenuWithdraw.dispose();
 			}
 		});
-		btnWithdrawFromChecking.setBounds(117, 36, 192, 21);
+		btnWithdrawFromChecking.setBounds(117, 60, 192, 21);
 		frmMenuWithdraw.getContentPane().add(btnWithdrawFromChecking);
 		
-		JButton btnWithdrawFromCurrencyAccount = new JButton("Withdraw From Currency Account");
+		JButton btnWithdrawFromCurrencyAccount = new JButton("Currency Account");
 		btnWithdrawFromCurrencyAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormWithdrawCurrencyAccount formWithdrawCurrencyAccount = new FormWithdrawCurrencyAccount(customerId);
@@ -74,10 +79,10 @@ public class FormMenuWithdraw {
 				frmMenuWithdraw.dispose();
 			}
 		});
-		btnWithdrawFromCurrencyAccount.setBounds(117, 98, 192, 21);
+		btnWithdrawFromCurrencyAccount.setBounds(117, 122, 192, 21);
 		frmMenuWithdraw.getContentPane().add(btnWithdrawFromCurrencyAccount);
 		
-		JButton btnWithdrawFromCredit = new JButton("Withdraw From Credit Account");
+		JButton btnWithdrawFromCredit = new JButton("Credit Account");
 		btnWithdrawFromCredit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormWithdrawCreditAccount formWithdrawCreditAccount = new FormWithdrawCreditAccount(customerId);
@@ -85,7 +90,7 @@ public class FormMenuWithdraw {
 				frmMenuWithdraw.dispose();
 			}
 		});
-		btnWithdrawFromCredit.setBounds(117, 129, 192, 21);
+		btnWithdrawFromCredit.setBounds(117, 153, 192, 21);
 		frmMenuWithdraw.getContentPane().add(btnWithdrawFromCredit);
 		
 		JButton btnExit = new JButton("Exit");
@@ -93,11 +98,31 @@ public class FormMenuWithdraw {
 			public void actionPerformed(ActionEvent e) {
 				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
 				formMenuCustomer.frmHomeCustomer.setVisible(true);
+				
+				JLabel lblInformation = new JLabel("Choose which account you want to deposit into");
+				lblInformation.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+				lblInformation.setHorizontalAlignment(SwingConstants.CENTER);
+				lblInformation.setBounds(10, 11, 423, 21);
+				formMenuCustomer.frmHomeCustomer.getContentPane().add(lblInformation);
+				
+				
 				frmMenuWithdraw.dispose();
 			}
 		});
 		btnExit.setBounds(306, 185, 85, 21);
 		frmMenuWithdraw.getContentPane().add(btnExit);
+		
+		JLabel lblInformation = new JLabel("Choose which account you want to withdraw");
+		lblInformation.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+		lblInformation.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInformation.setBounds(10, 11, 415, 21);
+		frmMenuWithdraw.getContentPane().add(lblInformation);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 115, 107, 105);
+		frmMenuWithdraw.getContentPane().add(lblNewLabel);
 	}
-
 }

@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,9 +11,11 @@ import javax.swing.JTextField;
 import bus.Account;
 import bus.CheckingAccount;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class FormWithdrawCheckingAccount {
 
@@ -53,22 +56,24 @@ public class FormWithdrawCheckingAccount {
 		frmWithdrawCheckingAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWithdrawCheckingAccount.getContentPane().setLayout(null);
 		
-		JLabel lblAccount = new JLabel("Enter the account id:");
-		lblAccount.setBounds(29, 30, 104, 13);
+		JLabel lblAccount = new JLabel("Account id:");
+		lblAccount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAccount.setBounds(26, 34, 122, 13);
 		frmWithdrawCheckingAccount.getContentPane().add(lblAccount);
 		
 		textFieldAccount = new JTextField();
 		textFieldAccount.setColumns(10);
-		textFieldAccount.setBounds(141, 27, 186, 19);
+		textFieldAccount.setBounds(172, 30, 186, 19);
 		frmWithdrawCheckingAccount.getContentPane().add(textFieldAccount);
 		
-		JLabel lblNewLabel = new JLabel("Enter the amount:");
-		lblNewLabel.setBounds(29, 56, 104, 13);
-		frmWithdrawCheckingAccount.getContentPane().add(lblNewLabel);
+		JLabel lblAmount = new JLabel("Amount to withdraw:");
+		lblAmount.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAmount.setBounds(26, 72, 122, 13);
+		frmWithdrawCheckingAccount.getContentPane().add(lblAmount);
 		
 		textFieldAmount = new JTextField();
 		textFieldAmount.setColumns(10);
-		textFieldAmount.setBounds(141, 53, 186, 19);
+		textFieldAmount.setBounds(172, 68, 186, 19);
 		frmWithdrawCheckingAccount.getContentPane().add(textFieldAmount);
 		
 		JButton btnExit = new JButton("Exit");
@@ -106,8 +111,16 @@ public class FormWithdrawCheckingAccount {
 				}
 			}
 		});
-		btnWithdraw.setBounds(312, 208, 85, 21);
+		btnWithdraw.setBounds(297, 208, 100, 21);
 		frmWithdrawCheckingAccount.getContentPane().add(btnWithdraw);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmWithdrawCheckingAccount.getContentPane().add(lblNewLabel);
+		
 	}
 
 }

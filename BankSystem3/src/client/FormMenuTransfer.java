@@ -3,9 +3,14 @@ package client;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.Image;
 
 public class FormMenuTransfer {
 
@@ -44,7 +49,7 @@ public class FormMenuTransfer {
 		frmMenuTransfer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMenuTransfer.getContentPane().setLayout(null);
 		
-		JButton btnCheckingToChecking = new JButton("Transfer between Checking Accounts");
+		JButton btnCheckingToChecking = new JButton("Between Checking Accounts");
 		btnCheckingToChecking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormTransferBetweenChecking formTransferBetweenChecking = new FormTransferBetweenChecking(customerId);
@@ -52,10 +57,10 @@ public class FormMenuTransfer {
 				frmMenuTransfer.dispose();
 			}
 		});
-		btnCheckingToChecking.setBounds(100, 47, 238, 21);
+		btnCheckingToChecking.setBounds(100, 66, 238, 21);
 		frmMenuTransfer.getContentPane().add(btnCheckingToChecking);
 		
-		JButton btnCheckingToSaving = new JButton("Transfer From Checking to Saving Accounts");
+		JButton btnCheckingToSaving = new JButton("From Checking to Saving Accounts");
 		btnCheckingToSaving.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormTransferFromCheckingToSaving formTransferFromCheckingToSaving = new FormTransferFromCheckingToSaving(customerId);
@@ -63,10 +68,10 @@ public class FormMenuTransfer {
 				frmMenuTransfer.dispose();
 			}
 		});
-		btnCheckingToSaving.setBounds(100, 78, 238, 21);
+		btnCheckingToSaving.setBounds(100, 97, 238, 21);
 		frmMenuTransfer.getContentPane().add(btnCheckingToSaving);
 		
-		JButton btnSavingToChecking = new JButton("Transfer From Saving to Checking Accounts");
+		JButton btnSavingToChecking = new JButton("From Saving to Checking Accounts");
 		btnSavingToChecking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormTransferFromSavingToChecking formTransferFromSavingToChecking = new FormTransferFromSavingToChecking(customerId);
@@ -75,7 +80,7 @@ public class FormMenuTransfer {
 				
 			}
 		});
-		btnSavingToChecking.setBounds(100, 109, 238, 21);
+		btnSavingToChecking.setBounds(100, 128, 238, 21);
 		frmMenuTransfer.getContentPane().add(btnSavingToChecking);
 		
 		JButton btnExit = new JButton("Exit");
@@ -84,13 +89,19 @@ public class FormMenuTransfer {
 				FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerId);
 				formMenuCustomer.frmHomeCustomer.setVisible(true);
 				
+				JLabel lblInformation = new JLabel("Choose which account you want to deposit into");
+				lblInformation.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+				lblInformation.setHorizontalAlignment(SwingConstants.CENTER);
+				lblInformation.setBounds(10, 11, 423, 21);
+				formMenuCustomer.frmHomeCustomer.getContentPane().add(lblInformation);
+				
 				frmMenuTransfer.dispose();
 			}
 		});
 		btnExit.setBounds(309, 217, 85, 21);
 		frmMenuTransfer.getContentPane().add(btnExit);
 		
-		JButton btnSavingToSaving = new JButton("Transfer between Saving Accounts");
+		JButton btnSavingToSaving = new JButton("Between Saving Accounts");
 		btnSavingToSaving.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FormTransferBetweenSaving formTransferBetweenSaving = new FormTransferBetweenSaving(customerId);
@@ -98,7 +109,21 @@ public class FormMenuTransfer {
 				frmMenuTransfer.dispose();
 			}
 		});
-		btnSavingToSaving.setBounds(100, 145, 238, 21);
+		btnSavingToSaving.setBounds(100, 164, 238, 21);
 		frmMenuTransfer.getContentPane().add(btnSavingToSaving);
+		
+		JLabel lblInformation = new JLabel("Choose the option of transfer you want to do");
+		lblInformation.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+		lblInformation.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInformation.setBounds(10, 22, 414, 21);
+		frmMenuTransfer.getContentPane().add(lblInformation);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		lblNewLabel.setBounds(0, 156, 107, 105);
+		frmMenuTransfer.getContentPane().add(lblNewLabel);
+		
 	}
 }
