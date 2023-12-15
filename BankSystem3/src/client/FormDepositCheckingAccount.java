@@ -74,7 +74,7 @@ public class FormDepositCheckingAccount {
 						JOptionPane.showMessageDialog(null, "You don't have this account number, try again!");
 					}
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields can not be empty\nIt must be a number");
 				}
 			}
 		});

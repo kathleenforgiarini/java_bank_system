@@ -102,20 +102,26 @@ public class FormOpenCurrencyAccount {
 					Double currRate = Double.parseDouble(textFieldCurrencyRate.getText());
 					Double currFee = Double.parseDouble(textFieldConversionFee.getText());
 					EnumTypeCurrency combobox = (EnumTypeCurrency) comboBoxCurrency.getSelectedItem();
-										
-					Customer selectedCustomer = Customer.search(selectedId);
 					
-					Manager.openCurrencyAccount(selectedCustomer.getId(), balance, combobox, currRate, currFee);
+					try {
+						Customer selectedCustomer = Customer.search(selectedId);
+						
+						Manager.openCurrencyAccount(selectedCustomer.getId(), balance, combobox, currRate, currFee);
 
-					JOptionPane.showMessageDialog(null, "Currency Account Created!");
+						JOptionPane.showMessageDialog(null, "Currency Account Created!");
+						
+						FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+						formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+						
+						frmOpenCurrencyAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "The user does not exist.");
+					}					
 					
-					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
-					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
-					
-					frmOpenCurrencyAccount.dispose();
 					
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty\nAll fields must be a number.");
 				}
 			}
 		});

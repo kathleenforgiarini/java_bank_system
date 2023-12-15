@@ -91,6 +91,9 @@ public class BankSystem {
 					System.out.println("\nWelcome " + item.getUserName());
 					break;
 				} 
+				else {
+					System.out.println("Invalid credencials");
+				}
 				
 			}
 			
@@ -232,6 +235,7 @@ public class BankSystem {
 						 transactionFees = Double.parseDouble(scan.nextLine());
 						 
 						 manager.openCheckingAccount(customer, balance, monthlyLimit, transactionFees);
+						 System.out.println("Checking account created!");
 
 					 }
 					 else {
@@ -257,12 +261,13 @@ public class BankSystem {
 						 System.out.println("\nYear: ");
 						 year = Integer.parseInt(scan.nextLine());
 						 dueDate = LocalDate.of(year, month, day);
-						 
 						 if (dueDate.isBefore(LocalDate.now()))
 						 {
-							 throw new ExceptionIsPassedDate();
+							 System.out.println("The due date can not be in the past");
+							 break;
 						 }
 						 manager.openSavingAccount(customer, balance, interestRate, dueDate);
+						 System.out.println("Saving account created!");
 
 					 }
 					 else {
@@ -285,14 +290,17 @@ public class BankSystem {
 						 System.out.println("\nYear: ");
 						 year = Integer.parseInt(scan.nextLine());
 						 dueDate = LocalDate.of(year, month, day);
-						 System.out.println("\nEnter the limit of credit: ");
-						 limit = Double.parseDouble(scan.nextLine());
 						 if (dueDate.isBefore(LocalDate.now()))
 						 {
-							 throw new ExceptionIsPassedDate();
+							 System.out.println("The due date can not be in the past");
+							 break;
 						 }
+						 System.out.println("\nEnter the limit of credit: ");
+						 limit = Double.parseDouble(scan.nextLine());
+
 						 
 						 manager.openCreditAccount(customer, balance, dueDate, limit);
+						 System.out.println("Credit account created!");
 
 					 }
 					 else {
@@ -332,6 +340,7 @@ public class BankSystem {
 						 conversionFees = Double.parseDouble(scan.nextLine());
 						 
 						 manager.openCurrencyAccount(customer, balance, currency, currencyRate, conversionFees);
+						 System.out.println("Currency account created!");
 					 }
 					 else {
 						 System.out.println("Invalid customer ID");
@@ -351,16 +360,18 @@ public class BankSystem {
 						 System.out.println("\nYear: ");
 						 year = Integer.parseInt(scan.nextLine());
 						 dueDate = LocalDate.of(year, month, day);
+						 if (dueDate.isBefore(LocalDate.now()))
+						 {
+							 System.out.println("The due date can not be in the past");
+							 break;
+						 }
 						 System.out.println("\nEnter the limit: ");
 						 limit = Double.parseDouble(scan.nextLine());
 						 System.out.println("\nEnter the interest rate: ");
 						 interestRate = Double.parseDouble(scan.nextLine());
-						 if (dueDate.isBefore(LocalDate.now()))
-						 {
-							 throw new ExceptionIsPassedDate();
-						 }
-						 
+
 						 manager.openLineOfCreditAccount(customer, dueDate, limit, interestRate);
+						 System.out.println("Line of credit account created!");
 
 					 }
 					 else {
@@ -396,12 +407,11 @@ public class BankSystem {
 					System.out.println("\nEnter the account number: ");
 					idAccount = Integer.parseInt(scan.nextLine());
 					
-					Boolean closedAccount = manager.closeAccount(customer, idAccount);
-					
-					if (closedAccount) {
+					try {
+						manager.closeAccount(customer, idAccount);
 						System.out.println("Account removed");
 					}
-					else {
+					catch(Exception exc) {
 						System.out.println("Account can not be removed, try again");
 					}
 				} else {
@@ -463,7 +473,9 @@ public class BankSystem {
 					System.out.println("\nWelcome " + item.getUserName());
 					break;
 				} 
-				
+				else {
+					System.out.println("Invalid credencials");
+				}
 			}
 			
 			if (logged) {
@@ -560,75 +572,102 @@ public class BankSystem {
 		String withdraw; 
 		do {			
 			Integer idAccount = null;
-			System.out.println("\nEnter the account number: ");
-			idAccount = Integer.parseInt(scan.nextLine());
 			
-			Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
-			if (account != null) {
+			try {
+				System.out.println("\nEnter the account number: ");
+				idAccount = Integer.parseInt(scan.nextLine());
 				
-				EnumTypeAccount type = account.getType();
-				
-				Double amount = null;
-				
-				switch(type) {
-					case CheckingAccount:
-						System.out.println("Balance: " + account.getBalance());
-						System.out.println("Enter an amount to withdraw: ");
-						amount = Double.parseDouble(scan.nextLine());
-						CheckingAccount checkingAccount = (CheckingAccount) account;
-						checkingAccount.withdraw(LocalDate.now(), amount);
-						System.out.println("Updated balance: " + account.getBalance());
-						FileManagerCustomers.saveNewCustomer(customer);
-						break;
-						
-					case SavingAccount:
-						SavingAccount savingAccount = (SavingAccount) account;
-						
-						if (LocalDate.now().isBefore(savingAccount.getDueDate())) {
-							System.out.println("Your balance is " + 
-										(savingAccount.getBalance() + savingAccount.getGain())
-										+ "\nThis value will be available only on " + savingAccount.getDueDate());
-						}
-						else {
-							System.out.println("Balance availabe: " + (savingAccount.getBalance() + savingAccount.getGain()));
+				Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
+
+				if (account != null) {
+					
+					EnumTypeAccount type = account.getType();
+					
+					Double amount = null;
+					
+					switch(type) {
+						case CheckingAccount:
+							System.out.println("Balance: " + account.getBalance());
 							System.out.println("Enter an amount to withdraw: ");
 							amount = Double.parseDouble(scan.nextLine());
+							CheckingAccount checkingAccount = (CheckingAccount) account;
 							
-							savingAccount.withdraw(LocalDate.now(), amount);
+							if (amount > checkingAccount.getBalance()) {
+								System.out.println("Not enouth funds");
+								break;
+							}
+							
+							checkingAccount.withdraw(LocalDate.now(), amount);
 							System.out.println("Updated balance: " + account.getBalance());
 							FileManagerCustomers.saveNewCustomer(customer);
-						}
-						
-						break;
-						
-					case CurrencyAccount:
-						System.out.println("Balance: " + account.getBalance());
-						System.out.println("Enter an amount to withdraw: ");
-						amount = Double.parseDouble(scan.nextLine());
-						CurrencyAccount currencyAccount = (CurrencyAccount) account;
-						currencyAccount.withdraw(LocalDate.now(), amount);
-						System.out.println("Updated balance: " + account.getBalance());
-						FileManagerCustomers.saveNewCustomer(customer);
-						break;
-						
-					case CreditAccount:
-						CreditAccount creditAccount = (CreditAccount) account;
-						System.out.println("Balance: " + creditAccount.getBalance() + 
-								"\nYour available funds is: " + (creditAccount.getBalance() - 
-										creditAccount.getLimit()));
-						System.out.println("Enter the value of your purchase: ");
-						amount = Double.parseDouble(scan.nextLine());
-						creditAccount.withdraw(LocalDate.now(), amount);
-						System.out.println("Updated balance: " + account.getBalance());
-						FileManagerCustomers.saveNewCustomer(customer);
-						break;
-					default:
-						System.out.println("\nInvalid account to withdraw!");
-						break;
+							break;
+							
+						case SavingAccount:
+							SavingAccount savingAccount = (SavingAccount) account;
+							
+							if (LocalDate.now().isBefore(savingAccount.getDueDate())) {
+								System.out.println("Your balance is " + 
+											(savingAccount.getBalance() + savingAccount.getGain())
+											+ "\nThis value will be available only on " + savingAccount.getDueDate());
+							}
+							else {
+								System.out.println("Balance availabe: " + (savingAccount.getBalance() + savingAccount.getGain()));
+								System.out.println("Enter an amount to withdraw: ");
+								amount = Double.parseDouble(scan.nextLine());
+								
+								if (amount > (savingAccount.getBalance()+savingAccount.getGain())) {
+									System.out.println("Not enouth funds");
+									break;
+								}
+								savingAccount.withdraw(LocalDate.now(), amount);
+								
+								System.out.println("Updated balance: " + account.getBalance());
+								FileManagerCustomers.saveNewCustomer(customer);
+							}
+							
+							break;
+							
+						case CurrencyAccount:
+							System.out.println("Balance: " + account.getBalance());
+							System.out.println("Enter an amount to withdraw: ");
+							amount = Double.parseDouble(scan.nextLine());
+							CurrencyAccount currencyAccount = (CurrencyAccount) account;
+							
+							if (amount > currencyAccount.getBalance()) {
+								System.out.println("Not enouth funds");
+								break;
+							}
+							
+							currencyAccount.withdraw(LocalDate.now(), amount);
+							System.out.println("Updated balance: " + account.getBalance());
+							FileManagerCustomers.saveNewCustomer(customer);
+							break;
+							
+						case CreditAccount:
+							CreditAccount creditAccount = (CreditAccount) account;
+							System.out.println("Balance: " + creditAccount.getBalance() + 
+									"\nYour available funds is: " + (creditAccount.getBalance() - 
+											creditAccount.getLimit()));
+							System.out.println("Enter the value of your purchase: ");
+							amount = Double.parseDouble(scan.nextLine());
+							creditAccount.withdraw(LocalDate.now(), amount);
+							System.out.println("Updated balance: " + account.getBalance());
+							FileManagerCustomers.saveNewCustomer(customer);
+							break;
+						default:
+							System.out.println("\nInvalid account to withdraw!");
+							break;
+					}	
 				}
-				
-				
+				else {
+					System.out.println("\nInvalid account number!");
+				}
 			}
+			
+			catch(Exception exc) {
+				System.out.println("\nInvalid number");
+			}
+			
 			System.out.println("\nDo you want to make a new withdraw? (Y/N) ");
 			withdraw = scan.nextLine();
 		}
@@ -640,51 +679,62 @@ public class BankSystem {
 		String deposit; 
 		do {
 			Integer idAccount = null; 
-			System.out.println("\nEnter the account number: ");
-			idAccount = Integer.parseInt(scan.nextLine());
 			
-			Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
-			if (account != null) {
+			try {
+				System.out.println("\nEnter the account number: ");
+				idAccount = Integer.parseInt(scan.nextLine());
 				
-				EnumTypeAccount type = account.getType();
-				
-				Double amount = null;
-				System.out.println("Balance: " + account.getBalance());
-				System.out.println("Enter an amount to deposit: ");
-				amount = Double.parseDouble(scan.nextLine());
-				
-				
-				switch(type) {
-					case CheckingAccount:
-						CheckingAccount checkingAccount = (CheckingAccount) account;
-						checkingAccount.deposit(LocalDate.now(), amount);
-						break;
-						
-					case SavingAccount:
-						SavingAccount savingAccount = (SavingAccount) account;
-						savingAccount.deposit(LocalDate.now(), amount);
-						break;
-						
-					case CurrencyAccount:
-						CurrencyAccount currencyAccount = (CurrencyAccount) account;
-						currencyAccount.deposit(LocalDate.now(), amount);
-						break;
-						
-					case CreditAccount:
-						CreditAccount creditAccount = (CreditAccount) account;
-						creditAccount.deposit(LocalDate.now(), amount);
-						break;
-					default:
-						break;
+				Account account = AccountCollection.searchByIdAndCustomer(customer, idAccount);
+				if (account != null) {
+					
+					EnumTypeAccount type = account.getType();
+					
+					Double amount = null;
+					System.out.println("Balance: " + account.getBalance());
+					System.out.println("Enter an amount to deposit: ");
+					amount = Double.parseDouble(scan.nextLine());
+							
+					switch(type) {
+						case CheckingAccount:
+							CheckingAccount checkingAccount = (CheckingAccount) account;
+							checkingAccount.deposit(LocalDate.now(), amount);
+							break;
+							
+						case SavingAccount:
+							SavingAccount savingAccount = (SavingAccount) account;
+							savingAccount.deposit(LocalDate.now(), amount);
+							break;
+							
+						case CurrencyAccount:
+							CurrencyAccount currencyAccount = (CurrencyAccount) account;
+							currencyAccount.deposit(LocalDate.now(), amount);
+							break;
+							
+						case CreditAccount:
+							CreditAccount creditAccount = (CreditAccount) account;
+							creditAccount.deposit(LocalDate.now(), amount);
+							break;
+							
+						case LineOfCreditAccount:
+							LineOfCreditAccount lineofcreditAccount = (LineOfCreditAccount) account;
+							lineofcreditAccount.deposit(LocalDate.now(), amount);
+							break;
+						default:
+							break;
+					}
+					
+					System.out.println("Updated balance: " + account.getBalance());
+					FileManagerCustomers.saveNewCustomer(customer);
+					
 				}
-				
-				System.out.println("Updated balance: " + account.getBalance());
-				FileManagerCustomers.saveNewCustomer(customer);
-				
+				else {
+					System.out.println("Invalid account number");
+				}
 			}
-			else {
-				System.out.println("Invalid account number");
+			catch(Exception exc) {
+				System.out.println("Invalid number");
 			}
+			
 			System.out.println("\nDo you want to make a new deposit? (Y/N) ");
 			deposit = scan.nextLine();
 		}
@@ -705,34 +755,38 @@ public class BankSystem {
 				idAccountTo = Integer.parseInt(scan.nextLine());
 				
 				if (idAccountFrom != idAccountTo) {
-					CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountFrom, customer);
-					CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountTo, customer);
 					
-					if (checkingAccountToWithdraw != null && checkingAccountToDeposit != null) {
-						Double amount = null;
-						System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
-						System.out.println("Enter an amount to transfer: ");
-						amount = Double.parseDouble(scan.nextLine());
+					try {
+						CheckingAccount checkingAccountToWithdraw = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountFrom, customer);
+						CheckingAccount checkingAccountToDeposit = (CheckingAccount) AccountCollection.searchByIdAndCustomer(idAccountTo, customer);
 						
-						checkingAccountToWithdraw.withdraw(LocalDate.now(), amount);
-						checkingAccountToDeposit.deposit(LocalDate.now(), amount);
-						
-						System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
-						System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
-						FileManagerCustomers.saveNewCustomer(customer);
+						if (checkingAccountToWithdraw != null && checkingAccountToDeposit != null) {
+							Double amount = null;
+							System.out.println("Balance: " + checkingAccountToWithdraw.getBalance());
+							System.out.println("Enter an amount to transfer: ");
+							amount = Double.parseDouble(scan.nextLine());
+							
+							checkingAccountToWithdraw.withdraw(LocalDate.now(), amount);
+							checkingAccountToDeposit.deposit(LocalDate.now(), amount);
+							
+							System.out.println("Balance Account ID "+ checkingAccountToWithdraw.getAccountNumber() + ": " + checkingAccountToWithdraw.getBalance());
+							System.out.println("Balance Account ID "+ checkingAccountToDeposit.getAccountNumber() + ": " + checkingAccountToDeposit.getBalance());
+							FileManagerCustomers.saveNewCustomer(customer);
+						}
+						else {
+							System.out.println("Invalid account number");
+						}
 					}
-					else {
+					catch(Exception exc) {
 						System.out.println("Invalid account number");
 					}
-					
-					
 				}
 				else {
 					System.out.println("You can not transfer to the same account");
 				}
 			}
 			catch(Exception exc) {
-				System.out.println(exc.getMessage());
+				System.out.println("Invalid number");
 			}
 			System.out.println("\nDo you want to make a new transfer? (Y/N) ");
 			transfer = scan.nextLine();
@@ -752,6 +806,9 @@ public class BankSystem {
 		if (account != null) {
 			
 			ArrayList<Transaction> listOfTransactions = account.getTransactions();
+			if (listOfTransactions.isEmpty()) {
+				System.out.println("You don't have any transactions yet");
+			}
 			
 			for (Transaction element : listOfTransactions)
 			{

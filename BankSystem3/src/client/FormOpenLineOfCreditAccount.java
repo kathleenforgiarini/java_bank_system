@@ -127,19 +127,25 @@ public class FormOpenLineOfCreditAccount {
 					
 					Double interestRate = Double.parseDouble(textFieldInterestRate.getText());
 					
-					Customer selectedCustomer = Customer.search(selectedId);
-					
-					Manager.openLineOfCreditAccount(selectedCustomer.getId(), dueDate, limit, interestRate);
+					try {
+						Customer selectedCustomer = Customer.search(selectedId);
+						
+						Manager.openLineOfCreditAccount(selectedCustomer.getId(), dueDate, limit, interestRate);
 
-					JOptionPane.showMessageDialog(null, "Line of Credit Account Created!");
+						JOptionPane.showMessageDialog(null, "Line of Credit Account Created!");
+						
+						FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+						formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+						
+						frmOpenLineOfCreditAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "The user does not exist.");
+					}
 					
-					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
-					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
-					
-					frmOpenLineOfCreditAccount.dispose();
 					
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty\nAll fields must be a number.");
 				}
 			}
 		});

@@ -119,7 +119,7 @@ public class FormGetBalance {
 					
 				}
 				catch(Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number.");
 				}
 				
 			}

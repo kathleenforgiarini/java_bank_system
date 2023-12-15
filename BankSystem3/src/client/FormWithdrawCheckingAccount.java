@@ -79,8 +79,8 @@ public class FormWithdrawCheckingAccount {
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormMenuDeposit formMenuDeposit = new FormMenuDeposit(customerId);
-				formMenuDeposit.frmMenuDeposit.setVisible(true);
+				FormMenuWithdraw formMenuWithdraw = new FormMenuWithdraw(customerId);
+				formMenuWithdraw.frmMenuWithdraw.setVisible(true);
 				frmWithdrawCheckingAccount.dispose();
 			}
 		});
@@ -107,7 +107,7 @@ public class FormWithdrawCheckingAccount {
 					
 					
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number.");
 				}
 			}
 		});

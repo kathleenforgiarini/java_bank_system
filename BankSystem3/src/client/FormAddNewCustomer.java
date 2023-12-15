@@ -85,7 +85,7 @@ public class FormAddNewCustomer {
 		textFieldPassword.setBounds(143, 126, 225, 19);
 		frmAddNewCustomer.getContentPane().add(textFieldPassword);
 		
-		JLabel lblSalary = new JLabel("Salary CAN$");
+		JLabel lblSalary = new JLabel("Salary CAD$");
 		lblSalary.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSalary.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblSalary.setBounds(10, 96, 97, 13);
@@ -114,18 +114,22 @@ public class FormAddNewCustomer {
 					try {
 						Integer passwordParsed = Integer.parseInt(password);
 						Double salaryParsed = Double.parseDouble(salary);
-											
-						Manager.createCustomer(username, passwordParsed, salaryParsed, mgrId);
 						
-						JOptionPane.showMessageDialog(null, "Customer Created!");
-						JOptionPane.showMessageDialog(null, "Checking Account Created!");
+						try {
+							Manager.createCustomer(username, passwordParsed, salaryParsed, mgrId);
+							JOptionPane.showMessageDialog(null, "Customer Created!");
+							JOptionPane.showMessageDialog(null, "Checking Account Created!");
 
-						FormMenuManager formMenuManager = new FormMenuManager(mgrId);
-						formMenuManager.frmHomeManager.setVisible(true);
-						
-						frmAddNewCustomer.dispose();
+							FormMenuManager formMenuManager = new FormMenuManager(mgrId);
+							formMenuManager.frmHomeManager.setVisible(true);
+							
+							frmAddNewCustomer.dispose();
+						}
+						catch(Exception exc) {
+							JOptionPane.showMessageDialog(null, "DB Exception: \nThis username already exists.");
+						}
 					} catch (Exception exc) {
-						JOptionPane.showMessageDialog(null, exc.getMessage());
+						JOptionPane.showMessageDialog(null, "The salary and the password must be a number");
 					}
 				}
 			}

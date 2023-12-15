@@ -22,7 +22,6 @@ import java.awt.Image;
 public class FormCloseAccount {
 
 	JFrame frmCloseAccount;
-	private JTextField textFieldPassword;
 	private JTextField textFieldAccount;
 
 	/**
@@ -54,42 +53,36 @@ public class FormCloseAccount {
 	private void initialize(Integer mgrId) {
 		frmCloseAccount = new JFrame();
 		frmCloseAccount.setTitle("Close Account");
-		frmCloseAccount.setBounds(100, 100, 450, 249);
+		frmCloseAccount.setBounds(100, 100, 420, 218);
 		frmCloseAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCloseAccount.getContentPane().setLayout(null);
-		
-		JLabel lblPasswordMngr = new JLabel("Confirm your password:");
-		lblPasswordMngr.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblPasswordMngr.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPasswordMngr.setBounds(10, 101, 152, 13);
-		frmCloseAccount.getContentPane().add(lblPasswordMngr);
-		
-		textFieldPassword = new JTextField();
-		textFieldPassword.setColumns(10);
-		textFieldPassword.setBounds(172, 95, 225, 19);
-		frmCloseAccount.getContentPane().add(textFieldPassword);
 		
 		JButton btnCloseAccount = new JButton("Close Account");
 		btnCloseAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Integer accountId = Integer.parseInt(textFieldAccount.getText());
-					Manager.closeAccount(accountId);
-					JOptionPane.showMessageDialog(null, "Account DELETED!!");
 					
-					FormMenuManager formMenuManager = new FormMenuManager(mgrId);
-					formMenuManager.frmHomeManager.setVisible(true);
-					
-					frmCloseAccount.dispose();
-					
+					try {
+						Manager.closeAccount(accountId);
+						JOptionPane.showMessageDialog(null, "Account DELETED!!");
+						
+						FormMenuManager formMenuManager = new FormMenuManager(mgrId);
+						formMenuManager.frmHomeManager.setVisible(true);
+						
+						frmCloseAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "This account does not exist.");
+					}
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number");
 				}
 				
 				
 			}
 		});
-		btnCloseAccount.setBounds(259, 178, 138, 21);
+		btnCloseAccount.setBounds(259, 154, 138, 21);
 		frmCloseAccount.getContentPane().add(btnCloseAccount);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -107,7 +100,7 @@ public class FormCloseAccount {
 				frmCloseAccount.dispose();
 			}
 		});
-		btnCancel.setBounds(172, 178, 77, 21);
+		btnCancel.setBounds(160, 154, 77, 21);
 		frmCloseAccount.getContentPane().add(btnCancel);
 		
 		textFieldAccount = new JTextField();
@@ -131,7 +124,7 @@ public class FormCloseAccount {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		Image img = new ImageIcon(this.getClass().getResource("/FortisBank.jpg")).getImage();
 		lblNewLabel.setIcon(new ImageIcon(img));
-		lblNewLabel.setBounds(0, 105, 107, 105);
+		lblNewLabel.setBounds(0, 82, 107, 105);
 		frmCloseAccount.getContentPane().add(lblNewLabel);
 		
 		

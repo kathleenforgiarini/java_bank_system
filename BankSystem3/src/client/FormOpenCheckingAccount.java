@@ -93,19 +93,24 @@ public class FormOpenCheckingAccount {
 					Integer monthLimit = Integer.parseInt(textFieldMonthlyLimit.getText());
 					Double fee = Double.parseDouble(textFieldTransFee.getText());
 					
-					Customer selectedCustomer = Customer.search(selectedId);
-			
-					Manager.openCheckingAccount(selectedCustomer.getId(), balance, monthLimit, fee);
+					try {
+						Customer selectedCustomer = Customer.search(selectedId);
+						
+						Manager.openCheckingAccount(selectedCustomer.getId(), balance, monthLimit, fee);
+						
+						JOptionPane.showMessageDialog(null, "Checking Account Created!");
+						
+						FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+						formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+						
+						frmOpenCheckingAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "The user does not exist.");
+					}
 					
-					JOptionPane.showMessageDialog(null, "Checking Account Created!");
-					
-					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
-					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
-					
-					frmOpenCheckingAccount.dispose();
-					
-				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+				} catch (Exception exc2) {
+					JOptionPane.showMessageDialog(null, "The fields must not be empty\nAll fields must be a number.");
 				}
 			}
 		});

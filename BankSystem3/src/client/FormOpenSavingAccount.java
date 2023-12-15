@@ -116,19 +116,24 @@ public class FormOpenSavingAccount {
 						throw new ExceptionIsPassedDate();
 					}
 					
-					Customer selectedCustomer = Customer.search(selectedId);
-					
-					Manager.openSavingAccount(selectedCustomer.getId(), balance, intRate, dueDate);
+					try {
+						Customer selectedCustomer = Customer.search(selectedId);
+						
+						Manager.openSavingAccount(selectedCustomer.getId(), balance, intRate, dueDate);
 
-					JOptionPane.showMessageDialog(null, "Saving Account Created!");
-					
-					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
-					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
-					
-					frmOpenSavingAccount.dispose();
+						JOptionPane.showMessageDialog(null, "Saving Account Created!");
+						
+						FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+						formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+						
+						frmOpenSavingAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "The user does not exist.");
+					}
 					
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty\nAll fields must be a number.");
 				}
 			}
 		});

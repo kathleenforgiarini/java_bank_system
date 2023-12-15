@@ -132,19 +132,25 @@ public class FormOpenCreditAccount {
 						throw new ExceptionIsPassedDate();
 					}
 					
-					Customer selectedCustomer = Customer.search(selectedId);
-					
-					Manager.openCreditAccount(selectedCustomer.getId(), balance, dueDate, limit);
+					try {
+						Customer selectedCustomer = Customer.search(selectedId);
+						
+						Manager.openCreditAccount(selectedCustomer.getId(), balance, dueDate, limit);
 
-					JOptionPane.showMessageDialog(null, "Credit Account Created!");
+						JOptionPane.showMessageDialog(null, "Credit Account Created!");
+						
+						FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
+						formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
+						
+						frmOpenCreditAccount.dispose();
+					}
+					catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "The user does not exist.");
+					}
 					
-					FormMenuOpenAccount formMenuOpenAccount = new FormMenuOpenAccount(mgrId);
-					formMenuOpenAccount.frmHomeNewAccount.setVisible(true);
-					
-					frmOpenCreditAccount.dispose();
 					
 				} catch (Exception exc) {
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty\nAll fields must be a number.");
 				}
 			}
 		});
