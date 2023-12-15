@@ -88,30 +88,33 @@ public class FormCustomerLogin {
 					}
 					else
 					{
-						User userFound = User.search(username, password);
-						Customer customerFound = Customer.search(userFound.getId());
-						if (customerFound == null)
-						{
-							JOptionPane.showMessageDialog(null, "Invalid Credentials!");
-						}
-						else
-						{
-							FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerFound.getId());
-							formMenuCustomer.frmHomeCustomer.setVisible(true);
-							
-							 JLabel lblHelloLabel = new JLabel("Hello, "+username);
-							  lblHelloLabel.setHorizontalAlignment(SwingConstants.CENTER);
-							  lblHelloLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-							  lblHelloLabel.setBounds(101, 26, 218, 14);
-							  formMenuCustomer.frmHomeCustomer.getContentPane().add(lblHelloLabel);
-							
-							
-							frmCustomerAreaLogin.dispose();
+						try {
+							User userFound = User.search(username, password);
+							Customer customerFound = Customer.search(userFound.getId());
+							if (customerFound == null)
+							{
+								JOptionPane.showMessageDialog(null, "Invalid Credentials!");
+							}
+							else
+							{
+								FormMenuCustomer formMenuCustomer = new FormMenuCustomer(customerFound.getId());
+								formMenuCustomer.frmHomeCustomer.setVisible(true);
+								
+								 JLabel lblHelloLabel = new JLabel("Hello, "+username);
+								  lblHelloLabel.setHorizontalAlignment(SwingConstants.CENTER);
+								  lblHelloLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+								  lblHelloLabel.setBounds(101, 26, 218, 14);
+								  formMenuCustomer.frmHomeCustomer.getContentPane().add(lblHelloLabel);
+
+								frmCustomerAreaLogin.dispose();
+							}
+						} catch (Exception exc) {
+							JOptionPane.showMessageDialog(null, "The user and password do not match.");
 						}
 					}
 				} catch (Exception exc)
 				{
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty.\nThe password must be a number.");
 				}
 				
 				

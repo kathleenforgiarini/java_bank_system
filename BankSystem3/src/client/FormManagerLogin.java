@@ -92,29 +92,35 @@ public class FormManagerLogin {
 					}
 					else
 					{
-						User userFound = User.search(username, password);
-						Manager mgrFound = Manager.search(userFound.getId());
-						if (mgrFound == null)
+						try {
+							User userFound = User.search(username, password);
+							Manager mgrFound = Manager.search(userFound.getId());
+							if (mgrFound == null)
+							{
+								JOptionPane.showMessageDialog(null, "Invalid Credentials!");
+							}
+							else
+							{
+								FormMenuManager formMenuManager = new FormMenuManager(mgrFound.getId());
+								formMenuManager.frmHomeManager.setVisible(true);
+								
+								  JLabel lblHelloLabel = new JLabel("Hello, "+username);
+								  lblHelloLabel.setHorizontalAlignment(SwingConstants.CENTER);
+								  lblHelloLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+								  lblHelloLabel.setBounds(101, 26, 218, 14);
+								  formMenuManager.frmHomeManager.getContentPane().add(lblHelloLabel);
+								  frmManagerAreaLogin.dispose();
+								 
+							}
+						} catch (Exception exc)
 						{
-							JOptionPane.showMessageDialog(null, "Invalid Credentials!");
+							JOptionPane.showMessageDialog(null, "The user and password do not match.");
 						}
-						else
-						{
-							FormMenuManager formMenuManager = new FormMenuManager(mgrFound.getId());
-							formMenuManager.frmHomeManager.setVisible(true);
-							
-							  JLabel lblHelloLabel = new JLabel("Hello, "+username);
-							  lblHelloLabel.setHorizontalAlignment(SwingConstants.CENTER);
-							  lblHelloLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-							  lblHelloLabel.setBounds(101, 26, 218, 14);
-							  formMenuManager.frmHomeManager.getContentPane().add(lblHelloLabel);
-							  frmManagerAreaLogin.dispose();
-							 
-						}
+						
 					}
 				} catch (Exception exc)
 				{
-					JOptionPane.showMessageDialog(null, exc.getMessage());
+					JOptionPane.showMessageDialog(null, "The fields must not be empty.\nThe password must be a number.");
 				}
 			}
 		});
