@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 import bus.Account;
 import bus.CheckingAccount;
+import bus.ExceptionNotEnoughBalance;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -105,8 +106,11 @@ public class FormWithdrawCheckingAccount {
 						JOptionPane.showMessageDialog(null, "You don't have this account number, try again!");
 					}
 					
-					
-				} catch (Exception exc) {
+				}
+				catch(ExceptionNotEnoughBalance ex) {
+					JOptionPane.showMessageDialog(null, "Not enough funds to complete the operation!");
+				}	
+				catch (Exception exc) {
 					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number.");
 				}
 			}

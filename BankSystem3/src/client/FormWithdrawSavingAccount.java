@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import bus.Account;
+import bus.ExceptionNotEnoughBalance;
 import bus.SavingAccount;
 
 import javax.swing.JLabel;
@@ -106,7 +107,11 @@ public class FormWithdrawSavingAccount {
 					}
 					
 					
-				} catch (Exception exc) {
+				} 
+				catch(ExceptionNotEnoughBalance ex) {
+					JOptionPane.showMessageDialog(null, "Not enough funds to complete the operation!");
+				}
+				catch (Exception exc) {
 					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number.");
 				}
 			}

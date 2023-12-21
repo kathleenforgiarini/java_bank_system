@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 
 import bus.Account;
 import bus.CreditAccount;
+import bus.ExceptionNotEnoughBalance;
+import bus.ExceptionNotEnoughLimit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -109,7 +111,11 @@ public class FormWithdrawCreditAccount {
 					}
 					
 					
-				} catch (Exception exc) {
+				} 
+				catch(ExceptionNotEnoughLimit ex) {
+					JOptionPane.showMessageDialog(null, "You don't have enough limit!");
+				}
+				catch (Exception exc) {
 					JOptionPane.showMessageDialog(null, "The field must not be empty.\nIt must be a number.");
 				}
 			}

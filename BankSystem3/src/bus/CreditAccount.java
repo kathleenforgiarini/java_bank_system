@@ -121,7 +121,7 @@ public class CreditAccount extends Account{
 	}
 
 	@Override
-	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException {
+	public void withdraw(Double amount) throws ExceptionNegativeAmount, ExceptionNotEnoughBalance, ExceptionIsNull, ExceptionIsNotANumber, SQLException, ExceptionNotEnoughLimit {
 		
 		if (amount <= (this.getBalance() - this.getLimit())) {
 			
@@ -133,7 +133,7 @@ public class CreditAccount extends Account{
 			this.setTransactions();
 		}
 		else {
-			throw new ExceptionNotEnoughBalance("You don't have enough limit!");
+			throw new ExceptionNotEnoughLimit("You don't have enough limit!");
 		}
 	}
 	
