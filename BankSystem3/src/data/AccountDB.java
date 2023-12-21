@@ -145,7 +145,25 @@ public class AccountDB {
 			
 			myList.add(accountid);
 		}
-		
+		myConnection.close();
 		return myList;
+	}
+
+	public static Integer searchCustomerByAccountId(Integer accountId) throws SQLException {
+		myConnection = DBConnection.getConnection();
+		Integer custId = null;
+		mySQLQuery = "SELECT customerid "
+				+ "FROM accountbank "
+				+ "WHERE accountid = " + accountId;
+		
+		Statement myStatemnt = myConnection.createStatement();
+		ResultSet myResultSet = myStatemnt.executeQuery(mySQLQuery);
+		
+		if(myResultSet.next()) {
+			custId = myResultSet.getInt("customerid");
+		}
+		
+		myConnection.close();
+		return custId;
 	}
 }

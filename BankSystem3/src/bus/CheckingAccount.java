@@ -82,6 +82,7 @@ public class CheckingAccount extends Account {
 			transaction.setAccountId(this.accountNumber);
 			
 			Transaction.add(transaction);
+			this.setTransactions();
 		} 
 		else {
 			this.balance += amount;
@@ -100,6 +101,7 @@ public class CheckingAccount extends Account {
 					this.transactionFees, this.accountNumber, EnumTypeTransaction.Debit);
             
 			Transaction.add(transactionFee);
+			this.setTransactions();
 		}
 
 		
@@ -121,6 +123,7 @@ public class CheckingAccount extends Account {
 	            Transaction transaction = new Transaction(null, "Withdraw", LocalDate.now(), amount, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transaction);
+	            this.setTransactions();
 			
 			}
 			else {
@@ -137,6 +140,7 @@ public class CheckingAccount extends Account {
 	            Transaction transactionFees = new Transaction(null, "Fee for transaction limit", LocalDate.now(), this.transactionFees, this.accountNumber,
 	            		EnumTypeTransaction.Debit);
 	            Transaction.add(transactionFees);
+	            this.setTransactions();
 			
 			}
 		} else {

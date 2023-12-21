@@ -3,9 +3,6 @@ package bus;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import data.AccountDB;
 import data.CurrencyAccountDB;
 
@@ -91,6 +88,7 @@ public class CurrencyAccount extends Account {
         this.balance -= conversionFee;
         Account.update(this);
         Transaction.add(transactionFee);
+        this.setTransactions();
 	}
 
 	@Override
@@ -102,6 +100,7 @@ public class CurrencyAccount extends Account {
 			this.balance -= amount;
 			Account.update(this);
 			Transaction.add(transaction);
+			this.setTransactions();
         }
 		else {
 			throw new ExceptionNotEnoughBalance();

@@ -12,6 +12,7 @@ public abstract class Account implements ITransaction{
 	protected Integer customer;
 	protected Double balance;
 	protected LocalDate openingDate;
+	protected ArrayList<Transaction> transactions;
 	
 	public Account() {
 		super();
@@ -20,6 +21,7 @@ public abstract class Account implements ITransaction{
 		this.customer = null;
 		this.balance = 0.00;
 		this.openingDate = null;
+		this.transactions = new ArrayList<Transaction>();
 	}
 	
 	public Account(Integer accountNumber, EnumTypeAccount type, Integer customer, Double balance, LocalDate openingDate) throws ExceptionIsNull, ExceptionIsNotANumber {
@@ -29,6 +31,7 @@ public abstract class Account implements ITransaction{
 		this.customer = customer;
 		setBalance(balance);
 		this.openingDate = openingDate;
+		setTransactions();
 	}
 	
 	public void setAccountNumber(Integer accountNumber) {
@@ -77,6 +80,20 @@ public abstract class Account implements ITransaction{
 		return this.openingDate;
 	}
 
+	public ArrayList<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions() {
+		try {
+			ArrayList<Transaction> listTransactions = Transaction.searchByAccount(this.accountNumber);
+			this.transactions = listTransactions;
+		}
+		catch (Exception exc) {
+			this.transactions = new ArrayList<Transaction>();
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Account Number: " + this.accountNumber +
@@ -116,5 +133,10 @@ public abstract class Account implements ITransaction{
 	
 	public static ArrayList<Integer> searchByCustomerId(Integer customerId) throws SQLException {
 		return AccountDB.searchByCustomerId(customerId);
+	}
+	
+	public static Customer searchCustomerByAccountId(Integer accountId) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
+		Integer customerId = AccountDB.searchCustomerByAccountId(accountId);
+		return Customer.search(customerId);
 	}
 }

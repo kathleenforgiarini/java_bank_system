@@ -84,6 +84,7 @@ public class SavingAccount extends Account {
 		this.balance += amount;
 		Account.update(this);
 		Transaction.add(transaction);
+		this.setTransactions();
 		setGain();
 	}
 
@@ -100,6 +101,7 @@ public class SavingAccount extends Account {
 			this.balance -= amount;
 			Account.update(this);
 			Transaction.add(transaction);
+			this.setTransactions();
 			setGain();
 			}
 			else {
@@ -117,6 +119,7 @@ public class SavingAccount extends Account {
 					this.balance -= amount;
 					Account.update(this);
 					Transaction.add(transactionInterest);
+					this.setTransactions();
 					setGain();
 				}
 				else

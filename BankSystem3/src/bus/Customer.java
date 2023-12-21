@@ -1,9 +1,6 @@
 package bus;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import data.CustomerDB;
 import data.UserDB;
 
@@ -11,20 +8,22 @@ public class Customer extends User{
 	private Integer id;
 	private Double salary;
 	private Integer mgr;
-	ArrayList<Account> listOfAccounts;
+	private ArrayList<Integer> listOfAccounts;
 	
 	public Customer() {
 		super();
 		this.id = null;
 		this.salary = 0.00;
 		this.mgr = null;
+		this.listOfAccounts = new ArrayList<Integer>();
 	}
 
-	public Customer(Integer id, String username, Integer password, Double salary, Integer mgr) throws ExceptionIsNotANumber, ExceptionIsNull {
+	public Customer(Integer id, String username, Integer password, Double salary, Integer mgr) throws ExceptionIsNotANumber, ExceptionIsNull, SQLException {
 		super(id, username, password);
 		this.id = id;
 		setSalary(salary);
 		this.mgr = mgr;
+		setListOfAccounts();
 	}
 	
 	public Integer getId() {
@@ -57,6 +56,22 @@ public class Customer extends User{
 	public void setMgr(Integer mgr) {
 		this.mgr = mgr;
 	}
+	
+	
+	public ArrayList<Integer> getListOfAccounts() {
+		return listOfAccounts;
+	}
+
+	public void setListOfAccounts() throws SQLException {
+		try {
+			ArrayList<Integer> accounts = Account.searchByCustomerId(this.id);
+			this.listOfAccounts = accounts;
+		}
+		catch (Exception exc) {
+			this.listOfAccounts = new ArrayList<Integer>();
+		}
+	}
+
 
 	@Override
 	public String toString() {
@@ -68,7 +83,6 @@ public class Customer extends User{
 	//   public static services //
 	//////////////////////////////
 	public static Integer add(Customer element) throws SQLException {
-		//JOptionPane.showMessageDialog(null, "Entrei no Customer Add");
 		Integer id = CustomerDB.insert(element);
 		return id;
 	}

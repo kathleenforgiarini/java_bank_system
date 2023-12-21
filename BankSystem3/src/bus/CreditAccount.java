@@ -92,6 +92,7 @@ public class CreditAccount extends Account{
 			}
 			
 			Transaction.add(transaction);
+			this.setTransactions();
 		}
 		else 
 		{
@@ -104,6 +105,7 @@ public class CreditAccount extends Account{
 		 	this.balance += amount;
 		 	Account.update(this);
 	        Transaction.add(transactionDep);
+	        this.setTransactions();
 	       
 	        if (this.balance == 0)
 	        {
@@ -114,6 +116,7 @@ public class CreditAccount extends Account{
 	        this.balance -= lateFee;
 	        Account.update(this);
 	        Transaction.add(transactionFees);
+	        this.setTransactions();
 		}
 	}
 
@@ -127,6 +130,7 @@ public class CreditAccount extends Account{
 			this.balance -= amount;
 			Account.update(this);
 			Transaction.add(transaction);
+			this.setTransactions();
 		}
 		else {
 			throw new ExceptionNotEnoughBalance("You don't have enough limit!");

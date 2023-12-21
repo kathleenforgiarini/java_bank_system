@@ -81,6 +81,7 @@ public class LineOfCreditAccount extends CreditAccount{
 		this.setBalance(amount*-1);
 		Account.update(this);
 		Transaction.add(transaction);
+		this.setTransactions();
 	}
 	
 	
@@ -100,6 +101,7 @@ public class LineOfCreditAccount extends CreditAccount{
 				this.setInstallment(this.getBalance()/this.getNbOfInstallments());
 				
 				Transaction.add(transaction);
+				this.setTransactions();
 			}
 			else
 			{

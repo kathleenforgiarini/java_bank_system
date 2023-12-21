@@ -4,14 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 import data.AccountDB;
-import data.CheckingAccountDB;
-import data.CreditAccountDB;
-import data.CurrencyAccountDB;
-import data.CustomerDB;
 import data.ManagerDB;
-import data.SavingAccountDB;
 import data.UserDB;
 
 public class Manager extends User {
@@ -63,9 +57,12 @@ public class Manager extends User {
 		LineOfCreditAccount.add(newAccount);
 	}
 
-	public static void closeAccount(Integer accountNumber) throws SQLException {
+	public static void closeAccount(Integer accountNumber) throws SQLException, ExceptionIsNotANumber, ExceptionIsNull {
 		if (accountNumber != null) {
+			
+			Customer customer = Account.searchCustomerByAccountId(accountNumber);
 			AccountDB.delete(accountNumber);
+			customer.setListOfAccounts();
 		}
 	}
 	
